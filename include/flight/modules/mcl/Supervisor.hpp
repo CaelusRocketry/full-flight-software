@@ -8,7 +8,7 @@
 #ifndef FLIGHT_SUPERVISOR_HPP
 #define FLIGHT_SUPERVISOR_HPP
 
-using namespace std;
+#using namespace std;
 
 class Supervisor {
     private:

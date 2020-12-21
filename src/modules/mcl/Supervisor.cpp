@@ -31,13 +31,13 @@ Supervisor::~Supervisor() {
 }
 
 void Supervisor::initialize(){
+    log("Initializing control tasks");
+    controlTask->begin();
+
     log("Initializing tasks");
     for(Task* task : tasks){
         task->initialize();
     }
-
-    log("Initializing control tasks");
-    controlTask->begin();
 }
 
 void Supervisor::read(){
