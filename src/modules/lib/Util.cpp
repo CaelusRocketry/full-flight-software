@@ -4,18 +4,9 @@
 
 //boost is imported in Util.hpp
 namespace pt = boost::property_tree;
-vector<string> Util::parse_json(initializer_list<string> args, string raw_json) {
+vector<string> Util::parse_json(initializer_list<string> args) {
     pt::ptree root;
-
-    if(raw_json.empty()) {
-        pt::read_json("../src/config.json", root);
-    }
-    else {
-        stringstream ss;
-        ss << raw_json;
-        pt::read_json(ss, root);
-    }
-
+    pt::read_json("../src/config.json", root);
     auto item = root;
     vector<string> ret;
 
@@ -43,7 +34,7 @@ vector<string> Util::parse_json(initializer_list<string> args, string raw_json) 
  * Note that you have to specify the field "solenoid" in order to get the items from the list.
  */
 
-vector<string> Util::parse_json_list(initializer_list<string> args, string raw_json) {
+vector<string> Util::parse_json_list(initializer_list<string> args) {
     /**
      * Returns list of things (strings) that are in the specified place in the config.json
      * To specify the place, use a list of arguments
@@ -54,14 +45,7 @@ vector<string> Util::parse_json_list(initializer_list<string> args, string raw_j
     pt::ptree root;
 
     // stores json contents in root
-    if(raw_json.empty()) {
-        pt::read_json("../src/config.json", root);
-    }
-    else {
-        stringstream ss;
-        ss << raw_json;
-        pt::read_json(ss, root);
-    }
+    pt::read_json("../src/config.json", root);
 
     // convert item to auto so it can automatically adapt type.
     auto item = root;
@@ -93,19 +77,10 @@ vector<string> Util::parse_json_list(initializer_list<string> args, string raw_j
     return ret;
 }
 
-string Util::parse_json_value(initializer_list<string> args, string raw_json) {
+string Util::parse_json_value(initializer_list<string> args) {
     // root is essentially a dictionary, it has key strings associated with data
     pt::ptree root;
-
-    if(raw_json.empty()) {
-        pt::read_json("../src/config.json", root);
-    }
-    else {
-        stringstream ss;
-        ss << raw_json;
-        pt::read_json(ss, root);
-    }
-
+    pt::read_json("../src/config.json", root);
     string path = "";
     string ret = "";
 
@@ -145,7 +120,7 @@ string Util::map_to_string(map<string, string> data, string key_delim, string el
         output += element_delim;
         it++;
     }
-    output[output.length() - 1] = '}';
+    output += "}";
     return output;
 }
 

@@ -17,7 +17,6 @@ void SensorTask::initialize(){
 }
 
 void SensorTask::read(){
-    log("here sensor read");
     char* data = sensor->read(); // data returned as an array of chars
 
     // Convert char array to double array
