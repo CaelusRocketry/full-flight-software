@@ -18,8 +18,8 @@ class Supervisor {
         ControlTask *controlTask;
 
     public:
-        Supervisor();
         ~Supervisor();
+        Supervisor();
         void initialize();
         void read();
         void control();
