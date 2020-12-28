@@ -9,38 +9,47 @@
 #include <flight/modules/control_tasks/ValveControl.hpp>
 #include <flight/modules/control_tasks/PressureControl.hpp>
 
+ControlTask::ControlTask(const set<string>& config) {
+    log("Control task: Adding controls");
 
-ControlTask::ControlTask(Registry *registry, Flag *flag, unordered_map<string, bool> config) {
-    log("Control Task started");
-    this->registry = registry;
-    this->flag = flag;
+    if (config.count("sensor")) {
+        controls.push_back(unique_ptr<Control>(new SensorControl()));
+    }
 
-    if(config["sensor"]) {
-        controls.push_back(unique_ptr<Control>(new SensorControl(registry, flag)));
+    if (config.count("telemetry")) {
+        controls.push_back(unique_ptr<Control>(new TelemetryControl()));
     }
-    if(config["telemetry"]) {
-        controls.push_back(unique_ptr<Control>(new TelemetryControl(registry, flag)));
+
+    if (config.count("valve")) {
+        controls.push_back(unique_ptr<Control>(new ValveControl()));
     }
-    if(config["valve"]) {
-        controls.push_back(unique_ptr<Control>(new ValveControl(registry, flag)));
+
+    if (config.count("stage")) {
+        controls.push_back(unique_ptr<Control>(new StageControl()));
     }
-    if(config["stage"]) {
-        controls.push_back(unique_ptr<Control>(new StageControl(registry, flag)));
+
+    if (config.count("pressure")) {
+        controls.push_back(unique_ptr<Control>(new PressureControl()));
     }
-    if(config["pressure"]) {
-        controls.push_back(unique_ptr<Control>(new PressureControl(registry, flag)));
-    }
-    Util::enqueue(this->flag, Log("response", "{\"header\": \"info\", \"Description\": \"Control Tasks started\"}"), LogPriority::INFO);
+
+    global_flag.log_info("response", {
+        {"header", "info"},
+        {"Description", "Control Tasks started"}
+    });
 }
 
 void ControlTask::begin() {
-    for(auto &ctrl : this->controls) {
-        ctrl.get()->begin();
+    log("Control task: Beginning");
+
+    for (auto &control : this->controls) {
+        control->begin();
     }
 }
 
 void ControlTask::control() {
-    for(auto &ctrl : this->controls) {
-        ctrl.get()->execute();
+    log("Control task: Controlling");
+
+    for (auto &control : this->controls) {
+        control->execute();
     }
 }

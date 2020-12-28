@@ -1,66 +1,66 @@
 #include <thread> // For time delay
+#include <set>
 #include <Logger/logger_util.h>
 #include <flight/modules/mcl/Supervisor.hpp>
 #include <flight/modules/tasks/SensorTask.hpp>
 #include <flight/modules/tasks/TelemetryTask.hpp>
 #include <flight/modules/tasks/ValveTask.hpp>
 #include <flight/modules/lib/Util.hpp>
+#include <flight/modules/mcl/Config.hpp>
+
+using json = nlohmann::json;
 
 //TODO: wrap everything in a try catch to make sure that execution doesn't stop if/when an error gets thrown?
 
-Supervisor::Supervisor(){
-    log("Creating registry and flag");
-    registry = new Registry();
-    flag = new Flag();
-
-    log("Creating tasks");
-    auto config = parse_config();
-
-    log("Creating control tasks");
-    controlTask = new ControlTask(registry, flag, config);
-}
-
 Supervisor::~Supervisor() {
-    delete registry;
-    delete flag;
-    delete controlTask;
+    delete control_task;
 
-    for(auto task : tasks) {
+    for (auto task : tasks) {
         delete task;
     }
 }
 
-void Supervisor::initialize(){
-    log("Initializing tasks");
-    for(Task* task : tasks){
+void Supervisor::initialize() {
+    /* Load config */
+    ifstream config_file("../config.json");
+    json j = json::parse(config_file);
+    global_config = Config(j);
+    global_registry.initialize();
+
+    log("Supervisor: Parsing config");
+    parse_config();
+
+    log("Tasks: Initializing");
+    for (Task* task : tasks){
         task->initialize();
     }
 
-    log("Initializing control tasks");
-    controlTask->begin();
+    log("Control tasks: Initializing");
+    control_task->begin();
 }
 
-void Supervisor::read(){
-    log("Reading...");
-    for(Task* task : tasks){
+void Supervisor::read() {
+    log("Supervisor: Reading");
+    for (Task* task : tasks){
         task->read();
     }
 }
 
-void Supervisor::control(){
-    log("Controlling...");
-    controlTask->control();
+void Supervisor::control() {
+    log("Supervisor: Controlling");
+
+    control_task->control();
 }
 
-void Supervisor::actuate(){
-    log("Actuating...");
-    for(Task* task : tasks){
+void Supervisor::actuate() {
+    log("Supervisor: Actuating");
+    for (Task* task : tasks){
         task->actuate();
     }
 }
 
-void Supervisor::run(){
-    while(true){
+void Supervisor::run() {
+    while (true) {
         read();
         control();
         actuate();
@@ -68,29 +68,19 @@ void Supervisor::run(){
     }
 }
 
-unordered_map<string, bool> Supervisor::parse_config() {
+void Supervisor::parse_config() {
     // parse_json_list automatically parses config.json
-    auto task_config = Util::parse_json_list({"task_config", "tasks"});
-    auto control_task_config = Util::parse_json_list({"task_config", "control_tasks"});
-
-    // unordered dict essentially
-    unordered_map<string, bool> control_tasks;
-
-    for(string task : task_config) {
-        if(task.compare("sensor") == 0) {
-            tasks.push_back(new SensorTask(registry, flag));
-        }
-        if(task.compare("telemetry") == 0) {
-            tasks.push_back(new TelemetryTask(registry, flag));
-        }
-        if(task.compare("valve") == 0) {
-            tasks.push_back(new ValveTask(registry, flag));
-        }
+    for (const string& task : global_config.task_config.tasks) {
+        if (task == "sensor") tasks.push_back(new SensorTask());
+        if (task == "telemetry") tasks.push_back(new TelemetryTask());
+        if (task == "valve") tasks.push_back(new ValveTask());
     }
 
-    for(string control_task : control_task_config) {
-        control_tasks[control_task] = true;
+    set<string> control_tasks;
+    for (const string& control_task : global_config.task_config.control_tasks) {
+        control_tasks.insert(control_task);
+        log("Control task [" + control_task + "]: Enabled");
     }
 
-    return control_tasks;
+    control_task = new ControlTask(control_tasks);
 }

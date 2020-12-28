@@ -2,17 +2,16 @@
 // Created by adiv413 on 6/25/2020.
 //
 
+#include <Logger/logger_util.h>
 #include <flight/modules/control_tasks/PressureControl.hpp>
-#include <flight/modules/lib/Util.hpp>
-
-
-PressureControl::PressureControl(Registry *registry, Flag *flag) {
-    this->registry = registry;
-    this->flag = flag;
-}
 
 void PressureControl::begin() {
-    Util::enqueue(this->flag, Log("response", "{\"header\": \"info\", \"Description\": \"Pressure Control started\"}"), LogPriority::INFO);
+    log("Pressure control: Beginning");
+
+    global_flag.log_info("response", {
+        {"header", "info"},
+        {"Description", "Pressure Control started"}
+    });
 }
 
 void PressureControl::execute() {
@@ -20,24 +19,34 @@ void PressureControl::execute() {
 }
 
 void PressureControl::check_pressure() {
+    for(const pair<string, string>& matched : this->matchups) {
+        auto registry_sensor = global_registry.sensors["pressure"][matched.first];
+        auto registry_valve = global_registry.valves["solenoid"][matched.second];
 
-    for(pair<string, string> matched : this->matchups) {
-        if(int(this->registry->get<SensorStatus>("sensor_status.pressure." + matched.first)) == int(SensorStatus::WARNING)) { // why cast each to int?
-            if(int(this->registry->get<SolenoidState>("valve.solenoid." + matched.second)) == int(SolenoidState::CLOSED)) {
-                Util::enqueue(this->flag, Log("response", "{\"header\": \"info\", \"Description\": \"Pressure at " + matched.first + " is too high; opening " + matched.second + ".\"}"), LogPriority::CRIT);
-                this->flag->put("valve_actuation_type.solenoid." + matched.second, ActuationType::OPEN_VENT);
-                this->flag->put("valve_actuation_priority.solenoid." + matched.second, ValvePriority::MAX_TELEMETRY_PRIORITY);
-            } 
-        } else if(int(this->registry->get<SensorStatus>("sensor_status.pressure." + matched.first)) == int(SensorStatus::SAFE)) {
-             if(int(this->registry->get<SolenoidState>("valve.solenoid." + matched.second)) == int(SolenoidState::OPEN)) {
-                Util::enqueue(this->flag, Log("response", "{\"header\": \"info\", \"Description\": \"Pressure at " + matched.first + " is safe; closing " + matched.second + ".\"}"), LogPriority::CRIT);
-                this->flag->put("valve_actuation_type.solenoid." + matched.second, ActuationType::CLOSE_VENT);
-                this->flag->put("valve_actuation_priority.solenoid." + matched.second, ValvePriority::MAX_TELEMETRY_PRIORITY);
+        // Warning state
+        if (registry_sensor.status == SensorStatus::WARNING) {
+            // Open the valve
+            if (registry_valve.state == SolenoidState::CLOSED) {
+                global_flag.log_critical("response", {
+                    {"header", "info"},
+                    {"Description", "Pressure at " + matched.first + " is too high; opening " + matched.second + "."}
+                });
+
+                FlagValveInfo &valve_flag = global_flag.valves["solenoid"][matched.second];
+                valve_flag.actuation_type = ActuationType::OPEN_VENT;
+                valve_flag.actuation_priority = ValvePriority::MAX_TELEMETRY_PRIORITY;
+            }
+        } else if (registry_sensor.status == SensorStatus::SAFE) {
+            if (registry_valve.state == SolenoidState::OPEN) {
+                global_flag.log_critical("response", {
+                        {"header", "info"},
+                        {"Description", "Pressure at " + matched.first + " is safe; closing " + matched.second + "."}
+                });
+
+                FlagValveInfo &valve_flag = global_flag.valves["solenoid"][matched.second];
+                valve_flag.actuation_type = ActuationType::CLOSE_VENT;
+                valve_flag.actuation_priority = ValvePriority::MAX_TELEMETRY_PRIORITY;
             } 
         }
-
-
     }
-
-
 }
