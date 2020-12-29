@@ -108,7 +108,7 @@ void SensorControl::send_sensor_data() {
             sensor_data_json[type][location] = json{
                 {"measured", sensor.measured_value},
                 {"kalman", sensor.normalized_value},
-                {"get_status", int(sensor.status)}
+                {"status", int(sensor.status)}
             };
         }
     }
