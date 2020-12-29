@@ -45,6 +45,7 @@ void TelemetryControl::execute() {
         auto &ingest_queue = global_registry.telemetry.ingest_queue;
         while (!ingest_queue.empty()) {
             Packet packet = ingest_queue.top();
+            ingest_queue.pop();
 
             //TODO: figure out if log command is outdated
             for(const Log& log_ : packet.getLogs()) {
@@ -59,7 +60,7 @@ void TelemetryControl::execute() {
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
     json params = log.getMessage();
-
+    std::cout << params.dump() << std::endl;
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
         throw INVALID_HEADER_ERROR();
@@ -70,9 +71,9 @@ void TelemetryControl::ingest(const Log& log) {
 
     // TODO: change the packet format from gs to make it strings instead of enums
 
-    if (argument_order.size() != params.size()) {
+    /* if (argument_order.size() != params.size()) {
         throw PACKET_ARGUMENT_ERROR();
-    }
+    } */
 
     vector<string> param_values;
 

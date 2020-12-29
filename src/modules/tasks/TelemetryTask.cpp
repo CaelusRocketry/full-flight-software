@@ -22,12 +22,14 @@ void TelemetryTask::read() {
             // strip of the "END"s off each packet_string_group string
             vector<string> split_packets = Util::split(packet_string_group, "END");
             for (auto packet_string : split_packets) {
-                log("Telemetry: Processing packet: " + packet_string);
-                json packet_json = json::parse(packet_string);
-                Packet packet;
+                if (!packet_string.empty()) {
+                    log("Telemetry: Processing packet: " + packet_string);
+                    json packet_json = json::parse(packet_string);
+                    Packet packet;
 
-                from_json(packet_json, packet);
-                global_registry.telemetry.ingest_queue.push(packet);
+                    from_json(packet_json, packet);
+                    global_registry.telemetry.ingest_queue.push(packet);
+                }
             }
         }
 
