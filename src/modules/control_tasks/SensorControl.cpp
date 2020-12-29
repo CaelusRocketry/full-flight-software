@@ -105,7 +105,7 @@ void SensorControl::send_sensor_data() {
             RegistrySensorInfo sensor = global_registry.sensors[type][location];
 
             // "type.location": {
-            sensor_data_json[type + "." + location] = json{
+            sensor_data_json[type][location] = json{
                 {"measured", sensor.measured_value},
                 {"kalman", sensor.normalized_value},
                 {"get_status", int(sensor.status)}
