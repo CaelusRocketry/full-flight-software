@@ -4,22 +4,21 @@
 #define NUM_SENSORS 6
 
 #include <vector>
-#include <tuple>
 #include <string>
 #include <map>
 #include <flight/modules/drivers/PseudoArduino.hpp>
 
 class PseudoSensor : public PseudoArduino {
 private:
-    vector<tuple<string, string>> sensor_list;
-    map<tuple<string, string>, double> sensor_values;
+    vector<pair<string, string>> sensor_list;
+    map<pair<string, string>, double> sensor_values;
 
     void set_sensor_values();
 
 public:
     PseudoSensor();
-    char* read();
-    void write(char* msg);
+    unsigned char* read() override;
+    void write(unsigned char* msg) override;
 };
 
 #endif //FLIGHT_PSEUDOSENSOR_HPP

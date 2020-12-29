@@ -1,3 +1,6 @@
+#ifndef FLIGHT_SUPERVISOR_HPP
+#define FLIGHT_SUPERVISOR_HPP
+
 #include <iostream>
 #include <vector>
 #include <flight/modules/tasks/Task.hpp>
@@ -5,27 +8,22 @@
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/mcl/Flag.hpp>
 
-#ifndef FLIGHT_SUPERVISOR_HPP
-#define FLIGHT_SUPERVISOR_HPP
-
-#using namespace std;
+using namespace std;
 
 class Supervisor {
     private:
-        Registry *registry;
-        Flag *flag;
         vector<Task*> tasks;
-        ControlTask *controlTask;
+        ControlTask *control_task;
+        void parse_config();
 
     public:
+        Supervisor() = default;
         ~Supervisor();
-        Supervisor();
         void initialize();
         void read();
         void control();
         void actuate();
         void run();
-        unordered_map<string, bool> parse_config();
 };
 
 #endif //FLIGHT_SUPERVISOR_HPP
