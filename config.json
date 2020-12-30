@@ -17,8 +17,22 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [0, 500],
-            "warn": [-500, 700]
+            "waiting": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "pressurization": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "autosequence": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "postburn": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            }
           },
           "pin": 14
         },
@@ -29,8 +43,22 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [0, 500],
-            "warn": [-500, 700]
+            "waiting": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "pressurization": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "autosequence": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "postburn": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            }
           },
           "pin": 15
         },
@@ -41,8 +69,22 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [0, 500],
-            "warn": [-500, 700]
+            "waiting": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "pressurization": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "autosequence": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "postburn": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            }
           },
           "pin": 16
         },
@@ -53,8 +95,22 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [0, 500],
-            "warn": [-500, 700]
+            "waiting": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "pressurization": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "autosequence": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            },
+            "postburn": {
+              "safe": [0, 500],
+              "warn": [-500, 700]
+            }
           },
           "pin": 17
         }
