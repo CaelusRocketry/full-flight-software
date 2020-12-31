@@ -3,7 +3,9 @@
 //
 
 #include <flight/modules/mcl/Config.hpp>
+#include <flight/modules/lib/Enums.hpp>
 #include <Logger/logger_util.h>
+#include <flight/modules/mcl/Registry.hpp>
 
 /* BOUNDARY JSON SERIALIZATION */
 
@@ -26,8 +28,8 @@ void to_json(json& j, const ConfigSensorInfo& sensor_info) {
             {"kalman_value", sensor_info.kalman_args.kalman_value}
         }},
         {"boundaries", {
-            {"safe", sensor_info.boundaries.safe},
-            {"warn", sensor_info.boundaries.warn}
+            {"safe", sensor_info.boundaries.waiting.safe},
+            {"warn", sensor_info.boundaries.waiting.warn}
         }},
         {"pin", sensor_info.pin},
     };
@@ -38,9 +40,23 @@ void from_json(const json& j, ConfigSensorInfo& sensor_info) {
     kalman_args.at("process_variance").get_to(sensor_info.kalman_args.process_variance);
     kalman_args.at("measurement_variance").get_to(sensor_info.kalman_args.measurement_variance);
     kalman_args.at("kalman_value").get_to(sensor_info.kalman_args.kalman_value);
-
-    j.at("boundaries").at("safe").get_to(sensor_info.boundaries.safe);
-    j.at("boundaries").at("warn").get_to(sensor_info.boundaries.warn);
+    Stage curr_stage = global_registry.general.stage;
+    if(curr_stage == Stage::WAITING){
+        j.at("boundaries").at("waiting").at("safe").get_to(sensor_info.boundaries.waiting.safe);
+        j.at("boundaries").at("waiting").at("warn").get_to(sensor_info.boundaries.waiting.warn);
+    }
+    if(curr_stage == Stage::PRESSURIZATION){
+        j.at("boundaries").at("pressurization").at("safe").get_to(sensor_info.boundaries.pressurization.safe);
+        j.at("boundaries").at("pressurization").at("warn").get_to(sensor_info.boundaries.pressurization.warn);
+    }
+    if(curr_stage == Stage::AUTOSEQUENCE){
+        j.at("boundaries").at("autosequence").at("safe").get_to(sensor_info.boundaries.autosequence.safe);
+        j.at("boundaries").at("autosequence").at("warn").get_to(sensor_info.boundaries.autosequence.warn);
+    }
+    if(curr_stage == Stage::POSTBURN){
+        j.at("boundaries").at("postburn").at("safe").get_to(sensor_info.boundaries.postburn.safe);
+        j.at("boundaries").at("postburn").at("warn").get_to(sensor_info.boundaries.postburn.warn);
+    }
     j.at("pin").get_to(sensor_info.pin);
 }
 

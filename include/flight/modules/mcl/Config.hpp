@@ -15,6 +15,9 @@ using std::vector;
 struct ConfigBoundary {
     double lower, upper;
 };
+struct ConfigStage {
+    ConfigBoundary safe, warn;
+};
 
 void to_json(json& j, const ConfigBoundary& boundary);
 void from_json(const json& j, ConfigBoundary& boundary);
@@ -24,7 +27,7 @@ struct ConfigSensorInfo {
         double process_variance, measurement_variance, kalman_value;
     } kalman_args;
     struct {
-        ConfigBoundary safe, warn;
+        ConfigStage waiting, pressurization, autosequence, postburn;
     } boundaries;
     int pin;
 };

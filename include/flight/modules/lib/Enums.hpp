@@ -110,12 +110,17 @@ static unordered_map<ValvePriority, string> valve_priority_inverse_map {
         {ValvePriority::MAX_TELEMETRY_PRIORITY, "MAX_TELEMETRY_PRIORITY"},
         {ValvePriority::ABORT_PRIORITY, "ABORT_PRIORITY"}
 };
-
 enum class Stage {
     WAITING,
     PRESSURIZATION,
     AUTOSEQUENCE,
     POSTBURN
+};
+static unordered_map<Stage, string> stage_map {
+    {Stage::WAITING, "waiting"},
+    {Stage::PRESSURIZATION, "pressurization"},
+    {Stage::AUTOSEQUENCE, "autosequence"},
+    {Stage::POSTBURN, "postburn"}
 };
 
 #endif //FLIGHT_ENUMS_HPP
