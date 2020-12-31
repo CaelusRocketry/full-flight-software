@@ -17,6 +17,8 @@
             "kalman_value": 1000
           },
           "boundaries": {
+            "safe": [0, 500],
+            "warn": [-500, 700],
             "waiting": {
               "safe": [0, 500],
               "warn": [-500, 700]
@@ -43,6 +45,8 @@
             "kalman_value": 1000
           },
           "boundaries": {
+            "safe": [0, 500],
+            "warn": [-500, 700],
             "waiting": {
               "safe": [0, 500],
               "warn": [-500, 700]
@@ -69,6 +73,8 @@
             "kalman_value": 1000
           },
           "boundaries": {
+            "safe": [0, 500],
+            "warn": [-500, 700],
             "waiting": {
               "safe": [0, 500],
               "warn": [-500, 700]
@@ -95,6 +101,8 @@
             "kalman_value": 1000
           },
           "boundaries": {
+            "safe": [0, 500],
+            "warn": [-500, 700],
             "waiting": {
               "safe": [0, 500],
               "warn": [-500, 700]
