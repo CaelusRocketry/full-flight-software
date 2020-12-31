@@ -79,7 +79,7 @@ void SensorControl::boundary_check() {
                     critical_sensors.push_back({type, location});
                 }
             }
-            if(curr_stage == Stage::PRESSURIZATION)
+            else if(curr_stage == Stage::PRESSURIZATION)
             {
                 if (between(conf.boundaries.pressurization.safe.lower, conf.boundaries.pressurization.safe.upper, kalman_value)) {
                     sensor_registry.status = SensorStatus::SAFE;
@@ -90,7 +90,7 @@ void SensorControl::boundary_check() {
                     critical_sensors.push_back({type, location});
                 }
             }
-            if(curr_stage == Stage::AUTOSEQUENCE)
+            else if(curr_stage == Stage::AUTOSEQUENCE)
             {
                 if (between(conf.boundaries.autosequence.safe.lower, conf.boundaries.autosequence.safe.upper, kalman_value)) {
                     sensor_registry.status = SensorStatus::SAFE;
@@ -101,7 +101,7 @@ void SensorControl::boundary_check() {
                     critical_sensors.push_back({type, location});
                 }
             }
-            if(curr_stage == Stage::POSTBURN)
+            else if(curr_stage == Stage::POSTBURN)
             {
                 if (between(conf.boundaries.postburn.safe.lower, conf.boundaries.postburn.safe.upper, kalman_value)) {
                     sensor_registry.status = SensorStatus::SAFE;
