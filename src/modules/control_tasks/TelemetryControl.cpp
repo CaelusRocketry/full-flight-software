@@ -105,7 +105,20 @@ void TelemetryControl::soft_abort(const vector<string>& args) {
         {"mode", "Soft Abort"}
     });
 }
-void TelemetryControl::solenoid_actuate(const vector<string>& args) {
+
+void TelemetryControl::return_to_normal(const vector<string>& args) {
+    global_registry.general.soft_abort = false;
+    global_flag.log_critical("response", {
+        {"header", "Normal"},
+        {"Status", "Success"},
+        {"Description", "Undoing soft abort"}
+    });
+    global_flag.log_critical("mode", {
+        {"header", "Normal"},
+        {"mode", "Normal"}
+    });
+}
+void TelemetryControl::soleAnoid_actuate(const vector<string>& args) {
     if (!global_registry.valve_exists("solenoid", args[0])) {
         global_flag.log_critical("Valve actuation",{
             {"header", "Valve actuation"},
