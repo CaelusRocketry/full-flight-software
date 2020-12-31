@@ -67,14 +67,50 @@ void SensorControl::boundary_check() {
             // We use .at() here because Kalman has no default constructor
             double kalman_value = kalman_filters.at(type).at(location).update_kalman(value);
             sensor_registry.normalized_value = kalman_value; // reference
-
-            if (between(conf.boundaries.safe.lower, conf.boundaries.safe.upper, kalman_value)) {
-                sensor_registry.status = SensorStatus::SAFE;
-            } else if (between(conf.boundaries.warn.lower, conf.boundaries.warn.upper, kalman_value)) {
-                sensor_registry.status = SensorStatus::WARNING;
-            } else {
-                sensor_registry.status = SensorStatus::CRITICAL;
-                critical_sensors.push_back({type, location});
+            Stage curr_stage = global_registry.general.stage;
+            if(curr_stage == Stage::WAITING)
+            {
+                if (between(conf.boundaries.waiting.safe.lower, conf.boundaries.waiting.safe.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::SAFE;
+                } else if (between(conf.boundaries.waiting.warn.lower, conf.boundaries.waiting.warn.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::WARNING;
+                } else {
+                    sensor_registry.status = SensorStatus::CRITICAL;
+                    critical_sensors.push_back({type, location});
+                }
+            }
+            if(curr_stage == Stage::PRESSURIZATION)
+            {
+                if (between(conf.boundaries.pressurization.safe.lower, conf.boundaries.pressurization.safe.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::SAFE;
+                } else if (between(conf.boundaries.pressurization.warn.lower, conf.boundaries.pressurization.warn.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::WARNING;
+                } else {
+                    sensor_registry.status = SensorStatus::CRITICAL;
+                    critical_sensors.push_back({type, location});
+                }
+            }
+            if(curr_stage == Stage::AUTOSEQUENCE)
+            {
+                if (between(conf.boundaries.autosequence.safe.lower, conf.boundaries.autosequence.safe.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::SAFE;
+                } else if (between(conf.boundaries.autosequence.warn.lower, conf.boundaries.autosequence.warn.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::WARNING;
+                } else {
+                    sensor_registry.status = SensorStatus::CRITICAL;
+                    critical_sensors.push_back({type, location});
+                }
+            }
+            if(curr_stage == Stage::POSTBURN)
+            {
+                if (between(conf.boundaries.postburn.safe.lower, conf.boundaries.postburn.safe.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::SAFE;
+                } else if (between(conf.boundaries.postburn.warn.lower, conf.boundaries.postburn.warn.upper, kalman_value)) {
+                    sensor_registry.status = SensorStatus::WARNING;
+                } else {
+                    sensor_registry.status = SensorStatus::CRITICAL;
+                    critical_sensors.push_back({type, location});
+                }
             }
         }
     }
