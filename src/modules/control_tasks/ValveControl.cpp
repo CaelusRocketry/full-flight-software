@@ -12,7 +12,9 @@
 #include <string>
 
 ValveControl::ValveControl() {
-    this->send_interval = global_config.valves.send_interval;
+    // config send interval in seconds, convert to milliseconds
+    this->send_interval = global_config.valves.send_interval * 1000;
+
     this->last_send_time = 0;
 }
 
@@ -24,11 +26,11 @@ void ValveControl::begin() {
 void ValveControl::execute() {
     log("Valve control: Executing");
     check_abort();
-    auto current_time = chrono::system_clock::now().time_since_epoch().count();
+    auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
     if (last_send_time == 0 || current_time > last_send_time + send_interval) {
         send_valve_data();
-        last_send_time = current_time;
+        last_send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
 }
 
@@ -49,7 +51,6 @@ void ValveControl::send_valve_data() {
     }
 
     global_flag.log_info("valve_data", valve_data_json);
-    last_send_time = chrono::system_clock::now().time_since_epoch().count();
 }
 
 void ValveControl::abort() {

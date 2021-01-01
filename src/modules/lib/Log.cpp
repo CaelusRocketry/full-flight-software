@@ -14,7 +14,7 @@ void to_json(json& j, const Log& log) {
 
 void from_json(const json& j, Log& log) {
     string header, message;
-    long timestamp;
+    long double timestamp;
     j.at("header").get_to(header);
     j.at("message").get_to(message);
     j.at("timestamp").get_to(timestamp);
@@ -50,6 +50,6 @@ json Log::getMessage() const {
     return message;
 }
 
-long Log::getTimestamp() const {
+long double Log::getTimestamp() const {
     return timestamp;
 }

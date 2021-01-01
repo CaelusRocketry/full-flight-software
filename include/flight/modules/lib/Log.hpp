@@ -19,12 +19,12 @@ class Log {
 private:
     string header;
     json message;
-    long timestamp;
+    long double timestamp;
 
 public:
     Log() = default;
 
-    Log(const string& header, const json& message, long timestamp = std::chrono::system_clock::now().time_since_epoch().count(), bool save = true)
+    Log(const string& header, const json& message, long double timestamp, bool save = true)
         : header(header),
           message(message),
           timestamp(timestamp) {
@@ -37,7 +37,7 @@ public:
     Log copy();
     string getHeader() const;
     json getMessage() const;
-    long getTimestamp() const;
+    long double getTimestamp() const;
 };
 
 

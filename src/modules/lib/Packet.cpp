@@ -13,7 +13,7 @@ void to_json(json& j, const Packet& packet) {
 
 void from_json(const json& j, Packet& packet) {
     // First, get timestamp and log priority
-    long timestamp = j.at("timestamp").get<long>();
+    long double timestamp = j.at("timestamp").get<long double>();
     auto priority = static_cast<LogPriority>(j.at("priority").get<int>());
     packet = Packet(priority, timestamp);
 

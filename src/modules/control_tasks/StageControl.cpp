@@ -5,8 +5,9 @@
 #include <chrono>
 
 StageControl::StageControl() {
-    this->start_time = chrono::system_clock::now().time_since_epoch().count();
-    this->send_interval = global_config.stages.send_interval;
+    this->start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    // convert seconds to milliseconds
+    this->send_interval = global_config.stages.send_interval * 1000;
     this->stage_index = 0;
 
     global_flag.log_info("response", {
@@ -51,7 +52,8 @@ double StageControl::calculate_status() const {
         if (mpv_actuation == ActuationType::OPEN_VENT) {
             return 100.0;
         } else {
-            return std::min(((chrono::system_clock::now().time_since_epoch().count() - this->start_time) / this->AUTOSEQUENCE_DELAY)*100, 99.0);
+            return std::min(((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()
+                - this->start_time) / this->AUTOSEQUENCE_DELAY) * 100, 99.0);
         }
     } else if(current_stage == Stage::POSTBURN) {
         double pressure = global_registry.sensors["pressure"]["PT-2"].normalized_value;
@@ -71,12 +73,13 @@ void StageControl::send_progression_request() {
 }
 
 void StageControl::send_data() {
-    if (this->send_time == 0 || chrono::system_clock::now().time_since_epoch().count() > (this->send_time + this->send_interval)) {
+    if (this->send_time == 0 || std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() > (this->send_time + this->send_interval)) {
         global_flag.log_info("response", {
             {"header", "stage_data"},
             {"Stage", stage_strings.at(stage_index)},
             {"Status", to_string(calculate_status())}
         });
+        this->send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
 }
 
@@ -93,7 +96,7 @@ void StageControl::progress() {
         global_registry.general.stage = stage_names[stage_index];
         send_time = 0;
         global_registry.general.stage_status = calculate_status();
-        start_time = chrono::system_clock::now().time_since_epoch().count();
+        start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         global_flag.log_critical("response", {
             {"header", "stage_progress"},
             {"Status", "Success"},
