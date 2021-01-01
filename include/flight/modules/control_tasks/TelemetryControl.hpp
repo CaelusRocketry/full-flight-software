@@ -20,7 +20,7 @@ private:
     const unordered_map<string, vector<string>> arguments {
         {"heartbeat", {}},
         {"soft_abort", {}},
-        {"return_to_normal", {}},
+        {"reset_to_normal", {}},
         {"solenoid_actuate", {"valve_location", "actuation_type", "priority"}},
         {"sensor_request", {"sensor_type", "sensor_location"}},
         {"valve_request", {"valve_type", "valve_location"}},

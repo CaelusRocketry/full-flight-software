@@ -107,15 +107,15 @@ void TelemetryControl::soft_abort(const vector<string>& args) {
     });
 }
 
-void TelemetryControl::return_to_normal(const vector<string>& args) {
+void TelemetryControl::reset_to_normal(const vector<string>& args) {
     global_registry.general.soft_abort = false;
     global_flag.log_critical("response", {
-        {"header", "Normal"},
+        {"header", "mode"},
         {"Status", "Success"},
         {"Description", "Undoing soft abort"}
     });
     global_flag.log_critical("mode", {
-        {"header", "Normal"},
+        {"header", "mode"},
         {"mode", "Normal"}
     });
 }
