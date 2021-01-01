@@ -12,8 +12,10 @@
 class ValveControl : public Control {
     private:
         std::vector<std::pair<std::string, std::string>> valves;
-        double send_interval;
-        double last_send_time;
+
+        // all time is calculated in milliseconds
+        long send_interval;
+        long last_send_time;
 
         void send_valve_data();
         void abort();

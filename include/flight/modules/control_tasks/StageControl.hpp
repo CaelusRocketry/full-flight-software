@@ -9,9 +9,9 @@
 
 class StageControl : public Control {
 private:
-    double send_time;
-    double start_time;
-    double send_interval;
+    long send_time;
+    long start_time;
+    long send_interval;
     int stage_index;
 
     vector<Stage> stage_names {
@@ -23,8 +23,8 @@ private:
 
     vector<string> stage_strings = global_config.stages.list;
 
-    const double AUTOSEQUENCE_DELAY = 5.0;
-    const double POSTBURN_DELAY = 10.0;
+    const double AUTOSEQUENCE_DELAY = 5.0 * 1000;
+    const double POSTBURN_DELAY = 10.0 * 1000;
 
     double calculate_status() const;
     void send_progression_request();

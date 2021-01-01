@@ -14,7 +14,8 @@
 
 class SensorControl : public Control {
 private:
-    double last_send_time;
+    long last_send_time;
+    long send_interval;
     map<string, map<string, Kalman>> kalman_filters;
 
     void boundary_check();

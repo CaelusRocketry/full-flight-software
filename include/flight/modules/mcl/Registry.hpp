@@ -37,7 +37,6 @@ public:
         Stage stage = Stage::WAITING;
         double stage_status = 0;
         int stage_progress = 0;
-        long mcl_start_time = 0;
     } general;
 
     struct {

@@ -25,6 +25,9 @@ class Flag {
 
         struct {
             bool progress = false;
+
+            // calculated in milliseconds
+            long mcl_start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();;
         } general;
 
         /* Telemetry Flags */

@@ -22,13 +22,13 @@ void from_json(const json& j, Packet& packet);
 class Packet {
 private:
     vector<Log> logs;
-    long timestamp;
+    long double timestamp;
     LogPriority level;
 
 public:
     Packet() = default;
 
-    explicit Packet(LogPriority logPriority, long timestamp = std::chrono::system_clock::now().time_since_epoch().count())
+    explicit Packet(LogPriority logPriority, long double timestamp)
         : level(logPriority),
           timestamp(timestamp){}
 

@@ -10,6 +10,9 @@
 
 SensorControl::SensorControl() {
     this->last_send_time = 0;
+
+    // config gives it in seconds, convert to milliseconds
+    this->send_interval = global_config.sensors.send_interval * 1000;
     global_flag.log_info("response", {
         {"header", "info"},
         {"Description", "Sensor control started"}
@@ -41,9 +44,9 @@ void SensorControl::begin() {
 void SensorControl::execute() {
     boundary_check();
 
-    auto now = chrono::system_clock::now().time_since_epoch().count();
+    long now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    if(last_send_time == 0 || now > last_send_time + global_config.sensors.send_interval) {
+    if(last_send_time == 0 || now > last_send_time + send_interval) {
         send_sensor_data();
         last_send_time = now;
     }
