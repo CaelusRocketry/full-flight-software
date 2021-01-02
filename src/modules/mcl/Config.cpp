@@ -45,15 +45,15 @@ void from_json(const json& j, ConfigSensorInfo& sensor_info) {
         j.at("boundaries").at("waiting").at("safe").get_to(sensor_info.boundaries.waiting.safe);
         j.at("boundaries").at("waiting").at("warn").get_to(sensor_info.boundaries.waiting.warn);
     }
-    if(curr_stage == Stage::PRESSURIZATION){
+    else if(curr_stage == Stage::PRESSURIZATION){
         j.at("boundaries").at("pressurization").at("safe").get_to(sensor_info.boundaries.pressurization.safe);
         j.at("boundaries").at("pressurization").at("warn").get_to(sensor_info.boundaries.pressurization.warn);
     }
-    if(curr_stage == Stage::AUTOSEQUENCE){
+    else if(curr_stage == Stage::AUTOSEQUENCE){
         j.at("boundaries").at("autosequence").at("safe").get_to(sensor_info.boundaries.autosequence.safe);
         j.at("boundaries").at("autosequence").at("warn").get_to(sensor_info.boundaries.autosequence.warn);
     }
-    if(curr_stage == Stage::POSTBURN){
+    else if(curr_stage == Stage::POSTBURN){
         j.at("boundaries").at("postburn").at("safe").get_to(sensor_info.boundaries.postburn.safe);
         j.at("boundaries").at("postburn").at("warn").get_to(sensor_info.boundaries.postburn.warn);
     }
