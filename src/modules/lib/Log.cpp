@@ -42,7 +42,7 @@ Log Log::copy(){
     return Log(header, message, timestamp, false);
 }
 
-string Log::getHeader() const {
+set Log::getHeader() const {
     return header;
 }
 
