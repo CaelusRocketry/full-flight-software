@@ -6,7 +6,7 @@ using nlohmann::json;
 void to_json(json& j, const Packet& packet) {
     j = json{
         {"logs", packet.logs},
-        {"level", packet.level},
+        {"priority", packet.priority},
         {"timestamp", packet.timestamp}
     };
 }
