@@ -23,13 +23,13 @@ class Packet {
 private:
     vector<Log> logs;
     long double timestamp;
-    LogPriority level;
+    LogPriority priority;
 
 public:
     Packet() = default;
 
     explicit Packet(LogPriority logPriority, long double timestamp)
-        : level(logPriority),
+        : priority(logPriority),
           timestamp(timestamp){}
 
     void add(const Log& log);
@@ -40,8 +40,8 @@ public:
 
     struct compareTo {
         bool operator()(const Packet& lhs, const Packet& rhs) {
-            if (lhs.level != rhs.level) {
-                return lhs.level < rhs.level;
+            if (lhs.priority != rhs.priority) {
+                return lhs.priority < rhs.priority;
             } else {
                 return lhs.timestamp < rhs.timestamp;
             }
