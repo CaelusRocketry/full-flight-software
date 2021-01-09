@@ -1,4 +1,5 @@
 #include <flight/modules/control_tasks/StageControl.hpp>
+#include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/lib/Enums.hpp>
 #include <Logger/logger_util.h>
@@ -107,17 +108,39 @@ void StageControl::progress() {
 
 void StageControl::stage_valve_control() {
     //TODO: make this actuate valves based on the current stage
-//    if(stage_index == int(Stage::WAITING)) {
-//
-//    }
-//    else if(stage_index == int(Stage::PRESSURIZATION)) {
-//
-//    }
-//    else if(stage_index == int(Stage::AUTOSEQUENCE)) {
-//
-//    }
-//    else if(stage_index == int(Stage::POSTBURN)) {
-//
-//    }
+    if(stage_index == int(Stage::WAITING)) {
+        if(global_registry.valves["solenoid"]["pressure_relief"].actuation_type != ActuationType::CLOSE_VENT) {
+            global_flag.valves["solenoid"]["pressure_relief"].actuation_type = ActuationType::CLOSE_VENT;
+            global_flag.valves["solenoid"]["pressure_relief"].actuation_priority = ValvePriority::PI_PRIORITY;
+        }
+        if(global_registry.valves["solenoid"]["main_propellant_valve"].actuation_type != ActuationType::CLOSE_VENT) {
+            global_flag.valves["solenoid"]["main_propellant_valve"].actuation_type = ActuationType::CLOSE_VENT;
+            global_flag.valves["solenoid"]["main_propellant_valve"].actuation_priority = ValvePriority::PI_PRIORITY;
+        }
+    }
+    else if(stage_index == int(Stage::PRESSURIZATION)) {
+        return;
+    }
+    else if(stage_index == int(Stage::AUTOSEQUENCE)) {
+        long double curr_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time;
+
+        if(global_registry.valves["solenoid"]["main_propellant_valve"].actuation_type != ActuationType::OPEN_VENT && curr_time - start_time > AUTOSEQUENCE_DELAY) {
+            global_flag.valves["solenoid"]["main_propellant_valve"].actuation_type = ActuationType::OPEN_VENT;
+            global_flag.valves["solenoid"]["main_propellant_valve"].actuation_priority = ValvePriority::PI_PRIORITY;
+        }
+    }
+    else if(stage_index == int(Stage::POSTBURN)) {
+        if(!acutated_postburn) {
+            global_flag.valves["solenoid"]["main_propellant_valve"].actuation_type = ActuationType::OPEN_VENT;
+            global_flag.valves["solenoid"]["main_propellant_valve"].actuation_priority = ValvePriority::PI_PRIORITY;
+
+            global_flag.valves["solenoid"]["pressure_relief"].actuation_type = ActuationType::OPEN_VENT;
+            global_flag.valves["solenoid"]["pressure_relief"].actuation_priority = ValvePriority::PI_PRIORITY;
+
+            acutated_postburn = true;
+        }
+    } else {
+        throw INVALID_STAGE();
+    }
 
 }
