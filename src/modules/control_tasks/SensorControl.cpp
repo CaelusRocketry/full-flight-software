@@ -20,6 +20,7 @@ SensorControl::SensorControl() {
 }
 
 void SensorControl::begin() {
+
     log("Sensor control: Beginning");
 
     // Initialize the Kalman filters

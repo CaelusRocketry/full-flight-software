@@ -14,15 +14,13 @@ private:
     vector<basic_string<char>> activate_stages;
     map<basic_string<char>, ConfigValveInfo> valves;
     map<basic_string<char>, ConfigSensorInfo> sensors;
-    vector<pair<SensorLocation, ValveLocation>> matchups;
+    vector<pair<string, string>> matchups;
 
     void check_pressure();
 
 public:
     PressureControl();
-    void begin();
     void execute();
-
-    void begin(json &config);
+    void begin();
 };
 #endif //FLIGHT_PRESSURECONTROL_HPP

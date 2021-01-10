@@ -29,7 +29,7 @@ enum class SensorType {
 enum class SensorLocation {
     PT1,
     PT2,
-    PT3, 
+    PT3,
     PT4
 };
 

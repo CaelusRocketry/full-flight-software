@@ -13,7 +13,7 @@ private:
     long start_time;
     long send_interval;
     int stage_index;
-    bool acutated_postburn = false;
+    bool acutated_postburn;
 
     vector<Stage> stage_names {
         Stage::WAITING,
