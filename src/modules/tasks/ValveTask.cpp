@@ -123,7 +123,7 @@ void ValveTask::actuate_solenoids() {
             command[1] = pin;
             command[2] = static_cast<char>(target_valve_info.actuation_type);
 
-            arduino -> write(command);
+            arduino->write(command);
 
             /* Reset the flags */
             global_flag.valves[valve_type][valve_location].actuation_type = ActuationType::NONE;

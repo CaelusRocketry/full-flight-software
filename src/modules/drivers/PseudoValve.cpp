@@ -4,6 +4,7 @@
 #include <flight/modules/drivers/PseudoValve.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/mcl/Registry.hpp>
+#include <flight/modules/lib/Errors.hpp>
 
 // Extends PseudoArduino
 PseudoValve::PseudoValve(){
@@ -60,9 +61,24 @@ void PseudoValve::actuate(const pair<string, string>& valve, const string& state
 }
 
 void PseudoValve::write(unsigned char* msg) {
-    auto loc_idx = msg[0];
+    auto pin = msg[0];
     auto actuation_idx = msg[1];
-    pair<string, string> valve {"solenoid", solenoid_locs[loc_idx]};
+
+    // get solenoid location from pin number
+
+    string loc = "";
+
+    for(auto i : global_config.valves.list["solenoid"]) {
+        if(global_config.valves.list["solenoid"][i.first].pin == pin) {
+            loc = i.first;
+        }
+    }
+
+    if(loc == "") {
+        throw BAD_COMMAND_PIN_ERROR();
+    }
+
+    pair<string, string> valve({"solenoid", loc});
     auto actuation_type = inv_actuation_dict.at(actuation_idx);
 
     string state1;
@@ -91,5 +107,6 @@ void PseudoValve::write(unsigned char* msg) {
     }
     valve_actuations[valve] = actuation_type;
     thread act([=] { actuate(valve, state1, timer, state2); });
+
     act.detach();
 }

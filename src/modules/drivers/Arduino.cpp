@@ -18,5 +18,10 @@ unsigned char* Arduino::read() {
 }
 
 void Arduino::write(unsigned char* msg) {
-    arduino->write(msg);
+    if(msg[0] == 254) { // command number to actuate a valve
+        unsigned char new_msg[2];
+        new_msg[0] = msg[1];
+        new_msg[1] = msg[2];
+        arduino->write(new_msg);
+    }
 }

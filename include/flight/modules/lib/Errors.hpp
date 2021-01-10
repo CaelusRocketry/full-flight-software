@@ -9,22 +9,7 @@
 
 enum class Error {
     // no error
-    NONE,
-
-    // invalid packets
-    INVALID_HEADER_ERROR,
-    INVALID_ARGUMENT_ERROR,
-
-    // invalid access attempt
-    KEY_ERROR,
-
-    // valve and sensor request errors
-    REQUEST_ERROR,
-    PRIORITY_ERROR,
-
-    TELEM_CONNECTION_ERROR,
-
-    INVALID_STAGE_ERROR
+    NONE
 };
 
 class DYNAMIC_CAST_ERROR : public std::exception {
@@ -52,6 +37,13 @@ class INVALID_SOLENOID_ERROR : public std::exception {
     virtual const char* what() const throw()
     {
         return "Unable to find an actuatable solenoid.";
+    }
+};
+
+class BAD_COMMAND_PIN_ERROR : public std::exception {
+    virtual const char* what() const throw()
+    {
+        return "Incorrect command format to actuate a solenoid: bad pin number";
     }
 };
 
@@ -90,20 +82,6 @@ class SOCKET_READ_ERROR : public std::exception {
     }
 };
 
-class SOCKET_CREATION_ERROR : public std::exception {
-    virtual const char* what() const throw()
-    {
-        return "An unexpected error occurred while creating the socket.";
-    }
-};
-
-class INVALID_ADDRESS_ERROR : public std::exception {
-    virtual const char* what() const throw()
-    {
-        return "Invalid socket address/address not supported.";
-    }
-};
-
 class SOCKET_CONNECTION_ERROR : public std::exception {
     virtual const char* what() const throw()
     {
@@ -115,13 +93,6 @@ class JSON_ARGUMENT_ERROR : public std::exception {
     virtual const char* what() const throw()
     {
         return "No arguments to parse json";
-    }
-};
-
-class JSON_PARSE_ERROR : public std::exception {
-    virtual const char* what() const throw()
-    {
-        return "An unexpected error occurred while parsing json";
     }
 };
 
