@@ -13,6 +13,8 @@ private:
     long start_time;
     long send_interval;
     int stage_index;
+    double status;
+    Stage curr_stage;
     bool acutated_postburn;
 
     vector<Stage> stage_names {

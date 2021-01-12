@@ -69,38 +69,45 @@ double StageControl::calculate_status() const {
 void StageControl::send_progression_request() {
     global_flag.log_critical("response", {
         {"header", "stage_progression_request"},
-        {"Description", "Request to progress to the next stage"}
+        {"Description", "Request to progress to the next stage"},
+        {"Current stage", stage_strings.at(stage_index)},
+        {"Next stage", stage_strings.at(stage_index + 1)}
     });
 }
 
 void StageControl::send_data() {
+    log("Sending Stage Data.");
     if (this->send_time == 0 || std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() > (this->send_time + this->send_interval)) {
-        global_flag.log_info("response", {
+        global_flag.log_info("stage", {
             {"header", "stage_data"},
-            {"Stage", stage_strings.at(stage_index)},
-            {"Status", to_string(calculate_status())}
+            {"stage", stage_strings.at(stage_index)},
+            {"status", to_string(calculate_status())}
         });
         this->send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
 }
 
 void StageControl::progress() {
-    double status = calculate_status();
+    status = calculate_status();
     if (status != 100.0) {
         global_flag.log_critical("response", {
             {"header", "stage_progress"},
-            {"Status", "Failure"},
+            {"Status", status},
+            {"Stage", curr_stage},
             {"Description", "Stage progression failed, the rocket's not ready yet"}
         });
     } else {
         stage_index++;
-        global_registry.general.stage = stage_names[stage_index];
+        curr_stage = stage_names[stage_index];
+        global_registry.general.stage = curr_stage;
         send_time = 0;
-        global_registry.general.stage_status = calculate_status();
+        status = calculate_status();
+        global_registry.general.stage_status = status;
         start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         global_flag.log_critical("response", {
             {"header", "stage_progress"},
-            {"Status", "Success"},
+            {"Status", to_string(status)},
+            {"Stage", stage_strings.at(stage_index)},
             {"Description", "Stage progression successful"}
         });
     }
