@@ -10,7 +10,7 @@
     "list": {
       "thermocouple": {},
       "pressure": {
-        "PT-1": {
+        "PT-5": {
           "kalman_args": {
             "process_variance": 0.01,
             "measurement_variance": 0.02,
@@ -43,7 +43,7 @@
           },
           "pin": 14
         },
-        "PT-2": {
+        "PT-P": {
           "kalman_args": {
             "process_variance": 0.01,
             "measurement_variance": 0.02,
@@ -76,7 +76,7 @@
           },
           "pin": 15
         },
-        "PT-3": {
+        "PT-7": {
           "kalman_args": {
             "process_variance": 0.01,
             "measurement_variance": 0.02,
@@ -109,7 +109,7 @@
           },
           "pin": 16
         },
-        "PT-4": {
+        "PT-8": {
           "kalman_args": {
             "process_variance": 0.01,
             "measurement_variance": 0.02,

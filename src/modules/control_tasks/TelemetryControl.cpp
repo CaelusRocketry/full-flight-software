@@ -37,7 +37,7 @@ void TelemetryControl::make_functions() {
 }
 
 void TelemetryControl::execute() {
-    log("Telemetry control: Executing");
+    log("Telemetry control: Controlling");
     if (!global_registry.telemetry.status) {
         global_flag.telemetry.reset = true;
     } else {

@@ -26,6 +26,8 @@ void StageControl::begin() {
 }
 
 void StageControl::execute() {
+    log("Stage control: Controlling\"");
+
     double status = calculate_status();
     global_registry.general.stage_status = status;
     bool &progress_flag = global_flag.general.progress;
@@ -46,8 +48,15 @@ double StageControl::calculate_status() const {
     if (current_stage == Stage::WAITING) {
         return 100.0;
     } else if (current_stage == Stage::PRESSURIZATION) {
-       double pressure = global_registry.sensors["pressure"]["PT-2"].normalized_value;
-       return std::min(100.0, pressure/4.9);
+        // if we're using PT-2 in the current test
+        if(global_registry.sensors["pressure"].find("PT-2") != global_registry.sensors["pressure"].end()) {
+            double pressure = global_registry.sensors["pressure"]["PT-2"].normalized_value;
+            return std::min(100.0, pressure/4.9);
+        }
+        else {
+            return 100.0;
+        }
+
     } else if (current_stage == Stage::AUTOSEQUENCE) {
         ActuationType mpv_actuation = global_registry.valves["solenoid"]["main_propellant_valve"].actuation_type;
         if (mpv_actuation == ActuationType::OPEN_VENT) {
