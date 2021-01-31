@@ -77,7 +77,7 @@ double StageControl::calculate_status() const {
 
 void StageControl::send_progression_request() {
     global_flag.log_critical("response", {
-        {"header", "stage_progression_request"},
+        {"header", "Stage progression request"},
         {"Description", "Request to progress to the next stage"},
         {"Current stage", stage_strings.at(stage_index)},
         {"Next stage", stage_strings.at(stage_index + 1)}
