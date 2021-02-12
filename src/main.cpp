@@ -1,4 +1,3 @@
-// Ily anup
 #include <Logger/logger_util.h> // external logging utility
 #include <flight/modules/mcl/Supervisor.hpp> // Includes 'Supervisor' type
 
