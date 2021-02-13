@@ -29,6 +29,7 @@ void TelemetryControl::make_functions() {
     log("Telemetry: Making Functions");
     this->functions.emplace("heartbeat", &TelemetryControl::heartbeat);
     this->functions.emplace("soft_abort", &TelemetryControl::soft_abort);
+    this->functions.emplace("undo_soft_abort", &TelemetryControl::undo_soft_abort);
     this->functions.emplace("solenoid_actuate", &TelemetryControl::solenoid_actuate);
     this->functions.emplace("sensor_request", &TelemetryControl::sensor_request);
     this->functions.emplace("valve_request", &TelemetryControl::valve_request);
@@ -60,7 +61,15 @@ void TelemetryControl::execute() {
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
     json params = log.getMessage();
-    std::cout << params.dump() << std::endl;
+    string dump = params.dump();
+
+    if(string({dump[0]}) + string({dump[1]}) == "\"{") { // if its a converted packet
+        string new_msg_str = dump.substr(1, dump.length() - 2);
+        new_msg_str = Util::replaceAll(new_msg_str, "\\", "");
+        cout << "new str: " << new_msg_str << endl;
+        params = json::parse(new_msg_str);
+        cout << params.dump() << endl;
+    }
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
         throw INVALID_HEADER_ERROR();
@@ -82,9 +91,9 @@ void TelemetryControl::ingest(const Log& log) {
             param_values.push_back(params.at(argument_name).get<string>());
         }
     } catch (...) {
-        global_flag.log_warning("invalid_argument", {{"message", "Invalid function arguments"}});
+        global_flag.log_warning("info", {{"message", "Invalid function arguments"}});
+        throw INVALID_PACKET_ARGUMENTS_ERROR();
     }
-
     (this->*function)(param_values); // call function which maps to the GS command sent w/ all params necessary
 }
 void TelemetryControl::heartbeat(const vector<string>& args) {
@@ -107,7 +116,7 @@ void TelemetryControl::soft_abort(const vector<string>& args) {
     });
 }
 
-void TelemetryControl::reset_to_normal(const vector<string>& args) {
+void TelemetryControl::undo_soft_abort(const vector<string>& args) {
     global_registry.general.soft_abort = false;
     global_flag.log_critical("response", {
         {"header", "mode"},

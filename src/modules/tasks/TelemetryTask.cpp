@@ -22,9 +22,38 @@ void TelemetryTask::read() {
             // strip of the "END"s off each packet_string_group string
             vector<string> split_packets = Util::split(packet_string_group, "END");
             for (auto packet_string : split_packets) {
-                if (!packet_string.empty()) {
+                if (!packet_string.empty() && packet_string[0] == '{') {
                     log("Telemetry: Processing packet: " + packet_string);
-                    json packet_json = json::parse(packet_string);
+                    string processed_packet_string = packet_string;
+
+                    // get rid of {} in the message field if necessary
+                    if(processed_packet_string.find("\"message\": {") != string::npos) {
+
+                        int start = processed_packet_string.find("\"message\": {");
+
+                        if (processed_packet_string.find("\"message\": {}") != string::npos) {
+                            string message_str = "\"message\": {}";
+                            processed_packet_string =
+                                    processed_packet_string.substr(0, start + message_str.length() - 2) + "\"\"" +
+                                    processed_packet_string.substr(start + message_str.length());
+
+                        } else {
+                            string message_str = "\"message\": ";
+                            int end = processed_packet_string.find(", \"timestamp\"", start) - (start + message_str.length() + 1);
+                            string inside_str = processed_packet_string.substr(start + message_str.length(), end + 1);
+
+                            inside_str = Util::replaceAll(inside_str, "\"", "\\\"");
+
+                            processed_packet_string =
+                                    processed_packet_string.substr(0, start + message_str.length()) + "\"" +
+                                    inside_str + "\"" +
+                                    processed_packet_string.substr(start + message_str.length() + end + 1);
+                        }
+
+                        cout << "Message converted processed packet string: " << processed_packet_string << endl;
+
+                    }
+                    json packet_json = json::parse(processed_packet_string);
                     Packet packet;
 
                     from_json(packet_json, packet);

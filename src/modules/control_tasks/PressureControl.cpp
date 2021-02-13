@@ -37,7 +37,7 @@ void PressureControl::begin() {
 }
 
 void PressureControl::execute() {
-    log("Pressure control: Controlling\"");
+    log("Pressure control: Controlling");
     check_pressure();
 }
 

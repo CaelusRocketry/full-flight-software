@@ -133,7 +133,8 @@ void ValveTask::actuate_solenoids() {
                 {"header", "info"},
                 {"Description", "Set actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type)}
             });
-        } else {
+        }
+        else {
             global_flag.log_info("response", {
                 {"header", "info"},
                 {"Description", "Allowing other valves to actuate"}

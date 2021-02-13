@@ -26,7 +26,7 @@ void StageControl::begin() {
 }
 
 void StageControl::execute() {
-    log("Stage control: Controlling\"");
+    log("Stage control: Controlling");
 
     double status = calculate_status();
     global_registry.general.stage_status = status;
