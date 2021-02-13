@@ -20,7 +20,7 @@ private:
     const unordered_map<string, vector<string>> arguments {
         {"heartbeat", {}},
         {"soft_abort", {}},
-        {"reset_to_normal", {}},
+        {"undo_soft_abort", {}},
         {"solenoid_actuate", {"valve_location", "actuation_type", "priority"}},
         {"sensor_request", {"sensor_type", "sensor_location"}},
         {"valve_request", {"valve_type", "valve_location"}},
@@ -33,7 +33,7 @@ private:
     void ingest(const Log& log);
     void heartbeat(const vector<string>& args);
     void soft_abort(const vector<string>& args);
-    void reset_to_normal(const vector<string>& args);
+    void undo_soft_abort(const vector<string>& args);
     void solenoid_actuate(const vector<string>& args);
     void sensor_request(const vector<string>& args);
     void valve_request(const vector<string>& args);

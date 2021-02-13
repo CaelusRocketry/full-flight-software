@@ -16,7 +16,6 @@ void from_json(const json& j, Packet& packet) {
     long double timestamp = j.at("timestamp").get<long double>();
     auto priority = static_cast<LogPriority>(j.at("priority").get<int>());
     packet = Packet(priority, timestamp);
-
     // Then, add logs
     j.at("logs").get_to(packet.logs); // overloaded in Log.hpp
 }

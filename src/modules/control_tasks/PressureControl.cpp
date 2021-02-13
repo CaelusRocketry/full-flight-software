@@ -18,24 +18,26 @@ void PressureControl::begin() {
     this->activate_stages = global_config.pressure_control.active_stages;
     this->valves = global_config.valves.list["solenoid"];
     this->sensors = global_config.sensors.list["pressure"];
-    this->matchups.push_back(make_pair("PT-2", "PRESSURE_RELIEF"));
+
+    // if we're using the PT-2 sensor in this test
+
+    if(global_registry.sensors["pressure"].find("PT-2") != global_registry.sensors["pressure"].end()) {
+        this->matchups.push_back(make_pair("PT-2", "PRESSURE_RELIEF"));
+    }
 
     for (pair<string , string> matched : this->matchups) {
-        try {
-            global_registry.sensors["pressure"][matched.first];
-        } catch (...) {
-            cout << "sensor at" << matched.first << "not registered";
+        if(global_registry.sensors["pressure"].find(matched.first) == global_registry.sensors["pressure"].end()) {
+            log("sensor at" + matched.first + "not registered");
         }
 
-        try {
-            global_registry.valves["solenoid"][matched.first]; //not sure if this should be [0]
-        } catch (...) {
-            cout << "pressure_relief_valve not registered";
+        if(global_registry.sensors["solenoid"].find(matched.first) == global_registry.sensors["solenoid"].end()) {
+            log("pressure_relief_valve not registered");
         }
     }
 }
 
 void PressureControl::execute() {
+    log("Pressure control: Controlling");
     check_pressure();
 }
 

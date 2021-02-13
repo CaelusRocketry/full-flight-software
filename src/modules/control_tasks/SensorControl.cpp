@@ -33,6 +33,7 @@ void SensorControl::begin() {
             auto kalman = sensor.kalman_args;
             // Use brackets for the first because we want to create a new map
             // We use emplace for the second because Kalman has no default constructor
+
             kalman_filters[type_.first].emplace(location_.first, Kalman(
                 kalman.process_variance,
                 kalman.measurement_variance,
@@ -43,6 +44,7 @@ void SensorControl::begin() {
 }
 
 void SensorControl::execute() {
+    log("Sensor control: Controlling");
     boundary_check();
 
     long now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

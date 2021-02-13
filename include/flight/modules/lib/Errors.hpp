@@ -103,4 +103,11 @@ class INVALID_STAGE : public std::exception {
     }
 };
 
+class INVALID_PACKET_ARGUMENTS_ERROR : public std::exception {
+    virtual const char* what() const throw()
+    {
+        return "Invalid packet arguments, unable to ingest.";
+    }
+};
+
 #endif //FLIGHT_ERRORS_HPP
