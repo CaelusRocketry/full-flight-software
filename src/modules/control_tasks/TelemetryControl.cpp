@@ -150,7 +150,6 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
             {"Actuation type", args[1]},
             {"Priority", args[2]}
         });
-        throw INSUFFICIENT_PRIORITY_SOLENOID_ERROR();
     }
 
     log("Actuating solenoid at " + args[0] + " with actuation type " + args[1]);

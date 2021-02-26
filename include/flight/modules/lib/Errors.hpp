@@ -47,13 +47,6 @@ class BAD_COMMAND_PIN_ERROR : public std::exception {
     }
 };
 
-class INSUFFICIENT_PRIORITY_SOLENOID_ERROR : public std::exception {
-    virtual const char* what() const throw()
-    {
-        return "Too little priority to actuate solenoid.";
-    }
-};
-
 class INVALID_PACKET_MESSAGE_ERROR : public std::exception {
     virtual const char* what() const throw()
     {
