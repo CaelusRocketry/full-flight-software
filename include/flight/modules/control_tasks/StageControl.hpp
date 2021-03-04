@@ -9,8 +9,8 @@
 
 class StageControl : public Control {
 private:
-    long send_time;
-    long start_time;
+    long send_time = 0;
+    long start_time = 0;
     long send_interval;
     int stage_index;
     double status;
