@@ -11,6 +11,8 @@ class StageControl : public Control {
 private:
     long send_time = 0;
     long start_time = 0;
+    long request_time = 0;
+    long request_interval = 10000;
     long send_interval;
     int stage_index;
     double status;

@@ -35,7 +35,11 @@ void StageControl::execute() {
         this->progress();
         progress_flag = false;
     } else if (status >= 100) {
-        send_progression_request();
+        if(request_time == 0 || std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - request_time > request_interval) {
+            send_progression_request();
+            request_time = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()).count();
+        }
     }
 
     stage_valve_control();
@@ -110,6 +114,7 @@ void StageControl::progress() {
         curr_stage = stage_names[stage_index];
         global_registry.general.stage = curr_stage;
         send_time = 0;
+        request_time = 0;
         status = calculate_status();
         global_registry.general.stage_status = status;
         start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
