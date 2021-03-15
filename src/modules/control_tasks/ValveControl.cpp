@@ -42,10 +42,12 @@ void ValveControl::send_valve_data() {
         for (const auto& location_pair : type_pair.second) {
             string location = location_pair.first;
             RegistryValveInfo valve_info = global_registry.valves[type][location];
-            valve_data_json[type][location] = {
-                {"state", solenoid_state_map.at(valve_info.state)},
-                {"actuation_type", actuation_type_inverse_map.at(valve_info.actuation_type)}
-            };
+            valve_data_json[type][location] = static_cast<int>(valve_info.state);
+//            valve_data_json[type][location] = solenoid_state_map.at(valve_info.state);
+//            valve_data_json[type][location] = {
+//                {"state", solenoid_state_map.at(valve_info.state)},
+//                {"actuation_type", actuation_type_inverse_map.at(valve_info.actuation_type)}
+//            };
             std::cout << valve_data_json.dump() << std::endl;
         }
     }

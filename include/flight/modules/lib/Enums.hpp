@@ -39,8 +39,8 @@ enum class SolenoidState {
 };
 
 static unordered_map<SolenoidState, string> solenoid_state_map {
-    {SolenoidState::OPEN, "OPEN"},
-    {SolenoidState::CLOSED, "CLOSED"}
+        {SolenoidState::OPEN, "OPEN"},
+        {SolenoidState::CLOSED, "CLOSED"}
 };
 
 enum class SensorStatus {
