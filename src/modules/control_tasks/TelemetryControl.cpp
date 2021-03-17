@@ -4,7 +4,7 @@
 
 #include <flight/modules/control_tasks/TelemetryControl.hpp>
 #include <flight/modules/lib/Util.hpp>
-#include <Logger/logger_util.h>
+#include <flight/modules/lib/logger_util.hpp>
 #include <queue>
 
 using nlohmann::json;

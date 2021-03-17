@@ -1,4 +1,4 @@
-#include <Logger/logger_util.h> // external logging utility
+#include <flight/modules/lib/logger_util.hpp> // external logging utility
 #include <flight/modules/mcl/Supervisor.hpp> // Includes 'Supervisor' type
 
 using namespace std; // allows access to standard library utilities

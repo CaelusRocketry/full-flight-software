@@ -1,6 +1,6 @@
 #include <thread> // For time delay
 #include <set>
-#include <Logger/logger_util.h>
+#include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Supervisor.hpp>
 #include <flight/modules/tasks/SensorTask.hpp>
 #include <flight/modules/tasks/TelemetryTask.hpp>

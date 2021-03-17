@@ -2,7 +2,7 @@
 #include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/lib/Enums.hpp>
-#include <Logger/logger_util.h>
+#include <flight/modules/lib/logger_util.hpp>
 #include <chrono>
 
 StageControl::StageControl() {

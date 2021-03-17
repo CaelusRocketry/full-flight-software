@@ -23,6 +23,7 @@ set (SOURCE_FILES
         src/modules/lib/Packet.cpp
         src/modules/lib/Kalman.cpp
         src/modules/lib/Log.cpp
+        src/modules/lib/logger_util.cpp
         src/modules/control_tasks/PressureControl.cpp
         src/modules/mcl/Config.cpp)
 
@@ -32,12 +33,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)  # misc stuff
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")  # misc stuff
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")  # misc stuff
 
-#find_package(Boost REQUIRED COMPONENTS system)
-#include_directories( ${Boost_INCLUDE_DIR} )
-
-include_directories( ./include ./src ./libs/Logger/include) # ALL directories than contain .h/.hpp files
+include_directories( ./include ./src) # ALL directories than contain .h/.hpp files
 
 add_executable( flight ${SOURCE_FILES}) # ALL .cpp files, first arg is output file, second arg is ALWAYS main.cpp
 
-add_subdirectory( ./libs/Logger ) # external dependency
-target_link_libraries( flight logger ${Boost_LIBRARIES} ) # tells cmake that the specified dependency library should be included in executable output file
+target_link_libraries( flight ) # tells cmake that the specified dependency library should be included in executable output file
