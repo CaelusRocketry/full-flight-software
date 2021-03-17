@@ -32,8 +32,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)  # misc stuff
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")  # misc stuff
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")  # misc stuff
 
-find_package(Boost REQUIRED COMPONENTS system)
-include_directories( ${Boost_INCLUDE_DIR} )
+#find_package(Boost REQUIRED COMPONENTS system)
+#include_directories( ${Boost_INCLUDE_DIR} )
 
 include_directories( ./include ./src ./libs/Logger/include) # ALL directories than contain .h/.hpp files
 

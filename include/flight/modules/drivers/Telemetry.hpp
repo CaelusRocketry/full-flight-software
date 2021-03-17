@@ -5,14 +5,18 @@
 #include <queue>
 #include <cstdio>
 #include <boost/array.hpp>
-#include <boost/asio.hpp>
+#include <asio/impl/src.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/write.hpp>
+#include <asio/read.hpp>
+#include <asio/basic_stream_socket.hpp>
 #include <unistd.h>
 #include <mutex>
 #include <thread>
 #include <flight/modules/lib/Packet.hpp>
 
 using namespace std;
-using boost::asio::ip::tcp;
+using asio::ip::tcp;
 
 class Telemetry {
 private:
@@ -24,8 +28,8 @@ private:
     thread* recv_thread = nullptr;
     bool TERMINATE_FLAG = false;
 
-    boost::asio::io_context io_context;
-    tcp::socket socket = tcp::socket(io_context);
+    asio::io_context io_context;
+    asio::ip::tcp::socket socket = tcp::socket(io_context);
 
 public:
     Telemetry();

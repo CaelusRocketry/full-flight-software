@@ -4,7 +4,7 @@
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Errors.hpp>
 
-using boost::asio::ip::address;
+using asio::ip::address;
 
 Telemetry::Telemetry() {
     // Initialize variables
@@ -37,11 +37,13 @@ bool Telemetry::write(const Packet& packet) {
     // Note: add "END" at the end of the packet, so packets are split correctly
     string packet_string = packet_json.dump() + "END";
     log("Telemetry: Sending packet: " + packet_string);
-    boost::system::error_code error;
-    boost::asio::write(socket, boost::asio::buffer(packet_string), boost::asio::transfer_all(), error);
 
-    if (error) {
-        throw boost::system::system_error(error);
+    try {
+        asio::write(socket, asio::buffer(packet_string), asio::transfer_all());
+    }
+    catch (std::exception& e) {
+        log(e.what());
+        throw SOCKET_WRITE_ERROR();
     }
 
     this_thread::sleep_for(chrono::milliseconds(global_config.telemetry.DELAY));
@@ -53,16 +55,8 @@ void Telemetry::recv_loop() {
     while (connection && !TERMINATE_FLAG) {
         try {
             // Read in data from socket
-            boost::array<char, 1024> buf;
-            boost::system::error_code error;
-            socket.read_some(boost::asio::buffer(buf), error);
-
-            if (error == boost::asio::error::eof) {
-                end();
-                break; // Connection closed cleanly by peer.
-            } else if (error) {
-                throw boost::system::system_error(error); // Some other error.
-            }
+            std::array<char, 1024> buf;
+            socket.read_some(asio::buffer(buf));
 
             string msg(buf.data());
 
@@ -95,10 +89,10 @@ void Telemetry::reset() {
 bool Telemetry::connect() {
     try {
         log("Telemetry: Connecting");
-        socket.open(boost::asio::ip::tcp::v4());
+        socket.open(asio::ip::tcp::v4());
 
         address ip_address = address::from_string(global_config.telemetry.GS_IP);
-        boost::asio::ip::tcp::endpoint ep(ip_address, global_config.telemetry.GS_PORT);
+        asio::ip::tcp::endpoint ep(ip_address, global_config.telemetry.GS_PORT);
 
         log("Telemetry: Connecting Socket");
         socket.connect(ep);

@@ -75,6 +75,13 @@ class SOCKET_READ_ERROR : public std::exception {
     }
 };
 
+class SOCKET_WRITE_ERROR : public std::exception {
+    virtual const char* what() const throw()
+    {
+        return "An unexpected error occurred while writing to the socket.";
+    }
+};
+
 class SOCKET_CONNECTION_ERROR : public std::exception {
     virtual const char* what() const throw()
     {
