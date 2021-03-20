@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/lib/Log.hpp>

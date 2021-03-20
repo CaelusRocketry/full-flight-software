@@ -1,6 +1,5 @@
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/tasks/TelemetryTask.hpp>
-#include <boost/algorithm/string.hpp>
 #include <flight/modules/lib/Util.hpp>
 
 void TelemetryTask::initialize() {

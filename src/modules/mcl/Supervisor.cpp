@@ -7,6 +7,7 @@
 #include <flight/modules/tasks/ValveTask.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
+#include <fstream>
 
 using json = nlohmann::json;
 

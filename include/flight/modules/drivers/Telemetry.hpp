@@ -4,7 +4,6 @@
 #include <string>
 #include <queue>
 #include <cstdio>
-#include <boost/array.hpp>
 #include <asio/impl/src.hpp>
 #include <asio/ip/tcp.hpp>
 #include <asio/write.hpp>
