@@ -20,7 +20,7 @@ ValveControl::ValveControl() {
 
 void ValveControl::begin() {
     log("Valve Control: Beginning");
-    global_flag.log_info("response",R"({"header": "info", "Description": "Valve Control started"})");
+    global_flag.log_info("response", R"({"header": "info", "Description": "Valve Control started"})");
 }
 
 void ValveControl::execute() {
@@ -32,6 +32,7 @@ void ValveControl::execute() {
         send_valve_data();
         last_send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
+    log("HIIII");
 }
 
 void ValveControl::send_valve_data() {
@@ -56,6 +57,7 @@ void ValveControl::send_valve_data() {
 }
 
 void ValveControl::abort() {
+    log("Aborting");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 
@@ -72,6 +74,7 @@ void ValveControl::abort() {
 
 // Set the actuation type to NONE, with ABORT_PRIORITY priority
 void ValveControl::undo_abort() {
+    log("Undoing abort");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 

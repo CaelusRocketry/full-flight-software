@@ -12,10 +12,11 @@ ValveDriver::ValveDriver(vector<int> pins){
             digitalWrite(pins[i], LOW);
         #endif
     }
+    NUM_VALVES = valve_pins.size();
 }
 
 int ValveDriver::getIndex(int pin){
-    for(int i = 0; i < valve_pins.size(); i++){
+    for(int i = 0; i < NUM_VALVES; i++){
         if(valve_pins[i] == pin){
             return i;
         }

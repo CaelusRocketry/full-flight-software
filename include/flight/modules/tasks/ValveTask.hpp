@@ -1,9 +1,8 @@
 #ifndef FLIGHT_VALVETASK_HPP
 #define FLIGHT_VALVETASK_HPP
 
-#define NUM_VALVES 3
-
 #include <vector>
+#include <string>
 #include <flight/modules/tasks/Task.hpp>
 #include <flight/modules/drivers/ValveDriver.hpp>
 #include <flight/modules/lib/Enums.hpp>
@@ -19,7 +18,6 @@ class ValveTask : public Task {
     public:
         ValveTask() {}
 
-        void begin();
         void initialize();
         void read();
         void actuate();

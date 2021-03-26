@@ -23,7 +23,7 @@ Supervisor::~Supervisor() {
 
 void Supervisor::initialize() {
     /* Load config */
-    ifstream config_file("../config.json");
+    ifstream config_file("config.json");
     json j = json::parse(config_file);
     global_config = Config(j);
     global_registry.initialize();

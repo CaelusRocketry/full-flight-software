@@ -11,6 +11,7 @@ private:
     vector<int> valve_pins;
     vector<SolenoidState> valve_states;
     vector<ActuationType> valve_actuations;
+    int NUM_VALVES = 0;
 
     float writeValue(int pin, int value);
     int getIndex(int pin);

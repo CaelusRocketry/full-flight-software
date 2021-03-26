@@ -21,9 +21,6 @@ void ValveTask::initialize() {
             valve_list.push_back(make_pair(type, location));
         }
     }
-}
-
-void ValveTask::begin() {
     valve_driver = new ValveDriver(pins);    
 }
 
@@ -39,13 +36,12 @@ void ValveTask::read(){
         string valve_type = pin_to_valve[pin].first;
         string valve_location = pin_to_valve[pin].second;
 
-        SolenoidState state = static_cast<SolenoidState>(valve_driver->getSolenoidState(pin));
-        ActuationType actuation_type = static_cast<ActuationType>(valve_driver->getActuationType(pin));
+        SolenoidState state = valve_driver->getSolenoidState(pin);
+        ActuationType actuation_type = valve_driver->getActuationType(pin);
 
         /* Update the registry */
         global_registry.valves[valve_type][valve_location].state = state;
         global_registry.valves[valve_type][valve_location].actuation_type = actuation_type;
-
     }
 }
 
@@ -91,6 +87,9 @@ void ValveTask::actuate() {
             target_valve_info.actuation_priority != ValvePriority::NONE &&
             target_valve_info.actuation_priority >= current_valve_info.actuation_priority
         ) {
+
+            log("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + to_string(pin));
+            log("Actuation type: " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ", Actuation priority: " + valve_priority_inverse_map.at(target_valve_info.actuation_priority));
 
             /* Send actuation signal */
             valve_driver->actuate(pin, target_valve_info.actuation_type);
