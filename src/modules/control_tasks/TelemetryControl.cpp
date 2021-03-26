@@ -20,7 +20,7 @@ TelemetryControl::TelemetryControl() {
 
 void TelemetryControl::begin() {
     log("Telemetry control: Beginning");
-    telemetry.connect();
+    // telemetry.connect();
     make_functions();
 }
 

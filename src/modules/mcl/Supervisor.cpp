@@ -3,7 +3,7 @@
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Supervisor.hpp>
 #include <flight/modules/tasks/SensorTask.hpp>
-#include <flight/modules/tasks/TelemetryTask.hpp>
+// #include <flight/modules/tasks/TelemetryTask.hpp>
 #include <flight/modules/tasks/ValveTask.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
@@ -73,7 +73,7 @@ void Supervisor::parse_config() {
     // parse_json_list automatically parses config.json
     for (const string& task : global_config.task_config.tasks) {
         if (task == "sensor") tasks.push_back(new SensorTask());
-        if (task == "telemetry") tasks.push_back(new TelemetryTask());
+        // if (task == "telemetry") tasks.push_back(new TelemetryTask());
         if (task == "valve") tasks.push_back(new ValveTask());
     }
 

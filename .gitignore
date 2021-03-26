@@ -293,4 +293,5 @@ private.pem
 __pycache__/*
 
 # Locally created log files
-src/pi/black_box.txt
+black_box.txt
+.pio
