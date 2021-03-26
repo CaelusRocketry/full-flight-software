@@ -38,7 +38,6 @@ void Registry::initialize() {
     telemetry.resetting = false;
 
     // General fields
-    general.hard_abort = false;
     general.soft_abort = false;
     general.stage = Stage::WAITING;
     general.stage_status = 0.0;

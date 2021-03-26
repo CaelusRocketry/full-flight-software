@@ -32,7 +32,6 @@ public:
     void initialize();
 
     struct {
-        bool hard_abort = false;
         bool soft_abort = false;
         Stage stage = Stage::WAITING;
         double stage_status = 0;

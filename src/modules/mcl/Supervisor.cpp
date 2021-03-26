@@ -49,7 +49,6 @@ void Supervisor::read() {
 
 void Supervisor::control() {
     log("Supervisor: Controlling");
-
     control_task->control();
 }
 

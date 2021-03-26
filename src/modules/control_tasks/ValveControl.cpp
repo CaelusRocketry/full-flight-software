@@ -14,8 +14,8 @@
 ValveControl::ValveControl() {
     // config send interval in seconds, convert to milliseconds
     this->send_interval = global_config.valves.send_interval * 1000;
-
     this->last_send_time = 0;
+    this->aborted = false;
 }
 
 void ValveControl::begin() {
@@ -32,7 +32,6 @@ void ValveControl::execute() {
         send_valve_data();
         last_send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
-    log("HIIII");
 }
 
 void ValveControl::send_valve_data() {
@@ -44,15 +43,9 @@ void ValveControl::send_valve_data() {
             string location = location_pair.first;
             RegistryValveInfo valve_info = global_registry.valves[type][location];
             valve_data_json[type][location] = static_cast<int>(valve_info.state);
-//            valve_data_json[type][location] = solenoid_state_map.at(valve_info.state);
-//            valve_data_json[type][location] = {
-//                {"state", solenoid_state_map.at(valve_info.state)},
-//                {"actuation_type", actuation_type_inverse_map.at(valve_info.actuation_type)}
-//            };
-            std::cout << valve_data_json.dump() << std::endl;
         }
     }
-
+    // log(valve_data_json.dump());
     global_flag.log_info("valve_data", valve_data_json);
 }
 
@@ -70,6 +63,7 @@ void ValveControl::abort() {
             valve_flag.actuation_priority = ValvePriority::ABORT_PRIORITY;
         }
     }
+    this->aborted = true;
 }
 
 // Set the actuation type to NONE, with ABORT_PRIORITY priority
@@ -84,12 +78,13 @@ void ValveControl::undo_abort() {
             valve_flag.actuation_priority = ValvePriority::ABORT_PRIORITY;
         }
     }
+    this->aborted = false;
 }
 
 void ValveControl::check_abort() {
-    if (global_registry.general.hard_abort || global_registry.general.soft_abort) {
+    if (global_registry.general.soft_abort && !this->aborted) {
         abort();
-    } else if (!global_registry.general.soft_abort) {
+    } else if (!global_registry.general.soft_abort && this->aborted) {
         undo_abort();
     }
 }
