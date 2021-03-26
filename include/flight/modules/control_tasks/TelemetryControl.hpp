@@ -1,7 +1,3 @@
-//
-// Created by Srikar on 4/15/2020.
-//
-
 #ifndef FLIGHT_TELEMETRYCONTROL_HPP
 #define FLIGHT_TELEMETRYCONTROL_HPP
 
