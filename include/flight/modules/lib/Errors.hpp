@@ -89,6 +89,27 @@ class SOCKET_CONNECTION_ERROR : public std::exception {
     }
 };
 
+class XBEE_READ_ERROR : public std::exception {
+    virtual const char* what() const throw()
+    {
+        return "An unexpected error occurred while reading from the socket.";
+    }
+};
+
+class XBEE_WRITE_ERROR : public std::exception {
+    virtual const char* what() const throw()
+    {
+        return "An unexpected error occurred while writing to the socket.";
+    }
+};
+
+class XBEE_CONNECTION_ERROR : public std::exception {
+    virtual const char* what() const throw()
+    {
+        return "Socket connection failed.";
+    }
+};
+
 class JSON_ARGUMENT_ERROR : public std::exception {
     virtual const char* what() const throw()
     {
