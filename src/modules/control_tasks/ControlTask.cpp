@@ -8,9 +8,10 @@
 #include <flight/modules/control_tasks/StageControl.hpp>
 #include <flight/modules/control_tasks/ValveControl.hpp>
 #include <flight/modules/control_tasks/PressureControl.hpp>
+#include <flight/modules/lib/logger_util.hpp>
 
 ControlTask::ControlTask(const set<string>& config) {
-    log("Control task: Adding controls");
+    print("Control task: Adding controls");
 
     if (config.count("sensor")) {
         controls.push_back(unique_ptr<Control>(new SensorControl()));
@@ -39,7 +40,7 @@ ControlTask::ControlTask(const set<string>& config) {
 }
 
 void ControlTask::begin() {
-    log("Control task: Beginning");
+    print("Control task: Beginning");
 
     for (auto &control : this->controls) {
         control->begin();
@@ -47,7 +48,7 @@ void ControlTask::begin() {
 }
 
 void ControlTask::control() {
-    log("Control task: Controlling");
+    print("Control task: Controlling");
 
     for (auto &control : this->controls) {
         control->execute();

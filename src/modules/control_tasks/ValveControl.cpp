@@ -19,12 +19,12 @@ ValveControl::ValveControl() {
 }
 
 void ValveControl::begin() {
-    log("Valve Control: Beginning");
+    print("Valve Control: Beginning");
     global_flag.log_info("response", R"({"header": "info", "Description": "Valve Control started"})");
 }
 
 void ValveControl::execute() {
-    log("Valve control: Controlling");
+    print("Valve control: Controlling");
     check_abort();
     auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
@@ -45,12 +45,12 @@ void ValveControl::send_valve_data() {
             valve_data_json[type][location] = static_cast<int>(valve_info.state);
         }
     }
-    // log(valve_data_json.dump());
+    // print(valve_data_json.dump());
     global_flag.log_info("valve_data", valve_data_json);
 }
 
 void ValveControl::abort() {
-    log("Aborting");
+    print("Aborting");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 
@@ -68,7 +68,7 @@ void ValveControl::abort() {
 
 // Set the actuation type to NONE, with ABORT_PRIORITY priority
 void ValveControl::undo_abort() {
-    log("Undoing abort");
+    print("Undoing abort");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 

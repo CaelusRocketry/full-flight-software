@@ -79,9 +79,9 @@ void from_json(const json& j, ConfigValveInfo& valve_info) {
 using nlohmann::json;
 
 Config::Config(json& json) {
-    log("Config: Initializing");
+    print("Config: Initializing");
 
-    log("Config: Reading telemetry data");
+    print("Config: Reading telemetry data");
     /* Read telemetry */
     json.at("telemetry").at("GS_IP").get_to(telemetry.GS_IP);
     json.at("telemetry").at("GS_PORT").get_to(telemetry.GS_PORT);
@@ -89,39 +89,39 @@ Config::Config(json& json) {
     json.at("telemetry").at("SOCKETIO_HOST").get_to(telemetry.SOCKETIO_HOST);
     json.at("telemetry").at("SOCKETIO_PORT").get_to(telemetry.SOCKETIO_PORT);
 
-    log("Config: Reading sensor list");
+    print("Config: Reading sensor list");
     /* Read sensor list */
     json.at("sensors").at("list").get_to(sensors.list);
     json.at("sensors").at("address").get_to(sensors.address);
     json.at("sensors").at("baud").get_to(sensors.baud);
     json.at("sensors").at("send_interval").get_to(sensors.send_interval);
 
-    log("Config: Reading valve list");
+    print("Config: Reading valve list");
     /* Read valve list */
     json.at("valves").at("list").get_to(valves.list);
     json.at("valves").at("address").get_to(valves.address);
     json.at("valves").at("baud").get_to(valves.baud);
     json.at("valves").at("send_interval").get_to(valves.send_interval);
 
-    log("Config: Reading stage list");
+    print("Config: Reading stage list");
     /* Read stage list */
     json.at("stages").at("list").get_to(stages.list);
     json.at("stages").at("request_interval").get_to(stages.request_interval);
     json.at("stages").at("send_interval").get_to(stages.send_interval);
 
-    log("Config: Reading timer config");
+    print("Config: Reading timer config");
     /* Read timer config */
     json.at("timer").at("delay").get_to(timer.delay);
 
-    log("Config: Reading pressure control stages list");
+    print("Config: Reading pressure control stages list");
     /* Read pressure control stages list */
     json.at("pressure_control").at("active_stages").get_to(pressure_control.active_stages);
 
-    log("Config: Reading arduino type");
+    print("Config: Reading arduino type");
     /* Read arduino type */
     json.at("arduino_type").get_to(arduino_type);
 
-    log("Config: Reading task config");
+    print("Config: Reading task config");
     /* Read task config */
     json.at("task_config").at("tasks").get_to(task_config.tasks);
     json.at("task_config").at("control_tasks").get_to(task_config.control_tasks);

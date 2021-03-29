@@ -1,12 +1,14 @@
 #include <flight/modules/drivers/PressureDriver.hpp>
 #include <flight/modules/lib/logger_util.hpp>
+#ifndef DESKTOP
+    #include "Arduino.h"
+#endif
 
 PressureDriver::PressureDriver(vector<int> pins){
     for(int i = 0; i < pins.size(); i++){
         pressure_pins.push_back(pins[i]);
         pressure_vals.push_back(MIN_PSI);
         #ifndef DESKTOP
-            #include "Arduino.h"
             pinMode(pins[i], INPUT);
         #endif
     }

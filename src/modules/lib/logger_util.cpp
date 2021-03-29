@@ -1,6 +1,11 @@
 #include <iostream>
 #include <string>
 
-void log(std::string message) {
-    std::cout << message << std::endl;
+void print(std::string message) {
+    #ifdef DESKTOP
+        std::cout << message << std::endl;
+    #else
+        #include "Arduino.h"
+        Serial.println(message);
+    #endif
 }

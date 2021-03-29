@@ -19,14 +19,14 @@ TelemetryControl::TelemetryControl() {
 }
 
 void TelemetryControl::begin() {
-    log("Telemetry control: Beginning");
+    print("Telemetry control: Beginning");
     // telemetry.connect();
     make_functions();
 }
 
 // Store list of all commands that GS can send as functions, add the function pointers to the map and call when necessary
 void TelemetryControl::make_functions() {
-    log("Telemetry: Making Functions");
+    print("Telemetry: Making Functions");
     this->functions.emplace("heartbeat", &TelemetryControl::heartbeat);
     this->functions.emplace("soft_abort", &TelemetryControl::soft_abort);
     this->functions.emplace("undo_soft_abort", &TelemetryControl::undo_soft_abort);
@@ -38,7 +38,7 @@ void TelemetryControl::make_functions() {
 }
 
 void TelemetryControl::execute() {
-    log("Telemetry control: Controlling");
+    print("Telemetry control: Controlling");
     if (!global_registry.telemetry.status) {
         global_flag.telemetry.reset = true;
     } else {
@@ -52,7 +52,7 @@ void TelemetryControl::execute() {
             for(const Log& log_ : packet.getLogs()) {
                 json j;
                 to_json(j, log_);
-                log(j.dump());
+                print(j.dump());
                 ingest(log_);
             }
         }
@@ -152,7 +152,7 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
         });
     }
 
-    log("Actuating solenoid at " + args[0] + " with actuation type " + args[1]);
+    print("Actuating solenoid at " + args[0] + " with actuation type " + args[1]);
 
     try {
         //TODO: make sure gs packets have the upper case version of the enum as the value for the actuation type
@@ -252,5 +252,5 @@ void TelemetryControl::progress(const vector<string>& args) {
     global_flag.general.progress = true;
 }
 void TelemetryControl::test(const vector<string>& args) {
-    log("Test received: " + args[0]);
+    print("Test received: " + args[0]);
 }

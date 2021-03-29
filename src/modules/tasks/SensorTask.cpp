@@ -17,11 +17,11 @@ void SensorTask::initialize() {
 
     sensor = new Arduino("PseudoSensor");
     pressure_driver = new PressureDriver(pressure_pins);
-    log("Sensor: Initialized");
+    print("Sensor: Initialized");
 }
 
 void SensorTask::read() {
-    log("Sensor: Reading");
+    print("Sensor: Reading");
     pressure_driver->read(); // data returned as an array of chars
 
     // Update pressure sensor values

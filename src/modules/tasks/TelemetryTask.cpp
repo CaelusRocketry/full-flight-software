@@ -7,7 +7,7 @@
 // }
 
 // void TelemetryTask::read() {
-//     log("Telemetry: Reading");
+//     print("Telemetry: Reading");
 //     bool status = this->telemetry.get_status();
 //     global_registry.telemetry.status = status;
 
@@ -17,12 +17,12 @@
 //         const string &h = packets.front();
 
 //         for (const string &packet_string_group = packets.front(); !packets.empty(); packets.pop()) {
-//             log("Telemetry: Read packet group: " + packet_string_group);
+//             print("Telemetry: Read packet group: " + packet_string_group);
 //             // strip of the "END"s off each packet_string_group string
 //             vector<string> split_packets = Util::split(packet_string_group, "END");
 //             for (auto packet_string : split_packets) {
 //                 if (!packet_string.empty() && packet_string[0] == '{') {
-//                     log("Telemetry: Processing packet: " + packet_string);
+//                     print("Telemetry: Processing packet: " + packet_string);
 //                     string processed_packet_string = packet_string;
 
 //                     // get rid of {} in the message field if necessary
@@ -61,12 +61,12 @@
 //             }
 //         }
 
-//         log("Telemetry: Finished reading packets");
+//         print("Telemetry: Finished reading packets");
 //     }
 // }
 
 // void TelemetryTask::actuate() {
-//     log("Telemetry: Actuating");
+//     print("Telemetry: Actuating");
 //     if (global_flag.telemetry.reset) {
 //         this->telemetry.reset();
 //     } else {

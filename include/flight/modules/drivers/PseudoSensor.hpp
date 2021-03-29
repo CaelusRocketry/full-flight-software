@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <stdlib.h>
 #include <flight/modules/drivers/PseudoArduino.hpp>
 
 class PseudoSensor : public PseudoArduino {

@@ -7,7 +7,7 @@ const unsigned char SEND_DATA_CMD = 255;
 const unsigned char ACTUATE_CMD = 254;
 
 void ValveTask::initialize() {
-    log("Valve task: Starting");
+    print("Valve task: Starting");
     for (const auto& valve_type : global_config.valves.list) {
         string type = valve_type.first;
         auto valve_locations = valve_type.second;
@@ -28,7 +28,7 @@ void ValveTask::initialize() {
  * Reads all actuation states from valve and updates registry
  */
 void ValveTask::read(){
-    log("Valve: Reading");
+    print("Valve: Reading");
 
 //    arduino->write(new unsigned char[1] {SEND_DATA_CMD});
     for(int i = 0; i < pins.size(); i++){
@@ -69,7 +69,7 @@ int ValveTask::get_pin(string valve_type, string valve_loc){
  */
 
 void ValveTask::actuate() {
-    log("Actuating valves");
+    print("Actuating valves");
 
     for (const auto& valve_info : valve_list) {
         string valve_type = valve_info.first;
@@ -88,8 +88,8 @@ void ValveTask::actuate() {
             target_valve_info.actuation_priority >= current_valve_info.actuation_priority
         ) {
 
-            log("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + to_string(pin));
-            log("Actuation type: " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ", Actuation priority: " + valve_priority_inverse_map.at(target_valve_info.actuation_priority));
+            print("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + to_string(pin));
+            print("Actuation type: " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ", Actuation priority: " + valve_priority_inverse_map.at(target_valve_info.actuation_priority));
 
             /* Send actuation signal */
             valve_driver->actuate(pin, target_valve_info.actuation_type);

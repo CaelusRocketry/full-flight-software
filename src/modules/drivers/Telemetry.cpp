@@ -36,13 +36,13 @@
 
 //     // Note: add "END" at the end of the packet, so packets are split correctly
 //     string packet_string = packet_json.dump() + "END";
-//     log("Telemetry: Sending packet: " + packet_string);
+//     print("Telemetry: Sending packet: " + packet_string);
 
 //     try {
 //         asio::write(socket, asio::buffer(packet_string), asio::transfer_all());
 //     }
 //     catch (std::exception& e) {
-//         log(e.what());
+//         print(e.what());
 //         throw SOCKET_WRITE_ERROR();
 //     }
 
@@ -64,11 +64,11 @@
 //             ingest_queue.push(msg);
 //             mtx.unlock();
 
-//             log("Telemetry: Received: " + msg);
+//             print("Telemetry: Received: " + msg);
 //             this_thread::sleep_for(chrono::seconds(global_config.telemetry.DELAY));
 //         }
 //         catch (std::exception& e){
-//             log(e.what());
+//             print(e.what());
 //             end();
 //             throw SOCKET_READ_ERROR();
 //         }
@@ -88,18 +88,18 @@
 
 // bool Telemetry::connect() {
 //     try {
-//         log("Telemetry: Connecting");
+//         print("Telemetry: Connecting");
 //         socket.open(asio::ip::tcp::v4());
 
 //         address ip_address = address::from_string(global_config.telemetry.GS_IP);
 //         asio::ip::tcp::endpoint ep(ip_address, global_config.telemetry.GS_PORT);
 
-//         log("Telemetry: Connecting Socket");
+//         print("Telemetry: Connecting Socket");
 //         socket.connect(ep);
 
-//         log("Telemetry: Connected!");
+//         print("Telemetry: Connected!");
 //     } catch(std::exception& e) {
-//         log(e.what());
+//         print(e.what());
 //         throw SOCKET_CONNECTION_ERROR();
 //     }
 

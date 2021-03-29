@@ -53,9 +53,9 @@ void PseudoValve::actuate(const pair<string, string>& valve, const string& state
         this_thread::sleep_for(chrono::milliseconds((long)(timer * 1000)));
     }
     valve_states[valve] = state2;
-    log("Finished actuating: " + valve.first + "." + valve.second);
+    print("Finished actuating: " + valve.first + "." + valve.second);
     if (timer != -1) {
-        log("Setting valve actuation type to NONE");
+        print("Setting valve actuation type to NONE");
         valve_actuations[valve] = "none";
     }
 }

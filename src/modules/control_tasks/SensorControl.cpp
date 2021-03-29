@@ -21,7 +21,7 @@ SensorControl::SensorControl() {
 
 void SensorControl::begin() {
 
-    log("Sensor control: Beginning");
+    print("Sensor control: Beginning");
 
     // Initialize the Kalman filters
 
@@ -44,7 +44,7 @@ void SensorControl::begin() {
 }
 
 void SensorControl::execute() {
-    log("Sensor control: Controlling");
+    print("Sensor control: Controlling");
     boundary_check();
 
     long now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

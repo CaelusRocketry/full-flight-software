@@ -8,7 +8,7 @@ PressureControl::PressureControl(){
 }
 
 void PressureControl::begin() {
-    log("Pressure control: Beginning");
+    print("Pressure control: Beginning");
 
     global_flag.log_info("response", {
             {"header", "info"},
@@ -27,17 +27,17 @@ void PressureControl::begin() {
 
     for (pair<string , string> matched : this->matchups) {
         if(global_registry.sensors["pressure"].find(matched.first) == global_registry.sensors["pressure"].end()) {
-            log("sensor at" + matched.first + "not registered");
+            print("sensor at" + matched.first + "not registered");
         }
 
         if(global_registry.sensors["solenoid"].find(matched.first) == global_registry.sensors["solenoid"].end()) {
-            log("pressure_relief_valve not registered");
+            print("pressure_relief_valve not registered");
         }
     }
 }
 
 void PressureControl::execute() {
-    log("Pressure control: Controlling");
+    print("Pressure control: Controlling");
     check_pressure();
 }
 

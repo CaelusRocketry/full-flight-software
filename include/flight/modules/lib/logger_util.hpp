@@ -2,4 +2,4 @@
 
 #include <string>
 
-void log(std::string message);
+void print(std::string message);

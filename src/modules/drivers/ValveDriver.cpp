@@ -1,5 +1,9 @@
 #include <flight/modules/drivers/ValveDriver.hpp>
 #include <flight/modules/lib/logger_util.hpp>
+#include <flight/modules/lib/logger_util.hpp>
+#ifndef DESKTOP
+    #include "Arduino.h"
+#endif
 
 ValveDriver::ValveDriver(vector<int> pins){
     for(int i = 0; i < pins.size(); i++){
@@ -7,7 +11,6 @@ ValveDriver::ValveDriver(vector<int> pins){
         valve_states.push_back(SolenoidState::CLOSED);
         valve_actuations.push_back(ActuationType::NONE);
         #ifndef DESKTOP
-            #include "Arduino.h";
             pinMode(pins[i], OUTPUT);
             digitalWrite(pins[i], LOW);
         #endif
