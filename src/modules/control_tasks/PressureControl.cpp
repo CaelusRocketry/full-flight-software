@@ -2,6 +2,7 @@
 #include <flight/modules/control_tasks/PressureControl.hpp>
 #include <vector>
 #include <flight/modules/mcl/Config.hpp>
+#include <flight/modules/lib/Util.hpp>
 
 PressureControl::PressureControl(){
     cout << "Pressure Control Initialized";
@@ -10,10 +11,8 @@ PressureControl::PressureControl(){
 void PressureControl::begin() {
     print("Pressure control: Beginning");
 
-    global_flag.log_info("response", {
-            {"header", "info"},
-            {"Description", "Pressure Control started"}
-    });
+    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Pressure Control started\"}");
+    global_flag.log_info("response", obj);
 
     this->activate_stages = global_config.pressure_control.active_stages;
     this->valves = global_config.valves.list["solenoid"];

@@ -10,6 +10,7 @@
 
 
 using namespace std;
+using ArduinoJson::StaticJsonDocument;
 
 class Packet;
 
@@ -19,12 +20,12 @@ void from_json(const JsonObject& j, Packet& packet);
 // Packet class groups together logs of similar priority
 class Packet {
 private:
-    StaticJsonDocument<5000> doc;
+
+public:
     vector<Log> logs;
     long double timestamp;
     LogPriority priority;
 
-public:
     Packet() = default;
 
     explicit Packet(LogPriority logPriority, long double timestamp)
@@ -34,7 +35,7 @@ public:
     void add(const Log& log);
     vector<Log> getLogs();
 
-    friend void to_json_doc(StaticJsonDocument& j, const Packet& packet);
+    friend void to_json_doc(StaticJsonDocument<5000>& j, const Packet& packet);
     friend void from_json(const JsonObject& j, Packet& packet);
 
     struct compareTo {

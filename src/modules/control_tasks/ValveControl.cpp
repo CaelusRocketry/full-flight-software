@@ -10,6 +10,8 @@
 #include <flight/modules/lib/logger_util.hpp>
 #include <chrono>
 #include <string>
+#include <flight/modules/lib/Util.hpp>
+#include <ArduinoJson.h>
 
 ValveControl::ValveControl() {
     // config send interval in seconds, convert to milliseconds
@@ -20,7 +22,8 @@ ValveControl::ValveControl() {
 
 void ValveControl::begin() {
     print("Valve Control: Beginning");
-    global_flag.log_info("response", R"({"header": "info", "Description": "Valve Control started"})");
+    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Valve Control started\"}");
+    global_flag.log_info("response", obj);
 }
 
 void ValveControl::execute() {

@@ -45,8 +45,8 @@ public:
     } telemetry;
 
     // valve type --> valve location --> valve info
-    map<string, map<string, RegistryValveInfo>> valves;
-    map<string, map<string, RegistrySensorInfo>> sensors;
+    std::map<string, std::map<string, RegistryValveInfo>> valves;
+    std::map<string, std::map<string, RegistrySensorInfo>> sensors;
 
     bool valve_exists(const string& type, const string& location);
     bool sensor_exists(const string& type, const string& location);

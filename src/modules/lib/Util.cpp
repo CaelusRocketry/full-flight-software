@@ -20,3 +20,35 @@ string Util::replaceAll(string str, const string& from, const string& to) {
     }
     return str;
 }
+
+void Util::serialize(JsonObject obj, string output){
+    serializeJson(obj, output);
+}
+
+JsonObject Util::deserialize(string str){
+    // Memory allocation
+    doc.clear();
+
+    // deserialize the object
+    deserializeJson(doc, str);
+
+    // extract the data
+    JsonObject object = doc.as<JsonObject>();
+    return object;
+}
+
+// JsonObject Util::createJsonObject(){
+//     StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
+//     JsonObject obj = doc.to<JsonObject>();
+//     return obj;
+// }
+
+// string Util::to_string(double val){
+//   int temp = i;
+//   String ret = "";
+//   while (temp > 0) {
+//       ret = String('0' + temp % 10) + ret;
+//       temp /= 10;
+//   }
+//   return ret;
+// }

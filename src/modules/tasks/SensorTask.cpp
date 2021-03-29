@@ -15,7 +15,6 @@ void SensorTask::initialize() {
         }
     }
 
-    sensor = new Arduino("PseudoSensor");
     pressure_driver = new PressureDriver(pressure_pins);
     print("Sensor: Initialized");
 }

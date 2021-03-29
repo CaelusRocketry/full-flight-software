@@ -25,38 +25,38 @@ void Supervisor::initialize() {
     DynamicJsonDocument doc(7500);
 
     ifstream config_file("config.json");
-    deserializeJson(do~c, input);
+    deserializeJson(doc, config_file);
     JsonObject j = doc.as<JsonObject>();
 
     global_config = Config(j);
     global_registry.initialize();
 
-    log("Supervisor: Parsing config");
+    print("Supervisor: Parsing config");
     parse_config();
 
-    log("Tasks: Initializing");
+    print("Tasks: Initializing");
     for (Task* task : tasks){
         task->initialize();
     }
 
-    log("Control tasks: Initializing");
+    print("Control tasks: Initializing");
     control_task->begin();
 }
 
 void Supervisor::read() {
-    log("Supervisor: Reading");
+    print("Supervisor: Reading");
     for (Task* task : tasks){
         task->read();
     }
 }
 
 void Supervisor::control() {
-    log("Supervisor: Controlling");
+    print("Supervisor: Controlling");
     control_task->control();
 }
 
 void Supervisor::actuate() {
-    log("Supervisor: Actuating");
+    print("Supervisor: Actuating");
     for (Task* task : tasks){
         task->actuate();
     }
@@ -82,7 +82,7 @@ void Supervisor::parse_config() {
     set<string> control_tasks;
     for (const string& control_task : global_config.task_config.control_tasks) {
         control_tasks.insert(control_task);
-        log("Control task [" + control_task + "]: Enabled");
+        print("Control task [" + control_task + "]: Enabled");
     }
 
     control_task = new ControlTask(control_tasks);

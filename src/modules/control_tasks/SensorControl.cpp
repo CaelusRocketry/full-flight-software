@@ -7,16 +7,15 @@
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <chrono>
+#include <flight/modules/lib/Util.hpp>
 
 SensorControl::SensorControl() {
     this->last_send_time = 0;
 
     // config gives it in seconds, convert to milliseconds
     this->send_interval = global_config.sensors.send_interval * 1000;
-    global_flag.log_info("response", {
-        {"header", "info"},
-        {"Description", "Sensor control started"}
-    });
+    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Sensor Control started\"}");
+    global_flag.log_info("response", obj);
 }
 
 void SensorControl::begin() {
@@ -130,28 +129,28 @@ void SensorControl::boundary_check() {
         }
         message = message.substr(0, message.length() - 2);
 
-        global_flag.log_critical("response", {
-            {"header", "info"},
-            {"Description", message}
-        });
+        JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": " + message + "}");
+        global_flag.log_critical("response", obj);
     }
 }
 
 void SensorControl::send_sensor_data() {
-    json sensor_data_json = json::object();
+    const size_t CAPACITY = JSON_OBJECT_SIZE(50);
+    StaticJsonDocument<CAPACITY> doc;
+    
+    JsonObject sensor_data_json = doc.to<JsonObject>();
 
     for (const auto& type_pair : global_config.sensors.list) {
         string type = type_pair.first;
+        JsonObject type_json = sensor_data_json.createNestedObject(type);
         for (const auto &location_pair : type_pair.second) {
             string location = location_pair.first;
             RegistrySensorInfo sensor = global_registry.sensors[type][location];
 
-            // "type.location": {
-            sensor_data_json[type][location] = json{
-                {"measured", sensor.measured_value},
-                {"kalman", sensor.normalized_value},
-                {"status", int(sensor.status)}
-            };
+            JsonObject location_json = type_json.createNestedObject(location);
+            location_json["measured"] = sensor.measured_value;
+            location_json["kalman"] = sensor.normalized_value;
+            location_json["status"] = int(sensor.status);
         }
     }
 

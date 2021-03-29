@@ -9,6 +9,7 @@
 #include <flight/modules/control_tasks/ValveControl.hpp>
 #include <flight/modules/control_tasks/PressureControl.hpp>
 #include <flight/modules/lib/logger_util.hpp>
+#include <flight/modules/lib/Util.hpp>
 
 ControlTask::ControlTask(const set<string>& config) {
     print("Control task: Adding controls");
@@ -33,10 +34,8 @@ ControlTask::ControlTask(const set<string>& config) {
         controls.push_back(unique_ptr<Control>(new PressureControl()));
     }
 
-    global_flag.log_info("response", {
-        {"header", "info"},
-        {"Description", "Control Tasks started"}
-    });
+    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Control Tasks started\"}");
+    global_flag.log_info("response", obj);
 }
 
 void ControlTask::begin() {

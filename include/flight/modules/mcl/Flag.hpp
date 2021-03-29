@@ -42,7 +42,7 @@ class Flag {
         } telemetry;
 
         /* Valve Flags */
-        map<string, map<string, FlagValveInfo>> valves;
+        std::map<string, std::map<string, FlagValveInfo>> valves;
 
         void enqueue(const Log& log, LogPriority logPriority);
         void log_info(const string& header, JsonObject& message);

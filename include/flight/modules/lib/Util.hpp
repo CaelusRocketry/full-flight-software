@@ -10,15 +10,23 @@
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Packet.hpp>
 #include <flight/modules/lib/Errors.hpp>
+#include <ArduinoJson.h>
 
 using namespace std;
 
 namespace Util {
+    StaticJsonDocument<5000> doc;
+
     /** Split a string by a delimiter */
     vector<string> split(const string &s, const string &delimiter);
 
     /** Replace all occurrences of a substring in str with a different string */
     string replaceAll(string str, const string& from, const string& to);
+    void serialize(JsonObject obj, string output);
+    JsonObject deserialize(string str);
+    // JsonObject createJsonObject();
+
+    // string to_string(double val);
 }
 
 #endif // FLIGHT_UTIL_HPP

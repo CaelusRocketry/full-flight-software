@@ -2,19 +2,19 @@
 #include <fstream>
 #include <flight/modules/lib/Log.hpp>
 #include <ArduinoJson.h>
+#include <flight/modules/lib/Util.hpp>
 
-
-void to_string(string &output, const Log& log) {
-    doc.clear()
-    doc["header"] = log.getHeader();
-    doc["message"] = log.getMessage();
-    doc["timestamp"] = log.getTimestamp();
-    SerializeJson(doc, output);
+void Log::to_string(string &output, const Log& log) {
+    Util::doc.clear();
+    Util::doc["header"] = log.getHeader();
+    Util::doc["message"] = log.getMessage();
+    Util::doc["timestamp"] = log.getTimestamp();
+    serializeJson(Util::doc, output);
 }
 
-void from_json(const JsonObject& j, Log& log) {
+void Log::from_json(const JsonObject& j, Log& log) {
     string header = j["header"].as<string>();
-    string message = j["message"].as<string>();
+    JsonObject message = j["message"];
     long double timestamp = j["timestamp"].as<long double>();
     log = Log(header, message, timestamp);
 }

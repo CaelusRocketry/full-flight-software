@@ -99,10 +99,8 @@ void ValveTask::actuate() {
             global_flag.valves[valve_type][valve_location].actuation_priority = ValvePriority::NONE;
 
             // Send response message
-            global_flag.log_info("response", {
-                {"header", "info"},
-                {"Description", "Set actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type)}
-            });
+            JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": Set actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + "}");
+            global_flag.log_info("response", obj);
         }
     }
 }

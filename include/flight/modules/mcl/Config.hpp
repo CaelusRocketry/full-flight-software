@@ -2,6 +2,9 @@
 #define FLIGHT_CONFIG_HPP
 
 #include <ArduinoJson.h>
+#include <string>
+#include <map>
+#include <vector>
 
 using std::string;
 using std::map;
@@ -26,7 +29,7 @@ struct ConfigSensorInfo {
 
 struct ConfigValveInfo {
     int pin;
-    string natural_state;
+    string natural;
     bool special;
 };
 

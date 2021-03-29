@@ -37,7 +37,7 @@
 
         // Note: add "END" at the end of the packet, so packets are split correctly
         string packet_string = "^" + packet_json.dump() + "$";
-        log("Telemetry: Sending packet: " + packet_string);
+        print("Telemetry: Sending packet: " + packet_string);
 
         for (size_t i = 0; i < packet_string.size(); i += 255)
         {
@@ -46,7 +46,7 @@
                 xbee.write(subpacket_string);
             }
             catch (std::exception& e) {
-                log(e.what());
+                print(e.what());
                 throw XBEE_WRITE_ERROR();
             }
         }
@@ -64,12 +64,12 @@
                     string msg(xbee.read());
                     rcvd.append(msg);
 
-                    log("Telemetry: Received: " + msg);
+                    print("Telemetry: Received: " + msg);
                 }
 
             }
             catch (std::exception& e){
-                log(e.what());
+                print(e.what());
                 end();
                 throw XBEE_READ_ERROR();
             }
@@ -80,7 +80,7 @@
                 size_t packet_end = rcvd.find('$', packet_start);
                 if (packet_end != string::npos) {
                     string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
-                    log("Telemetry: Received Full Packet: " + incoming_packet);
+                    print("Telemetry: Received Full Packet: " + incoming_packet);
                     mtx.lock();
                     ingest_queue.push(incoming_packet);
                     mtx.unlock();
@@ -106,10 +106,10 @@
 
     bool XBee::connect() {
         try {
-            log("Telemetry: Connecting");
+            print("Telemetry: Connecting");
             xbee.begin(BAUD_RATE)
         } catch(std::exception& e) {
-            log(e.what());
+            print(e.what());
             throw XBEE_CONNECTION_ERROR();
         }
 
