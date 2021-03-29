@@ -1,23 +1,21 @@
 #include <iostream>
 #include <fstream>
 #include <flight/modules/lib/Log.hpp>
+#include <ArduinoJson.h>
 
-using nlohmann::json;
 
-void to_json(json& j, const Log& log) {
-    j = json{
-        {"header", log.getHeader()},
-        {"message", log.getMessage()},
-        {"timestamp", log.getTimestamp()}
-    };
+void to_string(string &output, const Log& log) {
+    doc.clear()
+    doc["header"] = log.getHeader();
+    doc["message"] = log.getMessage();
+    doc["timestamp"] = log.getTimestamp();
+    SerializeJson(doc, output);
 }
 
-void from_json(const json& j, Log& log) {
-    string header, message;
-    long double timestamp;
-    j.at("header").get_to(header);
-    j.at("message").get_to(message);
-    j.at("timestamp").get_to(timestamp);
+void from_json(const JsonObject& j, Log& log) {
+    string header = j["header"].as<string>();
+    string message = j["message"].as<string>();
+    long double timestamp = j["timestamp"].as<long double>();
     log = Log(header, message, timestamp);
 }
 
@@ -30,10 +28,11 @@ void Log::save(const string& filename) const {
         file.open(filename, fstream::in | fstream::out | fstream::trunc);
     }
 
-    json j;
-    to_json(j, *this);
+    
+    string output;
+    to_string(output, *this); 
 
-    file << j.dump() << endl;
+    file << output << endl;
     file.close();
 }
 
@@ -46,7 +45,7 @@ string Log::getHeader() const {
     return header;
 }
 
-json Log::getMessage() const {
+JsonObject Log::getMessage() const {
     return message;
 }
 

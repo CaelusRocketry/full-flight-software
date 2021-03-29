@@ -1,13 +1,8 @@
-//
-// Created by myfatemi04 on 12/27/2020.
-//
-
 #ifndef FLIGHT_CONFIG_HPP
 #define FLIGHT_CONFIG_HPP
 
-#include <nlohmann/json.hpp>
+#include <ArduinoJson.h>
 
-using nlohmann::json;
 using std::string;
 using std::map;
 using std::vector;
@@ -19,9 +14,6 @@ struct ConfigStage {
     ConfigBoundary safe, warn;
 };
 
-void to_json(json& j, const ConfigBoundary& boundary);
-void from_json(const json& j, ConfigBoundary& boundary);
-
 struct ConfigSensorInfo {
     struct {
         double process_variance, measurement_variance, kalman_value;
@@ -32,17 +24,11 @@ struct ConfigSensorInfo {
     int pin;
 };
 
-void to_json(json& j, const ConfigSensorInfo& sensor_info);
-void from_json(const json& j, ConfigSensorInfo& sensor_info);
-
 struct ConfigValveInfo {
     int pin;
     string natural_state;
     bool special;
 };
-
-void to_json(json& j, const ConfigValveInfo& valve_info);
-void from_json(const json& j, ConfigValveInfo& valve_info);
 
 class Config {
 public:
@@ -50,7 +36,7 @@ public:
     Config() = default;
 
     /* Reads config from a JSON object */
-    explicit Config(json& json);
+    explicit Config(JsonObject& json);
 
     struct {
         string GS_IP;

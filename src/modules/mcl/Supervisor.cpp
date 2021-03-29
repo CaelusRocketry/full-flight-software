@@ -8,8 +8,7 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <fstream>
-
-using json = nlohmann::json;
+#include <ArduinoJson.h>
 
 //TODO: wrap everything in a try catch to make sure that execution doesn't stop if/when an error gets thrown?
 
@@ -23,37 +22,41 @@ Supervisor::~Supervisor() {
 
 void Supervisor::initialize() {
     /* Load config */
+    DynamicJsonDocument doc(7500);
+
     ifstream config_file("config.json");
-    json j = json::parse(config_file);
+    deserializeJson(do~c, input);
+    JsonObject j = doc.as<JsonObject>();
+
     global_config = Config(j);
     global_registry.initialize();
 
-    print("Supervisor: Parsing config");
+    log("Supervisor: Parsing config");
     parse_config();
 
-    print("Tasks: Initializing");
+    log("Tasks: Initializing");
     for (Task* task : tasks){
         task->initialize();
     }
 
-    print("Control tasks: Initializing");
+    log("Control tasks: Initializing");
     control_task->begin();
 }
 
 void Supervisor::read() {
-    print("Supervisor: Reading");
+    log("Supervisor: Reading");
     for (Task* task : tasks){
         task->read();
     }
 }
 
 void Supervisor::control() {
-    print("Supervisor: Controlling");
+    log("Supervisor: Controlling");
     control_task->control();
 }
 
 void Supervisor::actuate() {
-    print("Supervisor: Actuating");
+    log("Supervisor: Actuating");
     for (Task* task : tasks){
         task->actuate();
     }
@@ -79,7 +82,7 @@ void Supervisor::parse_config() {
     set<string> control_tasks;
     for (const string& control_task : global_config.task_config.control_tasks) {
         control_tasks.insert(control_task);
-        print("Control task [" + control_task + "]: Enabled");
+        log("Control task [" + control_task + "]: Enabled");
     }
 
     control_task = new ControlTask(control_tasks);

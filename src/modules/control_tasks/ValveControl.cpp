@@ -35,7 +35,7 @@ void ValveControl::execute() {
 }
 
 void ValveControl::send_valve_data() {
-    json valve_data_json = json::object();
+    JsonObject valve_data_json;
 
     for (const auto& type_pair : global_config.valves.list) {
         string type = type_pair.first;

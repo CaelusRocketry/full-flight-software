@@ -1,23 +1,34 @@
 #include <flight/modules/lib/Packet.hpp>
 #include <flight/modules/lib/Util.hpp>
+#include <ArduinoJson.h>
 
-using nlohmann::json;
+void to_string(string& output, const Packet& packet) {
+    doc.clear();
+    
+    doc["priority"] = packet.priority;
+    doc["timestamp"] = packet.timestamp;
 
-void to_json(json& j, const Packet& packet) {
-    j = json{
-        {"logs", packet.logs},
-        {"priority", packet.priority},
-        {"timestamp", packet.timestamp}
-    };
+    JsonArray array = doc.to<JsonArray>();
+    string logs;
+    for(Log l : packet.logs) {
+        to_string(logs, l);
+    }
+
+    doc["logs"] = logs;
+    SerializeJson(doc, output);
 }
 
-void from_json(const json& j, Packet& packet) {
+void from_json(const JsonObject& j, Packet& packet) {
     // First, get timestamp and log priority
-    long double timestamp = j.at("timestamp").get<long double>();
-    auto priority = static_cast<LogPriority>(j.at("priority").get<int>());
+    long double timestamp = j["timestamp"].as<long double>();
+    auto priority = static_cast<LogPriority>(j["priority"].as<int>());
     packet = Packet(priority, timestamp);
     // Then, add logs
-    j.at("logs").get_to(packet.logs); // overloaded in Log.hpp
+    for(JsonObject json_log : j["logs"].as<JsonObject>()) {
+        Log l;
+        from_json(json_log, l);
+        packet.logs.push_back(l);
+    }
 }
 
 void Packet::add(const Log& log) {

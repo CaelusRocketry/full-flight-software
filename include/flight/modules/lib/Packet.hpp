@@ -1,7 +1,3 @@
-//
-// Created by AC on 4/24/2020.
-//
-
 #ifndef FLIGHT_PACKET_HPP
 #define FLIGHT_PACKET_HPP
 
@@ -10,17 +6,20 @@
 #include <chrono>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Log.hpp>
+#include <ArduinoJson.h>
+
 
 using namespace std;
 
 class Packet;
 
-void to_json(json& j, const Packet& packet);
-void from_json(const json& j, Packet& packet);
+void to_string(string& output, const Packet& packet);
+void from_json(const JsonObject& j, Packet& packet);
 
 // Packet class groups together logs of similar priority
 class Packet {
 private:
+    StaticJsonDocument<5000> doc;
     vector<Log> logs;
     long double timestamp;
     LogPriority priority;
@@ -35,8 +34,8 @@ public:
     void add(const Log& log);
     vector<Log> getLogs();
 
-    friend void to_json(json& j, const Packet& packet);
-    friend void from_json(const json& j, Packet& packet);
+    friend void to_json_doc(StaticJsonDocument& j, const Packet& packet);
+    friend void from_json(const JsonObject& j, Packet& packet);
 
     struct compareTo {
         bool operator()(const Packet& lhs, const Packet& rhs) {

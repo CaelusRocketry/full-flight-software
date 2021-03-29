@@ -17,28 +17,21 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [100, 500],
-            "warn": [50, 550],
-            "critical": [0, 600],
             "waiting": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "pressurization": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "autosequence": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "postburn": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             }
           },
           "pin": 14
@@ -50,28 +43,21 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [100, 500],
-            "warn": [50, 550],
-            "critical": [0, 600],
             "waiting": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "pressurization": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "autosequence": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "postburn": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             }
           },
           "pin": 15
@@ -83,28 +69,21 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [100, 500],
-            "warn": [50, 550],
-            "critical": [0, 600],
             "waiting": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "pressurization": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "autosequence": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "postburn": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             }
           },
           "pin": 16
@@ -116,28 +95,21 @@
             "kalman_value": 1000
           },
           "boundaries": {
-            "safe": [100, 500],
-            "warn": [50, 550],
-            "critical": [0, 600],
             "waiting": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "pressurization": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "autosequence": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             },
             "postburn": {
               "safe": [100, 500],
-              "warn": [50, 550],
-              "critical": [0, 600]
+              "warn": [50, 550]
             }
           },
           "pin": 17

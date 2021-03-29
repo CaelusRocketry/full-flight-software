@@ -10,6 +10,8 @@
 #include <flight/modules/lib/Packet.hpp>
 #include <flight/modules/lib/Enums.hpp>
 
+#include <ArduinoJson.h>
+
 using namespace std;
 
 struct FlagValveInfo {
@@ -43,10 +45,10 @@ class Flag {
         map<string, map<string, FlagValveInfo>> valves;
 
         void enqueue(const Log& log, LogPriority logPriority);
-        void log_info(const string& header, const json& message);
-        void log_debug(const string& header, const json& message);
-        void log_warning(const string& header, const json& message);
-        void log_critical(const string& header, const json& message);
+        void log_info(const string& header, JsonObject& message);
+        void log_debug(const string& header, JsonObject& message);
+        void log_warning(const string& header, JsonObject& message);
+        void log_critical(const string& header, JsonObject& message);
 };
 
 extern Flag global_flag;

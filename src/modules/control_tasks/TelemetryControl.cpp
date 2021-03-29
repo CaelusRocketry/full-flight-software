@@ -7,7 +7,7 @@
 #include <flight/modules/lib/logger_util.hpp>
 #include <queue>
 
-using nlohmann::json;
+#include <ArduinoJson.h>
 
 //TODO: add custom packet enqueuing interface to gs???
 
@@ -50,9 +50,6 @@ void TelemetryControl::execute() {
 
             //TODO: figure out if log command is outdated
             for(const Log& log_ : packet.getLogs()) {
-                json j;
-                to_json(j, log_);
-                print(j.dump());
                 ingest(log_);
             }
         }
@@ -60,15 +57,18 @@ void TelemetryControl::execute() {
 }
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
-    json params = log.getMessage();
-    string dump = params.dump();
+    JsonObject params = log.getMessage();
+    
+    string dump;
+    to_string(dump, log);
+
 
     if(string({dump[0]}) + string({dump[1]}) == "\"{") { // if its a converted packet
         string new_msg_str = dump.substr(1, dump.length() - 2);
         new_msg_str = Util::replaceAll(new_msg_str, "\\", "");
-        cout << "new str: " << new_msg_str << endl;
-        params = json::parse(new_msg_str);
-        cout << params.dump() << endl;
+        // cout << "new str: " << new_msg_str << endl;
+        // params = json::parse(new_msg_str);
+        // cout << params.dump() << endl;
     }
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
