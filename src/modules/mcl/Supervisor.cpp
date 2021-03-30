@@ -22,11 +22,12 @@ Supervisor::~Supervisor() {
 
 void Supervisor::initialize() {
     /* Load config */
-    DynamicJsonDocument doc(7500);
+    // DynamicJsonDocument doc(15000);
 
+    Util::doc.clear();
     ifstream config_file("config.json");
-    deserializeJson(doc, config_file);
-    JsonObject j = doc.as<JsonObject>();
+    deserializeJson(Util::doc, config_file);
+    JsonObject j = Util::doc.as<JsonObject>();
 
     global_config = Config(j);
     global_registry.initialize();
@@ -74,6 +75,7 @@ void Supervisor::run() {
 void Supervisor::parse_config() {
     // parse_json_list automatically parses config.json
     for (const string& task : global_config.task_config.tasks) {
+        print("Found task: " + task);
         if (task == "sensor") tasks.push_back(new SensorTask());
         // if (task == "telemetry") tasks.push_back(new TelemetryTask());
         if (task == "valve") tasks.push_back(new ValveTask());
@@ -86,4 +88,7 @@ void Supervisor::parse_config() {
     }
 
     control_task = new ControlTask(control_tasks);
+    // const int a = 1;
+    // const int b = 0;
+    // const int c = a / b;
 }

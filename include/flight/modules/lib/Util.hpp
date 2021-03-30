@@ -15,7 +15,7 @@
 using namespace std;
 
 namespace Util {
-    extern StaticJsonDocument<5000> doc;
+    extern StaticJsonDocument<15000> doc;
 
     /** Split a string by a delimiter */
     extern vector<string> split(const string &s, const string &delimiter);
@@ -24,7 +24,6 @@ namespace Util {
     string replaceAll(string str, const string& from, const string& to);
     void serialize(JsonObject obj, string output);
     JsonObject deserialize(string str);
-    // JsonObject createJsonObject();
 
     // string to_string(double val);
 }

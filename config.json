@@ -162,7 +162,7 @@
   },
   "arduino_type": "real",
   "task_config": {
-    "tasks": ["sensor", "valve"],
+    "tasks": ["valve", "sensor"],
     "control_tasks": ["sensor", "valve", "stage", "pressure"]
   }
 }

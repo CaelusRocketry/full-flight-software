@@ -2,6 +2,7 @@
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Registry.hpp>
+#include <flight/modules/lib/Util.hpp>
 
 Config::Config(JsonObject& json) {
     print("Config: Initializing");
@@ -78,6 +79,10 @@ Config::Config(JsonObject& json) {
 
     /* Read stage list */
     print("Config: Reading stage list");
+    JsonArray stage_list_json = json["stages"]["list"].as<JsonArray>();
+    for (JsonVariant value : stage_list_json) {
+        stages.list.push_back(value.as<string>());
+    }
     // stages.list = json["stages"]["list"].as<vector<string>>();  // json.at("stages").at("list").get_to();
     stages.request_interval = json["stages"]["request_interval"].as<double>();
     stages.send_interval = json["stages"]["send_interval"].as<double>();
@@ -89,6 +94,10 @@ Config::Config(JsonObject& json) {
     /* Read pressure control stages list */
     print("Config: Reading pressure control stages list");
     // pressure_control.active_stages = json["pressure_control"]["active_stages"].as<vector<string>>(); 
+    JsonArray pressure_control_active_json = json["pressure_control"]["active_stages"].as<JsonArray>();
+    for (JsonVariant value : pressure_control_active_json) {
+        pressure_control.active_stages.push_back(value.as<string>());
+    }
     
     /* Read arduino type */
     print("Config: Reading arduino type");
@@ -96,6 +105,15 @@ Config::Config(JsonObject& json) {
 
     /* Read task config */
     print("Config: Reading task config");
+    JsonArray task_list_json = json["task_config"]["tasks"].as<JsonArray>();
+    for (JsonVariant value : task_list_json) {
+        print(value.as<string>());
+        task_config.tasks.push_back(value.as<string>());
+    }
+    JsonArray ct_list_json = json["task_config"]["control_tasks"].as<JsonArray>();
+    for (JsonVariant value : ct_list_json) {
+        task_config.control_tasks.push_back(value.as<string>());
+    }
     // task_config.tasks = json["task_config"]["tasks"].as<vector<string>>(); 
     // task_config.control_tasks = json["task_config"]["control_tasks"].as<vector<string>>(); 
 }

@@ -1,6 +1,6 @@
 #include <flight/modules/lib/Util.hpp>
 
-StaticJsonDocument<5000> Util::doc;
+StaticJsonDocument<15000> Util::doc;
 
 vector<string> Util::split(const string &s, const string &delimiter){
     vector<string> result;
@@ -28,13 +28,8 @@ void Util::serialize(JsonObject obj, string output){
 }
 
 JsonObject Util::deserialize(string str){
-    // Memory allocation
     doc.clear();
-
-    // deserialize the object
     deserializeJson(doc, str);
-
-    // extract the data
     JsonObject object = doc.as<JsonObject>();
     return object;
 }
