@@ -1,5 +1,7 @@
 #include <flight/modules/lib/Util.hpp>
 
+StaticJsonDocument<5000> Util::doc;
+
 vector<string> Util::split(const string &s, const string &delimiter){
     vector<string> result;
     int start = 0;

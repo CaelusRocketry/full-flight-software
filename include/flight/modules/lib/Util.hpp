@@ -15,10 +15,10 @@
 using namespace std;
 
 namespace Util {
-    StaticJsonDocument<5000> doc;
+    extern StaticJsonDocument<5000> doc;
 
     /** Split a string by a delimiter */
-    vector<string> split(const string &s, const string &delimiter);
+    extern vector<string> split(const string &s, const string &delimiter);
 
     /** Replace all occurrences of a substring in str with a different string */
     string replaceAll(string str, const string& from, const string& to);

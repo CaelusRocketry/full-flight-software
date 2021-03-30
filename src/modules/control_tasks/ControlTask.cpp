@@ -1,7 +1,3 @@
-//
-// Created by adiv413 on 4/24/2020.
-//
-
 #include <flight/modules/control_tasks/ControlTask.hpp>
 #include <flight/modules/control_tasks/TelemetryControl.hpp>
 #include <flight/modules/control_tasks/SensorControl.hpp>
