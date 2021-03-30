@@ -36,17 +36,17 @@ Config::Config(JsonObject& json) {
             info.kalman_args.measurement_variance = sensor["kalman_args"]["measurement_variance"].as<double>();
             info.kalman_args.kalman_value = sensor["kalman_args"]["kalman_value"].as<double>();
 
-            // info.boundaries.waiting.safe = sensor["boundaries"]["waiting"]["safe"][0];
-            // info.boundaries.waiting.warn = sensor["boundaries"]["waiting"]["warn"][1];
+            info.boundaries.waiting.safe.lower = sensor["boundaries"]["waiting"]["safe"][0].as<double>();
+            info.boundaries.waiting.warn.upper = sensor["boundaries"]["waiting"]["warn"][1].as<double>();
 
-            // info.boundaries.pressurization.safe = sensor["boundaries"]["pressurization"]["safe"][0];
-            // info.boundaries.pressurization.warn = sensor["boundaries"]["pressurization"]["warn"][1];
+            info.boundaries.pressurization.safe.lower = sensor["boundaries"]["pressurization"]["safe"][0].as<double>();
+            info.boundaries.pressurization.warn.upper = sensor["boundaries"]["pressurization"]["warn"][1].as<double>();
 
-            // info.boundaries.autosequence.safe = sensor["boundaries"]["autosequence"]["safe"][0];
-            // info.boundaries.autosequence.warn = sensor["boundaries"]["autosequence"]["warn"][1];
+            info.boundaries.autosequence.safe.lower = sensor["boundaries"]["autosequence"]["safe"][0].as<double>();
+            info.boundaries.autosequence.warn.upper = sensor["boundaries"]["autosequence"]["warn"][1].as<double>();
 
-            // info.boundaries.postburn.safe = sensor["boundaries"]["postburn"]["safe"][0];
-            // info.boundaries.postburn.warn = sensor["boundaries"]["postburn"]["warn"][1];
+            info.boundaries.postburn.safe.lower = sensor["boundaries"]["postburn"]["safe"][0].as<double>();
+            info.boundaries.postburn.warn.upper = sensor["boundaries"]["postburn"]["warn"][1].as<double>();
 
             sensors.list[sensor_type][sensor_loc] = info;
         }
