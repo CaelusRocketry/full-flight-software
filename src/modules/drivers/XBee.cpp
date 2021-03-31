@@ -5,6 +5,9 @@
 #include <flight/modules/lib/Packet.hpp>
 
 #include <ArduinoJson.h>
+#ifndef DESKTOP
+    #include <SoftwareSerial.h>
+#endif
 
 XBee::XBee() {
     // Initialize variables
@@ -45,7 +48,8 @@ bool XBee::write(const Packet& packet) {
             string subpacket_string = packet_string.substr(i, 255);
             
                 try {
-                    xbee->write(subpacket_string);
+                    char const *c = subpacket_string.c_str();
+                    xbee->write(c);
                 }
                 catch (std::exception& e) {
                     print(e.what());
@@ -65,11 +69,12 @@ void XBee::recv_loop() {
         #ifndef DESKTOP
             try {
                 // Read in data from socket
-                if(xbee->avaliable()) {
-                    string msg(xbee->read());
-                    rcvd.append(msg);
+                if(xbee->available()) {
+                    const char* msg(xbee->read());
+                    string msg_str(msg);
+                    rcvd.append(msg_str);
 
-                    print("Telemetry: Received: " + msg);
+                    print("Telemetry: Received: " + msg_str);
                 }
 
             }
@@ -102,7 +107,8 @@ bool XBee::get_status() const {
 
 void XBee::reset() {
     end();
-    if(!connect()){
+    bool res = connect();
+    if( !res ) {
         end();
     }
 }
@@ -112,8 +118,7 @@ bool XBee::connect() {
 
     #ifndef DESKTOP
         try {
-            
-            xbee->begin(global_config.telemetry.XBEE_BAUD_RATE)
+            xbee->begin(global_config.telemetry.XBEE_BAUD_RATE);
         } catch(std::exception& e) {
             print(e.what());
             throw XBEE_CONNECTION_ERROR();

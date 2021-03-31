@@ -61,7 +61,7 @@
             // Pseudo sensor stuff
             ret = (float)pin;
         #else
-            float ret = this->maxthermo->readThermocoupleTemperature();
+            ret = this->maxthermo->readThermocoupleTemperature();
             uint8_t fault = this->maxthermo->readFault();
 
             if (fault) {
