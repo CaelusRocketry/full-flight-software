@@ -66,7 +66,7 @@ double StageControl::calculate_status() const
         if (global_registry.sensors["pressure"].find("PT-2") != global_registry.sensors["pressure"].end())
         {
             float pressure = global_registry.sensors["pressure"]["PT-2"].normalized_value;
-            return std::min(100.0, pressure / 4.9);
+            return Util::min(100.0, pressure / 4.9);
         }
         else
         {
@@ -82,15 +82,15 @@ double StageControl::calculate_status() const
         }
         else
         {
-            return std::min(((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - this->start_time) / this->AUTOSEQUENCE_DELAY) * 100, 99.0);
+            return Util::min(((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - this->start_time) / this->AUTOSEQUENCE_DELAY) * 100, 99.0);
         }
     }
     else if (current_stage == Stage::POSTBURN)
     {
         double pressure = global_registry.sensors["pressure"]["PT-2"].normalized_value;
         double inv = (pressure - 20.0) / 5.0; // Assuming that "depressurization" means 20psi
-        double progress = std::min(100.0, 100.0 - inv);
-        return std::max(0.0, progress); //  makes sure that progress isn't negative
+        double progress = Util::min(100.0, 100.0 - inv);
+        return Util::max(0.0, progress); //  makes sure that progress isn't negative
     }
 
     throw INVALID_STAGE();

@@ -24,6 +24,8 @@ namespace Util {
     string replaceAll(string str, const string& from, const string& to);
     void serialize(JsonObject obj, string output);
     JsonObject deserialize(string str);
+    double min(double a, double b);
+    double max(double a, double b);
 
     // string to_string(double val);
 }

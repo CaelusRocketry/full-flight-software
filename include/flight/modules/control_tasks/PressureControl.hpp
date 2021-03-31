@@ -12,8 +12,8 @@ class PressureControl : public Control {
 private:
 
     vector<basic_string<char>> activate_stages;
-    map<basic_string<char>, ConfigValveInfo> valves;
-    map<basic_string<char>, ConfigSensorInfo> sensors;
+    std::map<basic_string<char>, ConfigValveInfo> valves;
+    std::map<basic_string<char>, ConfigSensorInfo> sensors;
     vector<pair<string, string>> matchups;
 
     void check_pressure();

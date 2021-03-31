@@ -34,6 +34,20 @@ JsonObject Util::deserialize(string str){
     return object;
 }
 
+double Util::min(double a, double b){
+    if(a < b){
+        return a;
+    }
+    return b;
+}
+
+double Util::max(double a, double b){
+    if(a > b){
+        return a;
+    }
+    return b;
+}
+
 // JsonObject Util::createJsonObject(){
 //     StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
 //     JsonObject obj = doc.to<JsonObject>();

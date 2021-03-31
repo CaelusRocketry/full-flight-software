@@ -6,7 +6,7 @@
 #endif
 
 ValveDriver::ValveDriver(vector<int> pins){
-    for(int i = 0; i < pins.size(); i++){
+    for(unsigned int i = 0; i < pins.size(); i++){
         valve_pins.push_back(pins[i]);
         valve_states.push_back(SolenoidState::CLOSED);
         valve_actuations.push_back(ActuationType::NONE);
@@ -60,7 +60,7 @@ void writeVal(int pin, bool signal){
     #ifdef DESKTOP
         // TODO figure this out
     #else
-        #include "Arduino.h";
+        #include "Arduino.h"
         digitalWrite(pin, signal);
     #endif
 }

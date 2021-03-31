@@ -5,7 +5,7 @@
 #endif
 
 PressureDriver::PressureDriver(vector<int> pins){
-    for(int i = 0; i < pins.size(); i++){
+    for(unsigned int i = 0; i < pins.size(); i++){
         pressure_pins.push_back(pins[i]);
         pressure_vals.push_back(MIN_PSI);
         #ifndef DESKTOP
@@ -37,7 +37,7 @@ float PressureDriver::readSensor(int pin){
 }
 
 void PressureDriver::read(){
-    for(int i = 0; i < pressure_pins.size(); i++){
+    for(unsigned int i = 0; i < pressure_pins.size(); i++){
         pressure_vals[i] = readSensor(pressure_pins[i]);
     }
 }
@@ -45,7 +45,7 @@ void PressureDriver::read(){
 float PressureDriver::getPressureValue(int pin){
     // Find index of the pin in the pins list, and return the corresponding value.
     int idx = -1;
-    for(int i = 0; i < pressure_pins.size(); i++){
+    for(unsigned int i = 0; i < pressure_pins.size(); i++){
         if(pressure_pins[i] == pin){
             idx = i;
             break;

@@ -7,7 +7,6 @@
 #include <vector>
 
 using std::string;
-using std::map;
 using std::vector;
 
 struct ConfigBoundary {
@@ -52,14 +51,14 @@ public:
     } telemetry;
 
     struct {
-        map<string, map<string, ConfigSensorInfo>> list;
+        std::map<string, std::map<string, ConfigSensorInfo>> list;
         string address;
         int baud;
         double send_interval;
     } sensors;
 
     struct {
-        map<string, map<string, ConfigValveInfo>> list;
+        std::map<string, std::map<string, ConfigValveInfo>> list;
         string address;
         int baud;
         double send_interval;
