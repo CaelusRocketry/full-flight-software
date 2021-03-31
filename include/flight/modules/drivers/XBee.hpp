@@ -7,26 +7,22 @@
     #include <queue>
     #include <cstdio>
     #include <unistd.h>
-    #include <mutex>
-    #include <thread>
     #include <flight/modules/lib/Packet.hpp>
+    #include <Arduino.h>
+    #include <SoftwareSerial.h>
 
     using namespace std;
 
-    #define RX_PIN 8
-    #define TX_PIN 9
     #define BAUD_RATE 9600
 
     class XBee  {
     private:
-        SoftwareSerial xbee(RX_PIN, TX_PIN);
+        static SoftwareSerial xbee(8, 9);
         bool connection;
         queue<string> ingest_queue;
         string rcvd;
 
         // lockable object used to specify when things need exclusive access.
-        mutex mtx;
-        thread* recv_thread = nullptr;
         bool TERMINATE_FLAG = false;
 
 

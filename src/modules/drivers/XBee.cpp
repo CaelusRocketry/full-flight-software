@@ -1,11 +1,11 @@
 #ifndef DESKTOP
 
-    #include <chrono>
     #include <flight/modules/lib/logger_util.hpp>
     #include <flight/modules/drivers/XBee.hpp>
     #include <flight/modules/mcl/Config.hpp>
     #include <flight/modules/lib/Errors.hpp>
     #include <string>
+    #include <ArduinoJson.h>
 
     XBee::XBee() {
         // Initialize variables
@@ -13,7 +13,6 @@
     }
 
     queue<string> XBee::read(int num_messages) {
-        mtx.lock(); // prevents anything else from a different thread from accessing the ingest_queue until we're done
         if (num_messages > ingest_queue.size() || num_messages == -1){
             num_messages = ingest_queue.size();
         }
@@ -25,18 +24,15 @@
             ingest_queue.pop();
         }
 
-        mtx.unlock();
         return q;
     }
 
     // This sends the packet to the GUI!
     bool XBee::write(const Packet& packet) {
-        // Convert to JSON and then to a string
-        json packet_json;
-        to_json(packet_json, packet);
 
-        // Note: add "END" at the end of the packet, so packets are split correctly
-        string packet_string = "^" + packet_json.dump() + "$";
+        string packet_string;
+        to_string(packet_string, packet);
+        packet_string = "^" + packet_string + "$";
         print("Telemetry: Sending packet: " + packet_string);
 
         for (size_t i = 0; i < packet_string.size(); i += 255)
@@ -51,7 +47,6 @@
             }
         }
 
-        this_thread::sleep_for(chrono::milliseconds(global_config.telemetry.DELAY));
         return true;
     }
 
@@ -81,14 +76,11 @@
                 if (packet_end != string::npos) {
                     string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
                     print("Telemetry: Received Full Packet: " + incoming_packet);
-                    mtx.lock();
                     ingest_queue.push(incoming_packet);
-                    mtx.unlock();
 
                     rcvd = rcvd.substr(packet_end + 1);
                 }
             }
-            this_thread::sleep_for(chrono::seconds(global_config.telemetry.DELAY));
 
         }
     }
@@ -113,11 +105,8 @@
             throw XBEE_CONNECTION_ERROR();
         }
 
-        thread t(&XBee::recv_loop, this);
         connection = true;
         TERMINATE_FLAG = false;
-        recv_thread = &t;
-        recv_thread->detach();
 
         return true;
     }
