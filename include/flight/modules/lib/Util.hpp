@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include <map>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Flag.hpp>
@@ -26,8 +27,11 @@ namespace Util {
     JsonObject deserialize(string str);
     double min(double a, double b);
     double max(double a, double b);
-
-    // string to_string(double val);
+    string to_string(bool b);
+    string to_string(int i);
+    string to_string(long int i);
+    string to_string(double d);
+    string to_string(long double d);
 }
 
 #endif // FLIGHT_UTIL_HPP
