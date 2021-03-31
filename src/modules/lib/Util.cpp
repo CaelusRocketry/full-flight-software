@@ -48,18 +48,69 @@ double Util::max(double a, double b){
     return b;
 }
 
+string to_string(bool b) {
+    return b ? "true" : "false";   
+}
+
+string to_string(int i) {
+    return to_string((long int) i);
+}
+
+string to_string(double d) {
+    return to_string((long double) d);
+}
+
+string to_string(long int i) {
+    if(i == 0) {
+        return string("0");
+    }
+
+    long int temp = abs(i);
+    string ret = "";
+    while (temp > 0) {
+        ret = (char) ('0' + temp % 10) + ret;
+        temp /= 10;
+    }
+    string test = "";
+
+    if(i < 0) {
+        return string("-") + ret;
+    }
+
+    return ret;
+}
+
+string to_string(long double d) {
+    // algorithm: take the double, multiply it by 10 until there are no decimals (or until integer overflow - 17 digits), 
+    // convert that int to a string, place the decimal point back where it belongs
+
+    // TODO: rn this doesn't handle small numbers, such as 0.00123
+    // it just converts it to 0.123
+
+    long double temp = d;
+    long int dot = to_string((long int) temp).length();
+
+    while((long int) round(temp) != temp && abs(temp / 1000000000000000000) < 1) { // handles integer overflow if there are more than 17 digits
+        temp *= 10;
+    }
+
+    long int expanded_temp = (long int) temp;
+
+    string output = to_string(expanded_temp);
+
+    if(0 < d && d < 1) { // make sure 0.9 doesn't become 9
+        dot--;
+    }
+
+    if(dot != output.length()) {
+        output = output.substr(0, dot) + "." + output.substr(dot);
+    }
+
+    return output;
+}
+
 // JsonObject Util::createJsonObject(){
 //     StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
 //     JsonObject obj = doc.to<JsonObject>();
 //     return obj;
-// }
-
-// string Util::to_string(double val){
-//   int temp = i;
-//   String ret = "";
-//   while (temp > 0) {
-//       ret = String('0' + temp % 10) + ret;
-//       temp /= 10;
-//   }
-//   return ret;
 // }
