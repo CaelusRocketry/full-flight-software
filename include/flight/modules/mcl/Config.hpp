@@ -48,6 +48,10 @@ public:
         int SOCKETIO_PORT;
 
         int DELAY;
+
+        int XBEE_RX_PIN;
+        int XBEE_TX_PIN;
+        int XBEE_BAUD_RATE;
     } telemetry;
 
     struct {

@@ -1,9 +1,13 @@
 #ifndef FLIGHT_THERMODRIVER_HPP
 #define FLIGHT_THERMODRIVER_HPP
 
-#include <vector>
-#include <Adafruit_MAX31856.h>
 #include <flight/modules/lib/Enums.hpp>
+
+#include <vector>
+#ifndef DESKTOP
+    #include <Adafruit_MAX31856.h>
+#endif
+ 
 
 
 // THESE VALUES ARE NOT CORRECT, please confirm with someone on propulsion
@@ -20,7 +24,11 @@ private:
     vector<float> thermo_vals;
 
     float readSensor(int pin);
-    Adafruit_MAX31856 *maxthermo;
+
+    #ifndef DESKTOP
+        Adafruit_MAX31856 *maxthermo;
+    #endif
+ 
 
 public:
     ThermoDriver(vector<vector<int>> pins);
@@ -29,3 +37,4 @@ public:
 };
 
 #endif // FLIGHT_VALVEDRIVER_HPP
+

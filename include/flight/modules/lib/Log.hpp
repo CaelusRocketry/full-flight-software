@@ -11,9 +11,6 @@ using ArduinoJson::StaticJsonDocument;
 
 // class Log;
 
-// void to_string(string &output, const Log& log);
-// void from_json(const JsonObject& j, Log& log);
-
 // Log class stores messages to be sent to and from ground and flight station
 class Log {
 private:

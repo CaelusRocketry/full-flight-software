@@ -4,7 +4,10 @@
     "GS_PORT": 5005,
     "DELAY": 0.1,
     "SOCKETIO_HOST": "127.0.0.1",
-    "SOCKETIO_PORT": 5000
+    "SOCKETIO_PORT": 5000,
+    "XBEE_RX_PIN": 8, 
+    "XBEE_TX_PIN": 9, 
+    "XBEE_BAUD_RATE": 9600
   },
   "sensors": {
     "list": {

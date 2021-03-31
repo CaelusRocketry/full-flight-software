@@ -14,9 +14,6 @@ using ArduinoJson::StaticJsonDocument;
 
 // class Packet;
 
-// void to_string(string& output, const Packet& packet);
-// void from_json(const JsonObject& j, Packet& packet);
-
 // Packet class groups together logs of similar priority
 class Packet {
 private:

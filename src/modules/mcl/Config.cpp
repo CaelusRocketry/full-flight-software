@@ -14,6 +14,10 @@ Config::Config(JsonObject& json) {
     telemetry.DELAY = json["telmetry"]["DELAY"].as<int>();
     telemetry.SOCKETIO_HOST = json["telmetry"]["SOCKETIO_HOST"].as<string>();
     telemetry.SOCKETIO_PORT = json["telmetry"]["SOCKETIO_PORT"].as<int>();
+    telemetry.XBEE_RX_PIN = json["telmetry"]["XBEE_RX_PIN"].as<int>();
+    telemetry.XBEE_TX_PIN = json["telmetry"]["XBEE_TX_PIN"].as<int>();
+    telemetry.XBEE_BAUD_RATE = json["telmetry"]["XBEE_BAUD_RATE"].as<int>();
+
 
     /* Read sensor list */
     print("Config: Reading sensor list");

@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 #include <flight/modules/lib/Util.hpp>
 
-void Log::to_string(string &output, const Log& log) {
+void Log::to_string(string& output, const Log& log) {
     Util::doc.clear();
     Util::doc["header"] = log.getHeader();
     Util::doc["message"] = log.getMessage();

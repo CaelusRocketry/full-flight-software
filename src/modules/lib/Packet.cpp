@@ -6,16 +6,16 @@
 void to_string(string& output, const Packet& packet) {
     Util::doc.clear();
     
-    Util::doc["priority"] = static_cast<int>(packet.priority);
-    Util::doc["timestamp"] = packet.timestamp;
+    // Util::doc["priority"] = static_cast<int>(packet.priority);
+    // Util::doc["timestamp"] = packet.timestamp;
 
-    JsonArray array = Util::doc.to<JsonArray>();
-    string logs;
-    for(Log l : packet.logs) {
-        Log::to_string(logs, l);
-    }
+    // JsonArray array = Util::doc.to<JsonArray>();
+    // string logs;
+    // for(Log l : packet.logs) {
+    //     Log::to_string(logs, l);
+    // }
 
-    Util::doc["logs"] = logs;
+    // Util::doc["logs"] = logs;
     serializeJson(Util::doc, output);
 }
 

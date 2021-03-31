@@ -1,7 +1,3 @@
-//
-// Created by adiv413 on 4/24/2020.
-//
-
 #include <flight/modules/control_tasks/TelemetryControl.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
@@ -53,6 +49,7 @@ void TelemetryControl::execute() {
         }
     }
 }
+
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
     JsonObject params = log.getMessage();
