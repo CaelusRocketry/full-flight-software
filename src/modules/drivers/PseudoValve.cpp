@@ -29,7 +29,7 @@ unsigned char* PseudoValve::read() {
     unsigned char *data = new unsigned char[num_solenoids * 3];
 
     // pin, state, actuation_type
-    for (int i = 0; i < solenoid_locs.size(); i++) {
+    for (unsigned int i = 0; i < solenoid_locs.size(); i++) {
         unsigned char solenoid_data[3];
         RegistryValveInfo solenoid = global_registry.valves["solenoid"][solenoid_locs[i]];
         int pin = global_config.valves.list["solenoid"][solenoid_locs[i]].pin;

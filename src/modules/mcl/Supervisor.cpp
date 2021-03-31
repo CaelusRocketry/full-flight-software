@@ -68,7 +68,12 @@ void Supervisor::run() {
         read();
         control();
         actuate();
-        this_thread::sleep_for(chrono::seconds(1)); // temp placeholder for TimerControl
+        // temp placeholder for TimerControl
+        #ifdef DESKTOP
+            this_thread::sleep_for(chrono::seconds(1));
+        #else
+            delay(1000);
+        #endif
     }
 }
 

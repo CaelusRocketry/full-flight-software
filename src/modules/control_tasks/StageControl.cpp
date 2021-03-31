@@ -107,8 +107,9 @@ void StageControl::send_data()
     print("Sending Stage Data.");
     if (this->send_time == 0 || std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() > (this->send_time + this->send_interval))
     {
-        JsonObject obj = Util::deserialize("{\"header\": \"stage_data\", \"stage\": " + stage_strings.at(stage_index) + ", \"status\": " + to_string(calculate_status()) + "}");
-        global_flag.log_info("stage", obj);
+        // TODO: Uncomment this
+        // JsonObject obj = Util::deserialize("{\"header\": \"stage_data\", \"stage\": " + stage_strings.at(stage_index) + ", \"status\": " + to_string(calculate_status()) + "}");
+        // global_flag.log_info("stage", obj);
         this->send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
 }
