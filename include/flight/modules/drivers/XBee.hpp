@@ -29,7 +29,7 @@ public:
     XBee();
     queue<string> read(int num_messages);
     bool write(const Packet& packet);
-    void recv_loop();
+    void read_buffer();
     bool get_status() const;
     void reset();
     bool connect();

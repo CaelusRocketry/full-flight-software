@@ -30,8 +30,7 @@ void ValveTask::initialize() {
 void ValveTask::read(){
     print("Valve: Reading");
 
-//    arduino->write(new unsigned char[1] {SEND_DATA_CMD});
-    for(int i = 0; i < pins.size(); i++){
+    for(unsigned int i = 0; i < pins.size(); i++){
         int pin = pins[i];
         string valve_type = pin_to_valve[pin].first;
         string valve_location = pin_to_valve[pin].second;
@@ -88,7 +87,7 @@ void ValveTask::actuate() {
             target_valve_info.actuation_priority >= current_valve_info.actuation_priority
         ) {
 
-            print("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + to_string(pin));
+            print("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + Util::to_string(pin));
             print("Actuation type: " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ", Actuation priority: " + valve_priority_inverse_map.at(target_valve_info.actuation_priority));
 
             /* Send actuation signal */

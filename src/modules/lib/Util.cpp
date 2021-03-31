@@ -4,8 +4,8 @@ StaticJsonDocument<15000> Util::doc;
 
 vector<string> Util::split(const string &s, const string &delimiter){
     vector<string> result;
-    int start = 0;
-    int end = 0;
+    unsigned int start = 0;
+    unsigned int end = 0;
     while (end != string::npos) {
         end = s.find(delimiter, start);
         result.push_back(s.substr(start, end-start));
@@ -48,19 +48,19 @@ double Util::max(double a, double b){
     return b;
 }
 
-string to_string(bool b) {
+string Util::to_string(bool b) {
     return b ? "true" : "false";   
 }
 
-string to_string(int i) {
+string Util::to_string(int i) {
     return to_string((long int) i);
 }
 
-string to_string(double d) {
+string Util::to_string(double d) {
     return to_string((long double) d);
 }
 
-string to_string(long int i) {
+string Util::to_string(long int i) {
     if(i == 0) {
         return string("0");
     }
@@ -80,7 +80,7 @@ string to_string(long int i) {
     return ret;
 }
 
-string to_string(long double d) {
+string Util::to_string(long double d) {
     // algorithm: take the double, multiply it by 10 until there are no decimals (or until integer overflow - 17 digits), 
     // convert that int to a string, place the decimal point back where it belongs
 
@@ -88,7 +88,7 @@ string to_string(long double d) {
     // it just converts it to 0.123
 
     long double temp = d;
-    long int dot = to_string((long int) temp).length();
+    unsigned long int dot = to_string((long int) temp).length();
 
     while((long int) round(temp) != temp && abs(temp / 1000000000000000000) < 1) { // handles integer overflow if there are more than 17 digits
         temp *= 10;

@@ -24,7 +24,7 @@ void SensorTask::read() {
     pressure_driver->read(); // data returned as an array of chars
 
     // Update pressure sensor values
-    for(int i = 0; i < pressure_pins.size(); i++){
+    for(unsigned int i = 0; i < pressure_pins.size(); i++){
         int pin = pressure_pins[i];
         pair<string, string> sensor_info = pin_sensor_mappings[pin];
         string type = sensor_info.first;

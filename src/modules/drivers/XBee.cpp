@@ -18,8 +18,9 @@ XBee::XBee() {
 }
 
 queue<string> XBee::read(int num_messages) {
-    if (num_messages > ingest_queue.size() || num_messages == -1){
-        num_messages = ingest_queue.size();
+    read_buffer();
+    if (num_messages > (int) ingest_queue.size() || num_messages == -1){
+        num_messages = (int) ingest_queue.size();
     }
 
     // type of list where elements are exclusively inserted from one side and removed from the other.
@@ -35,69 +36,58 @@ queue<string> XBee::read(int num_messages) {
 // This sends the packet to the GUI!
 bool XBee::write(const Packet& packet) {
 
-    #ifndef DESKTOP
+    string output;
+    Packet::to_string(output, packet);
 
-        string output;
-        Packet::to_string(output, packet);
+    string packet_string = "^" + output + "$";
+    print("Telemetry: Sending packet: " + packet_string);
 
-        string packet_string = "^" + output + "$";
-        print("Telemetry: Sending packet: " + packet_string);
-
-        for (size_t i = 0; i < packet_string.size(); i += 255)
-        {
-            string subpacket_string = packet_string.substr(i, 255);
-            
-                try {
-                    char const *c = subpacket_string.c_str();
-                    xbee->write(c);
-                }
-                catch (std::exception& e) {
-                    print(e.what());
-                    throw XBEE_WRITE_ERROR();
-                }
-            
-        }
-
-    #endif
+    for (size_t i = 0; i < packet_string.size(); i += 255)
+    {
+        string subpacket_string = packet_string.substr(i, 255);
+        
+            try {
+                char const *c = subpacket_string.c_str();
+                xbee->write(c);
+            }
+            catch (std::exception& e) {
+                print(e.what());
+                throw XBEE_WRITE_ERROR();
+            }
+        
+    }
 
     return true;
 }
 
-// This gets called in the main thread
-void XBee::recv_loop() {
-    while (this->connection && !TERMINATE_FLAG) {
-        #ifndef DESKTOP
-            try {
-                // Read in data from socket
-                if(xbee->available()) {
-                    const char* msg(xbee->read());
-                    string msg_str(msg);
-                    rcvd.append(msg_str);
-
-                    print("Telemetry: Received: " + msg_str);
-                }
-
-            }
-            catch (std::exception& e){
-                print(e.what());
-                end();
-                throw XBEE_READ_ERROR();
-            }
-        #endif
-
-
-        size_t packet_start = rcvd.find('^');
-        if(packet_start != string::npos) {
-            size_t packet_end = rcvd.find('$', packet_start);
-            if (packet_end != string::npos) {
-                string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
-                print("Telemetry: Received Full Packet: " + incoming_packet);
-                ingest_queue.push(incoming_packet);
-
-                rcvd = rcvd.substr(packet_end + 1);
-            }
+void XBee::read_buffer() {
+    while (this->connection && !TERMINATE_FLAG && xbee->available()) {
+        try {
+            // Read in data from socket
+            // const char* msg(xbee->read());
+            // string msg_str(msg);
+            char msg = xbee->read();
+            string msg_str(1, msg);
+            rcvd.append(msg_str);
         }
+        catch (std::exception& e){
+            print(e.what());
+            end();
+            throw XBEE_READ_ERROR();
+        }
+    }
+    print("Telemetry: Received: " + rcvd);
 
+    size_t packet_start = rcvd.find('^');
+    if(packet_start != string::npos) {
+        size_t packet_end = rcvd.find('$', packet_start);
+        if (packet_end != string::npos) {
+            string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
+            print("Telemetry: Received Full Packet: " + incoming_packet);
+            ingest_queue.push(incoming_packet);
+
+            rcvd = rcvd.substr(packet_end + 1);
+        }
     }
 }
 
