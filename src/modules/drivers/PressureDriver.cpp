@@ -1,5 +1,6 @@
 #include <flight/modules/drivers/PressureDriver.hpp>
 #include <flight/modules/lib/logger_util.hpp>
+#include <flight/modules/lib/Util.hpp>
 #ifndef DESKTOP
     #include "Arduino.h"
 #endif
@@ -44,13 +45,8 @@ void PressureDriver::read(){
 
 float PressureDriver::getPressureValue(int pin){
     // Find index of the pin in the pins list, and return the corresponding value.
-    int idx = -1;
-    for(unsigned int i = 0; i < pressure_pins.size(); i++){
-        if(pressure_pins[i] == pin){
-            idx = i;
-            break;
-        }
-    }
+    int idx = Util::getIndex(pressure_pins, pin);
+    // int idx = -1;
     if(idx == -1){
         return 0.0;
     }

@@ -1,7 +1,6 @@
 #ifndef FLIGHT_UTIL_HPP
 #define FLIGHT_UTIL_HPP
 
-#include <iostream>
 #include <vector>
 #include <cmath>
 #include <map>
@@ -19,6 +18,10 @@ namespace Util {
 
     /** Replace all occurrences of a substring in str with a different string */
     string replaceAll(string str, const string& from, const string& to);
+
+    template <typename T> int getIndex(vector<T> arr, T val);
+    // int getIndex(vector<int> arr, int val);
+
     void serialize(JsonObject obj, string output);
     JsonObject deserialize(string str);
     double min(double a, double b);

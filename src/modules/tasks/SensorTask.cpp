@@ -15,13 +15,17 @@ void SensorTask::initialize() {
         }
     }
 
-    pressure_driver = new PressureDriver(pressure_pins);
+    #ifdef DESKTOP
+        pressure_driver = new PseudoPressureDriver(pressure_pins);
+    #else
+        pressure_driver = new PressureDriver(pressure_pins);
+    #endif
     print("Sensor: Initialized");
 }
 
 void SensorTask::read() {
     print("Sensor: Reading");
-    pressure_driver->read(); // data returned as an array of chars
+    pressure_driver->read();
 
     // Update pressure sensor values
     for(unsigned int i = 0; i < pressure_pins.size(); i++){

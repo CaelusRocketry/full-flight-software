@@ -30,6 +30,19 @@ string Util::replaceAll(string str, const string& from, const string& to) {
     return str;
 }
 
+template <typename T> int Util::getIndex(vector<T> arr, T val){
+// int Util::getIndex(vector<int> arr, int val){
+    for(unsigned int i = 0; i < arr.size(); i++){
+        if(arr[i] == val){
+            return i; 
+        }
+    }
+    return -1;
+}
+template int Util::getIndex<int>(vector<int>, int); // Instantiate the template for type int
+template int Util::getIndex<float>(vector<float>, float); // Instantiate the template for type int
+
+
 void Util::serialize(JsonObject obj, string output){
     serializeJson(obj, output);
 }
