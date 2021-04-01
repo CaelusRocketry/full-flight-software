@@ -7,7 +7,7 @@
 #include <flight/modules/tasks/ValveTask.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
-#include <fstream>
+#include <flight/modules/lib/Constants.hpp>
 #include <ArduinoJson.h>
 
 #ifndef DESKTOP
@@ -26,26 +26,24 @@ Supervisor::~Supervisor() {
 
 void Supervisor::initialize() {
     /* Load config */
-    // DynamicJsonDocument doc(15000);
 
-    // Util::doc.clear();
-    // // ifstream config_file("config.json");
-    // // deserializeJson(Util::doc, config_file);
-    // // JsonObject j = Util::doc.as<JsonObject>();
+    Util::doc.clear();
+    deserializeJson(Util::doc, CONFIG_STR);
+    JsonObject j = Util::doc.as<JsonObject>();
 
-    // // global_config = Config(j);
-    // global_registry.initialize();
+    global_config = Config(j);
+    global_registry.initialize();
 
-    // print("Supervisor: Parsing config");
-    // parse_config();
+    print("Supervisor: Parsing config");
+    parse_config();
 
-    // print("Tasks: Initializing");
-    // for (Task* task : tasks){
-    //     task->initialize();
-    // }
+    print("Tasks: Initializing");
+    for (Task* task : tasks){
+        task->initialize();
+    }
 
-    // print("Control tasks: Initializing");
-    // control_task->begin();
+    print("Control tasks: Initializing");
+    control_task->begin();
 }
 
 void Supervisor::read() {
