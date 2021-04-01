@@ -118,7 +118,7 @@
 
 #ifdef ARDUINO
 
-#include <Arduino.h>
+// #include <Arduino.h> // NOTE: Commented this line out to fix delete error
 
 // Enable support for Arduino's String class
 #ifndef ARDUINOJSON_ENABLE_ARDUINO_STRING

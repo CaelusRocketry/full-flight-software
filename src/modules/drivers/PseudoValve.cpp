@@ -5,6 +5,7 @@
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/lib/Errors.hpp>
+#include <flight/modules/lib/Util.hpp>
 
 // Extends PseudoArduino
 PseudoValve::PseudoValve(){
@@ -50,7 +51,7 @@ unsigned char* PseudoValve::read() {
 void PseudoValve::actuate(const pair<string, string>& valve, const string& state1, double timer, const string& state2){
     valve_states[valve] = state1;
     if (timer != -1) {
-        this_thread::sleep_for(chrono::milliseconds((long)(timer * 1000)));
+        Util::pause((long)(timer * 1000));
     }
     valve_states[valve] = state2;
     print("Finished actuating: " + valve.first + "." + valve.second);

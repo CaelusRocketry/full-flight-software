@@ -21,19 +21,19 @@ void Log::from_json(const JsonObject& j, Log& log) {
 
 // Log string to black_box.txt
 void Log::save(const string& filename) const {
-    ofstream file;
-    file.open(filename, fstream::in | fstream::out | fstream::app);
+    // ofstream file;
+    // file.open(filename, fstream::in | fstream::out | fstream::app);
 
-    if(!file) {
-        file.open(filename, fstream::in | fstream::out | fstream::trunc);
-    }
+    // if(!file) {
+    //     file.open(filename, fstream::in | fstream::out | fstream::trunc);
+    // }
 
     
     string output;
     to_string(output, *this); 
 
-    file << output << endl;
-    file.close();
+    // file << output << endl;
+    // file.close();
 }
 
 Log Log::copy(){

@@ -160,7 +160,7 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     value = sensor.measured_value;
     kalman_value = sensor.normalized_value;
     sensor_status_str = sensor_status_map[sensor.status];
-    long double millisecond_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    long double millisecond_timestamp = Util::getTime();
     string value_str = Util::to_string(value);
     string kalman_str = Util::to_string(kalman_value);
     string time_str = Util::to_string((double) (millisecond_timestamp / 1000));
@@ -185,7 +185,7 @@ void TelemetryControl::valve_request(const vector<string>& args) {
 
     actuation_type = actuation_type_inverse_map.at(valve_registry.actuation_type);
     actuation_priority = valve_priority_inverse_map.at(valve_registry.actuation_priority);
-    long double millisecond_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    long double millisecond_timestamp = Util::getTime();
 
     string time_str = Util::to_string((double) (millisecond_timestamp / 1000));
     JsonObject obj = Util::deserialize("{\"header\": \"Valve data request\", \"Status\": \"Success\", \"Actuation type\": " + actuation_type + ", \"Actuation priority\": " + actuation_priority + ", \"Valve type\": " + valve_type + ", \"Valve location\": " + valve_loc + ", \"Last actuated\": " + time_str + "}");

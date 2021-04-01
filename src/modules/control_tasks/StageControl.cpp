@@ -3,12 +3,11 @@
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/logger_util.hpp>
-#include <chrono>
 #include <flight/modules/lib/Util.hpp>
 
 StageControl::StageControl()
 {
-    this->start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    this->start_time = Util::getTime();
     // convert seconds to milliseconds
     this->send_interval = global_config.stages.send_interval * 1000;
     this->stage_index = 0;
@@ -39,12 +38,10 @@ void StageControl::execute()
     }
     else if (status >= 100)
     {
-        if (request_time == 0 || std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - request_time > request_interval)
+        if (request_time == 0 || Util::getTime() - request_time > request_interval)
         {
             send_progression_request();
-            request_time = std::chrono::duration_cast<std::chrono::milliseconds>(
-                               std::chrono::system_clock::now().time_since_epoch())
-                               .count();
+            request_time = Util::getTime();
         }
     }
 
@@ -82,7 +79,7 @@ double StageControl::calculate_status() const
         }
         else
         {
-            return Util::min(((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - this->start_time) / this->AUTOSEQUENCE_DELAY) * 100, 99.0);
+            return Util::min(((Util::getTime() - this->start_time) / this->AUTOSEQUENCE_DELAY) * 100, 99.0);
         }
     }
     else if (current_stage == Stage::POSTBURN)
@@ -105,12 +102,12 @@ void StageControl::send_progression_request()
 void StageControl::send_data()
 {
     print("Sending Stage Data.");
-    if (this->send_time == 0 || std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() > (this->send_time + this->send_interval))
+    if (this->send_time == 0 || Util::getTime() > (this->send_time + this->send_interval))
     {
         // TODO: Uncomment this
         JsonObject obj = Util::deserialize("{\"header\": \"stage_data\", \"stage\": " + stage_strings.at(stage_index) + ", \"status\": " + Util::to_string(calculate_status()) + "}");
         global_flag.log_info("stage", obj);
-        this->send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        this->send_time = Util::getTime();
     }
 }
 
@@ -135,7 +132,7 @@ void StageControl::progress()
         request_time = 0;
         status = calculate_status();
         global_registry.general.stage_status = status;
-        start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        start_time = Util::getTime();
         // JsonObject obj = Util::createJsonObject();
         // obj["header"] = "stage_progress";
         // obj["Status"] = status;
@@ -167,7 +164,7 @@ void StageControl::stage_valve_control()
     }
     else if (stage_index == int(Stage::AUTOSEQUENCE))
     {
-        long double curr_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time;
+        long double curr_time = Util::getTime() - start_time;
 
         if (global_registry.valves["solenoid"]["main_propellant_valve"].actuation_type != ActuationType::OPEN_VENT && curr_time - start_time > AUTOSEQUENCE_DELAY)
         {

@@ -1,5 +1,11 @@
 #include <flight/modules/lib/Util.hpp>
 
+#ifdef DESKTOP
+    #include <chrono>
+#else
+    #include "Arduino.h"
+#endif
+
 StaticJsonDocument<15000> Util::doc;
 
 vector<string> Util::split(const string &s, const string &delimiter){
@@ -109,8 +115,18 @@ string Util::to_string(long double d) {
     return output;
 }
 
-// JsonObject Util::createJsonObject(){
-//     StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
-//     JsonObject obj = doc.to<JsonObject>();
-//     return obj;
-// }
+long double Util::getTime(){
+    #ifdef DESKTOP
+        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    #else
+        return millis();
+    #endif
+}
+
+void Util::pause(int millis){
+    #ifdef DESKTOP
+        this_thread::sleep_for(std::chrono::milliseconds(millis));
+    #else
+        delay(millis);
+    #endif
+}

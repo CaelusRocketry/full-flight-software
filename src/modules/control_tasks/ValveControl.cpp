@@ -8,7 +8,6 @@
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/lib/logger_util.hpp>
-#include <chrono>
 #include <string>
 #include <flight/modules/lib/Util.hpp>
 #include <ArduinoJson.h>
@@ -29,11 +28,11 @@ void ValveControl::begin() {
 void ValveControl::execute() {
     print("Valve control: Controlling");
     check_abort();
-    auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    auto current_time = Util::getTime();
 
     if (last_send_time == 0 || current_time > last_send_time + send_interval) {
         send_valve_data();
-        last_send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        last_send_time = Util::getTime();
     }
 }
 

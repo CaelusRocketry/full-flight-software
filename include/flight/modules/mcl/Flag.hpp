@@ -9,7 +9,7 @@
 
 #include <flight/modules/lib/Packet.hpp>
 #include <flight/modules/lib/Enums.hpp>
-
+#include <flight/modules/lib/Util.hpp>
 #include <ArduinoJson.h>
 
 using namespace std;
@@ -29,7 +29,7 @@ class Flag {
             bool progress = false;
 
             // calculated in milliseconds
-            long mcl_start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();;
+            long double mcl_start_time = Util::getTime();
         } general;
 
         /* Telemetry Flags */

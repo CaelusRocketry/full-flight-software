@@ -6,7 +6,6 @@
 #include <flight/modules/control_tasks/SensorControl.hpp>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/mcl/Config.hpp>
-#include <chrono>
 #include <flight/modules/lib/Util.hpp>
 
 SensorControl::SensorControl() {
@@ -46,7 +45,7 @@ void SensorControl::execute() {
     print("Sensor control: Controlling");
     boundary_check();
 
-    long now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    long now = Util::getTime();
 
     if(last_send_time == 0 || now > last_send_time + send_interval) {
         send_sensor_data();

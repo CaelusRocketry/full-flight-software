@@ -5,11 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <map>
-#include <flight/modules/lib/logger_util.hpp>
-#include <flight/modules/mcl/Flag.hpp>
-#include <flight/modules/lib/Log.hpp>
 #include <flight/modules/lib/Enums.hpp>
-#include <flight/modules/lib/Packet.hpp>
 #include <flight/modules/lib/Errors.hpp>
 #include <ArduinoJson.h>
 
@@ -32,6 +28,8 @@ namespace Util {
     string to_string(long int i);
     string to_string(double d);
     string to_string(long double d);
+    long double getTime();
+    void pause(int millis);
 }
 
 #endif // FLIGHT_UTIL_HPP

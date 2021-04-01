@@ -10,6 +10,10 @@
 #include <fstream>
 #include <ArduinoJson.h>
 
+#ifndef DESKTOP
+    #include "Arduino.h"
+#endif
+
 //TODO: wrap everything in a try catch to make sure that execution doesn't stop if/when an error gets thrown?
 
 Supervisor::~Supervisor() {
@@ -24,24 +28,24 @@ void Supervisor::initialize() {
     /* Load config */
     // DynamicJsonDocument doc(15000);
 
-    Util::doc.clear();
-    ifstream config_file("config.json");
-    deserializeJson(Util::doc, config_file);
-    JsonObject j = Util::doc.as<JsonObject>();
+    // Util::doc.clear();
+    // // ifstream config_file("config.json");
+    // // deserializeJson(Util::doc, config_file);
+    // // JsonObject j = Util::doc.as<JsonObject>();
 
-    global_config = Config(j);
-    global_registry.initialize();
+    // // global_config = Config(j);
+    // global_registry.initialize();
 
-    print("Supervisor: Parsing config");
-    parse_config();
+    // print("Supervisor: Parsing config");
+    // parse_config();
 
-    print("Tasks: Initializing");
-    for (Task* task : tasks){
-        task->initialize();
-    }
+    // print("Tasks: Initializing");
+    // for (Task* task : tasks){
+    //     task->initialize();
+    // }
 
-    print("Control tasks: Initializing");
-    control_task->begin();
+    // print("Control tasks: Initializing");
+    // control_task->begin();
 }
 
 void Supervisor::read() {
@@ -69,11 +73,7 @@ void Supervisor::run() {
         control();
         actuate();
         // temp placeholder for TimerControl
-        #ifdef DESKTOP
-            this_thread::sleep_for(chrono::seconds(1));
-        #else
-            delay(1000);
-        #endif
+        Util::pause(1000);
     }
 }
 
