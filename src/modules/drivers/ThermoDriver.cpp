@@ -57,7 +57,6 @@
             uint8_t fault = this->maxthermo->readFault();
 
             if (fault) {
-                Serial.println("REEEEEEE");
                 ret = -420;
             }
 
