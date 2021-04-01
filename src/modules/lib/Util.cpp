@@ -2,6 +2,7 @@
 
 #ifdef DESKTOP
     #include <chrono>
+    #include <thread>
 #else
     #include "Arduino.h"
 #endif
@@ -125,7 +126,7 @@ long double Util::getTime(){
 
 void Util::pause(int millis){
     #ifdef DESKTOP
-        this_thread::sleep_for(std::chrono::milliseconds(millis));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(millis));
     #else
         delay(millis);
     #endif
