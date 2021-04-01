@@ -18,7 +18,7 @@
         for(unsigned int i = 0; i < pins.size(); i++){
             for (int j = 0; j < 4; j++) {
                 thermo_pins.push_back(pins[i][j]);
-            }        
+            }
             thermo_vals.push_back(MIN_TEMP);
             maxthermo = new Adafruit_MAX31856(pins[i][0], pins[i][1], pins[i][2], pins[i][3]);
             // Begin making readings

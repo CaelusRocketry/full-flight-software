@@ -107,7 +107,11 @@ void PseudoValve::write(unsigned char* msg) {
             break;
     }
     valve_actuations[valve] = actuation_type;
-    thread act([=] { actuate(valve, state1, timer, state2); });
 
-    act.detach();
+    // #ifdef DESKTOP
+    //     thread act([=] { actuate(valve, state1, timer, state2); });
+    //     act.detach();
+    // #else
+        actuate(valve, state1, timer, state2);
+    // #endif
 }
