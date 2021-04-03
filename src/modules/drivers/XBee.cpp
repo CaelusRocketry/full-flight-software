@@ -15,6 +15,8 @@
     }
 
     queue<string> XBee::read(int num_messages) {
+        print("XBee: Reading: " + rcvd);
+
         read_buffer();
         if (num_messages > (int) ingest_queue.size() || num_messages == -1){
             num_messages = (int) ingest_queue.size();
@@ -37,7 +39,7 @@
         Packet::to_string(output, packet);
 
         string packet_string = "^" + output + "$";
-        print("Telemetry: Sending packet: " + packet_string);
+        print("XBee: Sending packet: " + packet_string);
 
         for (size_t i = 0; i < packet_string.size(); i += 255)
         {
@@ -73,7 +75,7 @@
                 throw XBEE_READ_ERROR();
             }
         }
-        print("Telemetry: Received: " + rcvd);
+        print("XBee: Received: " + rcvd);
 
         size_t packet_start = rcvd.find('^');
         if(packet_start != string::npos) {
@@ -101,7 +103,7 @@
     }
 
     bool XBee::connect() {
-        print("Telemetry: Connecting");
+        print("XBee: Connecting");
 
         try {
             xbee->begin(global_config.telemetry.XBEE_BAUD_RATE);

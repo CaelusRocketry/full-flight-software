@@ -23,7 +23,8 @@ struct ConfigSensorInfo {
     struct {
         ConfigStage waiting, pressurization, autosequence, postburn;
     } boundaries;
-    int pin;
+    int pressure_pin;
+    vector<int> thermo_pins;
 };
 
 struct ConfigValveInfo {

@@ -35,7 +35,6 @@ Config::Config(JsonObject& json) {
             string sensor_loc = it2->key().c_str();
             JsonObject sensor = it2->value();
             ConfigSensorInfo info;
-            info.pin = sensor["pin"].as<int>();
 
             info.kalman_args.process_variance = sensor["kalman_args"]["process_variance"].as<double>();
             info.kalman_args.measurement_variance = sensor["kalman_args"]["measurement_variance"].as<double>();
@@ -52,6 +51,16 @@ Config::Config(JsonObject& json) {
 
             info.boundaries.postburn.safe.lower = sensor["boundaries"]["postburn"]["safe"][0].as<double>();
             info.boundaries.postburn.warn.upper = sensor["boundaries"]["postburn"]["warn"][1].as<double>();
+
+            if(sensor_type == "pressure") {
+                info.pressure_pin = sensor["pressure_pin"].as<int>();
+            }
+            if(sensor_type == "thermocouple") {
+                JsonArray thermo_pins_arr = sensor["thermo_pins"].as<JsonArray>();
+                for(JsonVariant value : thermo_pins_arr) {
+                    info.thermo_pins.push_back( value.as<int>() );
+                }
+            }
 
             sensors.list[sensor_type][sensor_loc] = info;
         }

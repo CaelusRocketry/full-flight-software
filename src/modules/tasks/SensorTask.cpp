@@ -9,16 +9,19 @@ void SensorTask::initialize() {
         /* Pair of <string, sensorinfo> */
         for (const auto& location_ : type_.second) {
             sensor_list.push_back(make_pair(type_.first, location_.first));
-            int pin = location_.second.pin;
-            pin_sensor_mappings[pin] = make_pair(type_.first, location_.first);
 
+            int pin;
             if(type_.first == "pressure") {
+                pin = location_.second.pressure_pin;
                 pressure_pins.push_back(pin);
-            } else {
-                //  TODO: FIGURE OUT HOW THERMO INFO IS ENCODED WITHIN CONFIG.JSON, GLOBAL CONFIG, AND SENSORTASK::THERMO_PINS
-                vector<int> v;
-                thermo_pins.push_back( v );
             }
+            if (type_.first == "thermocouple")
+            {
+                pin = location_.second.thermo_pins[0];
+                thermo_pins.push_back( location_.second.thermo_pins );
+            }
+
+            pin_sensor_mappings[pin] = make_pair(type_.first, location_.first);
         }
     }
 
