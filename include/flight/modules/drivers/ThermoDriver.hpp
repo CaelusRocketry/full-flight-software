@@ -4,6 +4,7 @@
     #define FLIGHT_THERMODRIVER_HPP
 
     #include <flight/modules/lib/Enums.hpp>
+    #include <flight/modules/lib/Util.hpp>
 
     #include <vector>
     #include <Adafruit_MAX31856.h>
@@ -20,12 +21,13 @@
     private:
         vector<int> thermo_pins;
         vector<float> thermo_vals;
+        vector<Adafruit_MAX31856*> maxthermos;
 
         float readSensor(int pin);
 
-        #ifndef DESKTOP
-            Adafruit_MAX31856 *maxthermo;
-        #endif
+        // #ifndef DESKTOP
+        //     Adafruit_MAX31856 *maxthermo;
+        // #endif
     
     public:
         ThermoDriver(vector<vector<int>> pins);

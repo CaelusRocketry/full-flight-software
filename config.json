@@ -36,33 +36,7 @@
               "warn": [50, 550]
             }
           },
-          "thermo_pins": [4, 6, 8, 10]     
-        },
-        "Thermo-2": {
-          "kalman_args": {
-            "process_variance": 0.01,
-            "measurement_variance": 0.02,
-            "kalman_value": 1000
-          },
-          "boundaries": {
-            "waiting": {
-              "safe": [100, 500],
-              "warn": [50, 550]
-            },
-            "pressurization": {
-              "safe": [100, 500],
-              "warn": [50, 550]
-            },
-            "autosequence": {
-              "safe": [100, 500],
-              "warn": [50, 550]
-            },
-            "postburn": {
-              "safe": [100, 500],
-              "warn": [50, 550]
-            }
-          },
-          "thermo_pins": [3, 5, 7, 9]
+          "thermo_pins": [10, 11, 12, 13]     
         }
       },
       "pressure": {
@@ -218,7 +192,7 @@
   },
   "arduino_type": "real",
   "task_config": {
-    "tasks": ["telemetry"],
-    "control_tasks": ["telemetry"]
+    "tasks": ["sensor"],
+    "control_tasks": ["sensor"]
   }
 }

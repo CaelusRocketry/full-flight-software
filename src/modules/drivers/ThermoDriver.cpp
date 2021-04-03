@@ -16,19 +16,21 @@
     // }
     ThermoDriver::ThermoDriver(vector<vector<int>> pins){
         for(unsigned int i = 0; i < pins.size(); i++){
-            for (int j = 0; j < 4; j++) {
-                thermo_pins.push_back(pins[i][j]);
-            }
+            thermo_pins.push_back(pins[i][0]);
             thermo_vals.push_back(MIN_TEMP);
+            Adafruit_MAX31856 *maxthermo;
             maxthermo = new Adafruit_MAX31856(pins[i][0], pins[i][1], pins[i][2], pins[i][3]);
             // Begin making readings
             maxthermo->begin();
+            maxthermos.push_back(maxthermo);
         }
     }
 
     void ThermoDriver::read(){
         for(unsigned int i = 0; i < thermo_pins.size(); i++){
             thermo_vals[i] = readSensor(thermo_pins[i]);
+            // Serial.print("Read in: ");
+            // Serial.println(thermo_vals[i]);
         }
     }
 
@@ -48,9 +50,10 @@
     }
 
     float ThermoDriver::readSensor(int pin){
+        int idx = Util::getIndex<int>(thermo_pins, pin);
         float ret = 0.0;
-        ret = this->maxthermo->readThermocoupleTemperature();
-        uint8_t fault = this->maxthermo->readFault();
+        ret = this->maxthermos[idx]->readThermocoupleTemperature();
+        uint8_t fault = this->maxthermos[idx]->readFault();
 
         if (fault) {
             ret = -420;
