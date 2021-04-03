@@ -26,11 +26,11 @@
         if(pin == 15){
             Serial.println(pwmVal);
         }
-        float voltage = map_value(pwmVal, 147, 1024, 0.5, 4.5) + 0.0100;
+        float voltage = map_value(pwmVal, 147, 1024, MIN_VOLTAGE, MAX_VOLTAGE) + 0.0100;
         if(pin == 15){
             Serial.println(voltage);
         }
-        float psi = map_value(voltage, 0.5, 4.5, 15, 1000) - 15;
+        float psi = map_value(voltage, MIN_VOLTAGE, MAX_VOLTAGE, MIN_PSI, MAX_PSI) - 15;
         if(pin == 15){
             Serial.println(psi);
         }
