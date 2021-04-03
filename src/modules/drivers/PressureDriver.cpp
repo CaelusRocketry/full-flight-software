@@ -23,6 +23,7 @@
 
     float PressureDriver::readSensor(int pin){
         float pwmVal = analogRead(pin);
+<<<<<<< HEAD
         if(pin == 15){
             Serial.println(pwmVal);
         }
@@ -34,6 +35,10 @@
         if(pin == 15){
             Serial.println(psi);
         }
+=======
+        float voltage = map_value(pwmVal, 147, 1024, 0.5, 4.5) + 0.0100;
+        float psi = map_value(voltage, 0.5, 4.5, 15, 1000) - 15;
+>>>>>>> 08d1560a301e2d804ff241cc04ece8e79d4c2996
         return psi;
     }
 
