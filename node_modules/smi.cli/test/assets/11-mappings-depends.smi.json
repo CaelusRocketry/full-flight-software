@@ -1,0 +1,22 @@
+{
+    "upstream": {
+        "catalogs": {
+            "02-mappings-catalog": "./02-mappings-catalog.catalog.json"
+        }
+    },
+    "mappings": {
+        "smi-test-package-1": {
+            "location": "02-mappings-catalog/smi-test-package-2",
+            "depends": [
+                "smi-test-package-2"
+            ]
+        },
+        "smi-test-package-2": {
+            "location": "02-mappings-catalog/smi-test-package-2",
+            "depends": [
+                "smi-test-package-3"
+            ]
+        },
+        "smi-test-package-3": "02-mappings-catalog/smi-test-package-2"
+    }
+}

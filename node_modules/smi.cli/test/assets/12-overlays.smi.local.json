@@ -1,0 +1,11 @@
+{
+	"mappings": {
+		"smi-test-package-2": {
+			"aspects": {
+                "source": {
+					"install": true
+				}
+			}
+		}
+	}
+}

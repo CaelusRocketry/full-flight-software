@@ -1,0 +1,13 @@
+{
+	"mappings": {
+		"smi-test-package-2": {
+			"aspects": {
+                "source": {
+					"location": "https://github.com/sourcemint/smi-test-package-2/archive/v0.4.0.tar.gz",
+					"subpath": "source",
+					"install": false
+				}
+			}
+		}
+	}
+}

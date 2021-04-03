@@ -1,0 +1,44 @@
+{
+    "dirpath": "packages/requirements-env",
+    "dirrealpath": "packages/requirements-env",
+    "id": "b8e45b12518504247e583187d15d7c8958ebe291-requirements-env",
+    "lookupPaths": [
+        "packages/requirements-env/package.json",
+        "packages/requirements-env/.package.json"
+    ],
+    "descriptorPaths": [
+        "packages/requirements-env/package.json"
+    ],
+    "raw": {
+        "package.json": {
+            "env": {
+                "TERM": "$TERM",
+                "TERM_INHERITED": "$TERM",
+                "TERM_OWN": "own-term"
+            }
+        }
+    },
+    "normalized": {
+        ".package.json": {},
+        "package.json": {
+            "requirements": {
+                "env": {
+                    "TERM": "$TERM",
+                    "TERM_INHERITED": "$TERM",
+                    "TERM_OWN": "own-term"
+                }
+            }
+        }
+    },
+    "combined": {
+        "requirements": {
+            "env": {
+                "TERM": "$TERM",
+                "TERM_INHERITED": "$TERM",
+                "TERM_OWN": "own-term"
+            }
+        }
+    },
+    "warnings": [],
+    "errors": []
+}

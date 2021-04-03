@@ -1,0 +1,87 @@
+{
+    "dirpath": "packages/node-dependency-not-declare",
+    "dirrealpath": "packages/node-dependency-not-declare",
+    "id": "7c39af25c7e8142807cb3908a3b829058921429c-node-dependency-not-declare",
+    "lookupPaths": [
+        "packages/node-dependency-not-declare/package.json",
+        "packages/node-dependency-not-declare/.package.json"
+    ],
+    "descriptorPaths": [
+        "packages/node-dependency-not-declare/package.json"
+    ],
+    "raw": {
+        "package.json": {
+            "main": "app.js"
+        }
+    },
+    "normalized": {
+        ".package.json": {
+            "pm": {
+                "install": "npm"
+            },
+            "layout": {
+                "directories": {
+                    "dependency": "./node_modules"
+                }
+            },
+            "dependencies": {
+                "bundled": {
+                    "greeting": {
+                        "location": "./node_modules/greeting"
+                    }
+                }
+            },
+            "mappings": {
+                "greeting": "275b1739d304b77fdad7b9388d6ef9984eb55a92-greeting"
+            }
+        },
+        "package.json": {
+            "exports": {
+                "main": "./app.js"
+            },
+            "pm": {
+                "install": "npm"
+            },
+            "layout": {
+                "directories": {
+                    "dependency": "./node_modules"
+                }
+            },
+            "dependencies": {
+                "bundled": {
+                    "greeting": {
+                        "location": "./node_modules/greeting"
+                    }
+                }
+            },
+            "mappings": {
+                "greeting": "275b1739d304b77fdad7b9388d6ef9984eb55a92-greeting"
+            }
+        }
+    },
+    "combined": {
+        "exports": {
+            "main": "./app.js"
+        },
+        "pm": {
+            "install": "npm"
+        },
+        "layout": {
+            "directories": {
+                "dependency": "./node_modules"
+            }
+        },
+        "dependencies": {
+            "bundled": {
+                "greeting": {
+                    "location": "./node_modules/greeting"
+                }
+            }
+        },
+        "mappings": {
+            "greeting": "275b1739d304b77fdad7b9388d6ef9984eb55a92-greeting"
+        }
+    },
+    "warnings": [],
+    "errors": []
+}

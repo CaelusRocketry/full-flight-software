@@ -1,0 +1,5 @@
+{
+	"mappings": {
+        "test-data[platform=darwin]": "https://s3.amazonaws.com/__TEST_DATA__/Archive.dmg"
+	}
+}
