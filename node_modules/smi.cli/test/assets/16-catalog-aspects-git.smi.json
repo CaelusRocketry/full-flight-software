@@ -1,0 +1,33 @@
+{
+	"upstream": {
+		"catalogs": {
+			"catalog": "./16-catalog-aspects-git.catalog.json"
+		}
+	},
+	"mappings": {
+        "./.packages/github.com~sourcemint~smi.cli~pgs~source": {
+        	"depends": [
+        		"smi.cache"
+        	],
+        	"location": "catalog/github.com~sourcemint~smi.cli~0~source"
+        },
+        "smi.cli": {
+        	"depends": [
+        		"smi.cache"
+        	],
+        	"location": "catalog/github.com~sourcemint~smi.cli~0~source",
+        	"install": false
+        },
+        "./.packages/github.com~sourcemint~smi.cache~pgs~source": "catalog/github.com~sourcemint~smi.cache~0~source",
+        "smi.cache": {
+        	"location": "catalog/github.com~sourcemint~smi.cache~0~source",
+        	"install": false
+        }
+	},
+	"config": {
+		"smi.cli": {
+			"latestOnly": false,
+			"packagesDirectory": "node_modules"
+		}
+	}
+}

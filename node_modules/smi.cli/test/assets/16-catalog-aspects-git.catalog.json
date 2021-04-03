@@ -1,0 +1,20 @@
+{
+    "packages": {
+        "github.com~sourcemint~smi.cli~0~$aspect": {
+            "aspects": {
+                "source": {
+                    "location": "https://github.com/sourcemint/smi#51dc2a6e15d03e807ebfaf6ef1eb48605deb0149",
+                    "type": "git"
+                }
+            }
+        },
+        "github.com~sourcemint~smi.cache~0~$aspect": {
+            "aspects": {
+                "source": {
+                    "location": "https://github.com/sourcemint/smi.cache#515292a568affaf707bf30ed9e60f6d063812b10",
+                    "type": "git"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "dirpath": "packages/nodejs-main-6",
+    "dirrealpath": "packages/nodejs-main-6",
+    "id": "3c1f461a49a5e43474d9f4cfd91b27eb099befd2-nodejs-main-6",
+    "lookupPaths": [
+        "packages/nodejs-main-6/package.json",
+        "packages/nodejs-main-6/.package.json"
+    ],
+    "descriptorPaths": [],
+    "raw": {},
+    "normalized": {
+        ".package.json": {
+            "exports": {
+                "main": "./index.js",
+                "browser": "./index.js"
+            }
+        },
+        "package.json": {
+            "exports": {
+                "main": "./index.js",
+                "browser": "./index.js"
+            }
+        }
+    },
+    "combined": {
+        "exports": {
+            "main": "./index.js",
+            "browser": "./index.js"
+        }
+    },
+    "warnings": [],
+    "errors": []
+}

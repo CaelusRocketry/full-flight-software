@@ -1,0 +1,48 @@
+{
+    "hashes": {
+        "hash": "970cf1dfa75ae9b9f2d13f87c1282284",
+        "paths": {
+            "/_packages": {
+                "dir": true,
+                "size": 204
+            },
+            "/_packages/smi-test-package-1": {
+                "dir": true,
+                "size": 26,
+                "symlink": "smi-test-package-1-cdeaa1d",
+                "symlinkReal": "/_packages/smi-test-package-1-cdeaa1d"
+            },
+            "/_packages/smi-test-package-1-cdeaa1d": {
+                "dir": true,
+                "size": 170
+            },
+            "/_packages/smi-test-package-1-cdeaa1d.gz": {
+                "dir": false,
+                "size": 182,
+                "symlink": "/pinf.genesis/01-genesis.pinf.org/.deps/github.com~sourcemint~smi~0/source/installed/master/test/.tmp/.smi/cache/https/codeload.github.com/sourcemint/smi-test-package-1/tar.gz/v0.2.0",
+                "symlinkReal": "/../.smi/cache/https/codeload.github.com/sourcemint/smi-test-package-1/tar.gz/v0.2.0"
+            },
+            "/_packages/smi-test-package-1-cdeaa1d/package.json": {
+                "size": 54
+            },
+            "/_packages/smi-test-package-1-cdeaa1d~extracted": {
+                "dir": true,
+                "size": 170
+            },
+            "/_packages/smi-test-package-1-cdeaa1d~extracted/package.json": {
+                "size": 54
+            },
+            "/_packages/smi-test-package-1/package.json": {
+                "size": 54
+            }
+        },
+        "summary": {
+            "ignoreRulesCount": 20,
+            "ignoredFileList": {},
+            "ignoredFiles": 6,
+            "totalFiles": 11,
+            "totalSize": 162
+        }
+    },
+    "info": {}
+}

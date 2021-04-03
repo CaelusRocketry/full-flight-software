@@ -1,0 +1,22 @@
+{
+	"upstream": {
+		"catalogs": {
+			"cat": "./13-contextual-build-assets.catalog.json"
+		}
+	},
+	"mappings": {
+		"pkg1": "cat/pkg1",
+		"pkg2": "cat/pkg2",
+		"pkg3": {
+            "aspects": {
+                "build[platform=never-match-me]": "https://github.com/sourcemint/smi-test-package-1/archive/v0.2.0.tar.gz",
+                "build": "https://github.com/sourcemint/smi-test-package-2/archive/v0.4.0.tar.gz"
+            }
+		},
+		"pkg4": {
+            "aspects": {
+                "build[platform=darwin&arch=x64]": "https://github.com/sourcemint/smi-test-package-2/archive/v0.4.0.tar.gz"
+            }
+		}
+	}
+}

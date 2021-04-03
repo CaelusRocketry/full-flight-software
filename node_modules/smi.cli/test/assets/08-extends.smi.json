@@ -1,0 +1,14 @@
+{
+	"extends": [
+		"./08-extends.smi.prototype.json"
+	],
+	"mappings": {
+		"smi-test-package-2": {
+			"aspects": {
+                "source": {
+					"install": false
+				}
+			}
+		}
+	}
+}
