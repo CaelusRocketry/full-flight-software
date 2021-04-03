@@ -5,16 +5,22 @@
 #include <flight/modules/mcl/Flag.hpp>
 
 void TelemetryTask::initialize() {
-    this->telemetry.connect();
+    #ifdef DESKTOP
+        telemetry = new Telemetry();
+    #else 
+        telemetry = new XBee();
+    #endif
+
+    telemetry->connect();
 }
 
 void TelemetryTask::read() {
     print("Telemetry: Reading");
-    bool status = this->telemetry.get_status();
+    bool status = telemetry->get_status();
     global_registry.telemetry.status = status;
 
     if (status) {
-        queue<string> packets = this->telemetry.read(-1);
+        queue<string> packets = telemetry->read(-1);
         // For packet in packets read from telemetry, push packet to ingest queue
         
         // NOTE: ONLY WORKS FOR XBEE, with "^" and "$" formatting
@@ -65,14 +71,14 @@ void TelemetryTask::read() {
 void TelemetryTask::actuate() {
     print("Telemetry: Actuating");
     if (global_flag.telemetry.reset) {
-        this->telemetry.reset();
+        telemetry->reset();
     } else {
         enqueue();
         auto& send_queue = global_flag.telemetry.send_queue;
 
         // for each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
-            this->telemetry.write(packet);
+            telemetry->write(packet);
         }
     }
 }

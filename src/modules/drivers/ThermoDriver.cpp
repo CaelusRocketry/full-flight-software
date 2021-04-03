@@ -49,18 +49,13 @@
 
     float ThermoDriver::readSensor(int pin){
         float ret = 0.0;
-        #ifdef DESKTOP
-            // Pseudo sensor stuff
-            ret = (float)pin;
-        #else
-            ret = this->maxthermo->readThermocoupleTemperature();
-            uint8_t fault = this->maxthermo->readFault();
+        ret = this->maxthermo->readThermocoupleTemperature();
+        uint8_t fault = this->maxthermo->readFault();
 
-            if (fault) {
-                ret = -420;
-            }
+        if (fault) {
+            ret = -420;
+        }
 
-        #endif
         return ret;
     }
 

@@ -3,9 +3,10 @@
 
 #include <string>
 #include <flight/modules/tasks/Task.hpp>
-#include <flight/modules/drivers/Telemetry.hpp>
 
-#ifndef DESKTOP
+#ifdef DESKTOP
+    #include <flight/modules/drivers/Telemetry.hpp>
+#else 
     #include <flight/modules/drivers/XBee.hpp>
 #endif
 
@@ -13,9 +14,9 @@
 class TelemetryTask : public Task {
 private:
 #ifdef DESKTOP
-    Telemetry telemetry;
+    Telemetry* telemetry;
 #else
-    XBee telemetry;
+    XBee* telemetry;
 #endif
 
 public:
