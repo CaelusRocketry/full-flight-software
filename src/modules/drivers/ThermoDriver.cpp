@@ -54,6 +54,8 @@
         float ret = 0.0;
         ret = this->maxthermos[idx]->readThermocoupleTemperature();
         uint8_t fault = this->maxthermos[idx]->readFault();
+        print(Util::to_string(idx) + " " + Util::to_string(ret) + " " + Util::to_string(fault));
+
 
         if (fault) {
             ret = -420;

@@ -36,7 +36,7 @@
               "warn": [50, 550]
             }
           },
-          "thermo_pins": [10, 11, 12, 13]     
+          "thermo_pins": [33, 0, 1, 32]     
         }
       },
       "pressure": {
@@ -64,7 +64,7 @@
               "warn": [50, 550]
             }
           },
-          "pressure_pin": 14
+          "pressure_pin": 10
         },
         "PT-P": {
           "kalman_args": {

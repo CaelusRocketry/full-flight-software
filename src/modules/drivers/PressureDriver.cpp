@@ -25,6 +25,7 @@
         float pwmVal = analogRead(pin);
         float voltage = map_value(pwmVal, 147, 1024, 0.5, 4.5) + 0.0100;
         float psi = map_value(voltage, 0.5, 4.5, 15, 1000) - 15;
+        print(Util::to_string(psi) + " " + Util::to_string(voltage) + " " + Util::to_string(pwmVal));
         return psi;
     }
 

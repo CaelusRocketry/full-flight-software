@@ -49,6 +49,7 @@ void SensorTask::read() {
         // specific sensor, pressure sensor 1, pressure sensor 2, etc.
         string loc = sensor_info.second;
         float value = pressure_driver->getPressureValue(pin);
+        print(type + " " + loc + ": " + Util::to_string((double) value));
         global_registry.sensors[type][loc].measured_value = value;
     }
 
@@ -60,6 +61,7 @@ void SensorTask::read() {
         // specific sensor, pressure sensor 1, pressure sensor 2, etc.
         string loc = sensor_info.second;
         float value = thermo_driver->getThermoValue(pin);
+        print(type + " " + loc + ": " + Util::to_string((double) value));
         global_registry.sensors[type][loc].measured_value = value;
     }
 
