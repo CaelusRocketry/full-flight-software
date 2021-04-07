@@ -18,22 +18,14 @@ Run
 
 to make sure that PlatformIO was set up correctly.
 
-## Running Natively
+## Running locally
 
-To run natively, make sure you're in the cpp-flight-software folder, and run
+To run locally, make sure you're in the cpp-flight-software folder, and run
 
-```python run.py```
+```python run.py local```
 
 ## Uploading to a Teensy 3.6
 
-To run the flight software on a Teensy 3.6, run
+To upload and run the flight software on a Teensy 3.6, make sure you're in the cpp-flight-software folder, and run
 
-```pio run -e teensy36 -t upload```
-
-and after that is successful, run
-
-```pio device monitor```
-
-
-
-```
+```python run.py teensy```
