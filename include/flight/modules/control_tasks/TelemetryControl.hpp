@@ -25,7 +25,6 @@ private:
         {"test", {"response"}}
     };
 
-    // Telemetry telemetry;
 
     void ingest(const Log& log);
     void heartbeat(const vector<string>& args);

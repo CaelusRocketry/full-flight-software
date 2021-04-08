@@ -1,119 +1,123 @@
-// #include <chrono>
-// #include <flight/modules/lib/logger_util.hpp>
-// #include <flight/modules/drivers/Telemetry.hpp>
-// #include <flight/modules/mcl/Config.hpp>
-// #include <flight/modules/lib/Errors.hpp>
+#ifdef DESKTOP
 
-// using asio::ip::address;
+#include <chrono>
+#include <flight/modules/lib/logger_util.hpp>
+#include <flight/modules/drivers/Telemetry.hpp>
+#include <flight/modules/mcl/Config.hpp>
+#include <flight/modules/lib/Errors.hpp>
 
-// Telemetry::Telemetry() {
-//     // Initialize variables
-//     connection = false;
-// }
+using asio::ip::address;
 
-// queue<string> Telemetry::read(int num_messages) {
-//     mtx.lock(); // prevents anything else from a different thread from accessing the ingest_queue until we're done
-//     if (num_messages > ingest_queue.size() || num_messages == -1){
-//         num_messages = ingest_queue.size();
-//     }
+Telemetry::Telemetry() {
+    // Initialize variables
+    connection = false;
+}
 
-//     // type of list where elements are exclusively inserted from one side and removed from the other.
-//     queue<string> q;
-//     for (int i = 0; i < num_messages; i++){
-//         q.push(ingest_queue.front());
-//         ingest_queue.pop();
-//     }
+queue<string> Telemetry::read(int num_messages) {
+    mtx.lock(); // prevents anything else from a different thread from accessing the ingest_queue until we're done
+    if (num_messages > ingest_queue.size() || num_messages == -1){
+        num_messages = ingest_queue.size();
+    }
 
-//     mtx.unlock();
-//     return q;
-// }
+    // type of list where elements are exclusively inserted from one side and removed from the other.
+    queue<string> q;
+    for (int i = 0; i < num_messages; i++){
+        q.push(ingest_queue.front());
+        ingest_queue.pop();
+    }
 
-// // This sends the packet to the GUI!
-// bool Telemetry::write(const Packet& packet) {
-//     // Convert to JSON and then to a string
-//     json packet_json;
-//     to_json(packet_json, packet);
+    mtx.unlock();
+    return q;
+}
 
-//     // Note: add "END" at the end of the packet, so packets are split correctly
-//     string packet_string = packet_json.dump() + "END";
-//     print("Telemetry: Sending packet: " + packet_string);
+// This sends the packet to the GUI!
+bool Telemetry::write(const Packet& packet) {
+    // Convert to JSON and then to a string
+    json packet_json;
+    to_json(packet_json, packet);
 
-//     try {
-//         asio::write(socket, asio::buffer(packet_string), asio::transfer_all());
-//     }
-//     catch (std::exception& e) {
-//         print(e.what());
-//         throw SOCKET_WRITE_ERROR();
-//     }
+    // Note: add "END" at the end of the packet, so packets are split correctly
+    string packet_string = packet_json.dump() + "END";
+    print("Telemetry: Sending packet: " + packet_string);
 
-//     this_thread::sleep_for(chrono::milliseconds(global_config.telemetry.DELAY));
-//     return true;
-// }
+    try {
+        asio::write(socket, asio::buffer(packet_string), asio::transfer_all());
+    }
+    catch (std::exception& e) {
+        print(e.what());
+        throw SOCKET_WRITE_ERROR();
+    }
 
-// // This gets called in the main thread
-// void Telemetry::recv_loop() {
-//     while (connection && !TERMINATE_FLAG) {
-//         try {
-//             // Read in data from socket
-//             std::array<char, 1024> buf;
-//             socket.read_some(asio::buffer(buf));
+    this_thread::sleep_for(chrono::milliseconds(global_config.telemetry.DELAY));
+    return true;
+}
 
-//             string msg(buf.data());
+// This gets called in the main thread
+void Telemetry::recv_loop() {
+    while (connection && !TERMINATE_FLAG) {
+        try {
+            // Read in data from socket
+            std::array<char, 1024> buf;
+            socket.read_some(asio::buffer(buf));
 
-//             mtx.lock();
-//             ingest_queue.push(msg);
-//             mtx.unlock();
+            string msg(buf.data());
 
-//             print("Telemetry: Received: " + msg);
-//             this_thread::sleep_for(chrono::seconds(global_config.telemetry.DELAY));
-//         }
-//         catch (std::exception& e){
-//             print(e.what());
-//             end();
-//             throw SOCKET_READ_ERROR();
-//         }
-//     }
-// }
+            mtx.lock();
+            ingest_queue.push(msg);
+            mtx.unlock();
 
-// bool Telemetry::get_status() const {
-//     return connection;
-// }
+            print("Telemetry: Received: " + msg);
+            this_thread::sleep_for(chrono::seconds(global_config.telemetry.DELAY));
+        }
+        catch (std::exception& e){
+            print(e.what());
+            end();
+            throw SOCKET_READ_ERROR();
+        }
+    }
+}
 
-// void Telemetry::reset() {
-//     end();
-//     if(!connect()){
-//         end();
-//     }
-// }
+bool Telemetry::get_status() const {
+    return connection;
+}
 
-// bool Telemetry::connect() {
-//     try {
-//         print("Telemetry: Connecting");
-//         socket.open(asio::ip::tcp::v4());
+void Telemetry::reset() {
+    end();
+    if(!connect()){
+        end();
+    }
+}
 
-//         address ip_address = address::from_string(global_config.telemetry.GS_IP);
-//         asio::ip::tcp::endpoint ep(ip_address, global_config.telemetry.GS_PORT);
+bool Telemetry::connect() {
+    try {
+        print("Telemetry: Connecting");
+        socket.open(asio::ip::tcp::v4());
 
-//         print("Telemetry: Connecting Socket");
-//         socket.connect(ep);
+        address ip_address = address::from_string(global_config.telemetry.GS_IP);
+        asio::ip::tcp::endpoint ep(ip_address, global_config.telemetry.GS_PORT);
 
-//         print("Telemetry: Connected!");
-//     } catch(std::exception& e) {
-//         print(e.what());
-//         throw SOCKET_CONNECTION_ERROR();
-//     }
+        print("Telemetry: Connecting Socket");
+        socket.connect(ep);
 
-//     thread t(&Telemetry::recv_loop, this);
-//     connection = true;
-//     TERMINATE_FLAG = false;
-//     recv_thread = &t;
-//     recv_thread->detach();
+        print("Telemetry: Connected!");
+    } catch(std::exception& e) {
+        print(e.what());
+        throw SOCKET_CONNECTION_ERROR();
+    }
 
-//     return true;
-// }
+    tthread::thread t(&Telemetry::recv_loop, this);
+    connection = true;
+    TERMINATE_FLAG = false;
+    recv_thread = &t;
+    recv_thread->detach();
 
-// void Telemetry::end() {
-//     TERMINATE_FLAG = true;
-//     socket.close();
-//     connection = false;
-// }
+    return true;
+}
+
+void Telemetry::end() {
+    TERMINATE_FLAG = true;
+    socket.close();
+    connection = false;
+}
+
+#endif

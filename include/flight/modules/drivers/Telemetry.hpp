@@ -1,21 +1,23 @@
 #ifndef FLIGHT_TELEMETRY_HPP
 #define FLIGHT_TELEMETRY_HPP
 
+#ifdef DESKTOP
+
 #include <string>
 #include <queue>
 #include <cstdio>
-// #include <asio/impl/src.hpp>
-// #include <asio/ip/tcp.hpp>
-// #include <asio/write.hpp>
-// #include <asio/read.hpp>
-// #include <asio/basic_stream_socket.hpp>
+#include <asio/impl/src.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/write.hpp>
+#include <asio/read.hpp>
+#include <asio/basic_stream_socket.hpp>
 #include <unistd.h>
 #include <mutex>
-#include <thread>
+#include <thread/tinythread.h>
 #include <flight/modules/lib/Packet.hpp>
 
 using namespace std;
-// using asio::ip::tcp;
+using asio::ip::tcp;
 
 class Telemetry {
 private:
@@ -23,12 +25,12 @@ private:
     queue<string> ingest_queue;
 
     // lockable object used to specify when things need exclusive access.
-    // mutex mtx;
-    // thread* recv_thread = nullptr;
+    tthread::mutex mtx;
+    tthread::thread* recv_thread = nullptr;
     bool TERMINATE_FLAG = false;
 
-    // asio::io_context io_context;
-    // asio::ip::tcp::socket socket = tcp::socket(io_context);
+    asio::io_context io_context;
+    asio::ip::tcp::socket socket = tcp::socket(io_context);
 
 public:
     Telemetry();
@@ -41,5 +43,6 @@ public:
     void end();
 };
 
+#endif
 
 #endif //FLIGHT_TELEMETRY_HPP

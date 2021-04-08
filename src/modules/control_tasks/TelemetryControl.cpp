@@ -14,7 +14,6 @@ TelemetryControl::TelemetryControl() {
 
 void TelemetryControl::begin() {
     print("Telemetry control: Beginning");
-    // telemetry.connect();
     make_functions();
 }
 

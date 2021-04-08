@@ -192,7 +192,7 @@
   },
   "arduino_type": "real",
   "task_config": {
-    "tasks": ["sensor"],
-    "control_tasks": ["sensor"]
+    "tasks": ["sensor", "telemetry"],
+    "control_tasks": ["sensor", "telemetry"]
   }
 }

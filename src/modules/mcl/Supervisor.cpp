@@ -3,7 +3,7 @@
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Supervisor.hpp>
 #include <flight/modules/tasks/SensorTask.hpp>
-// #include <flight/modules/tasks/TelemetryTask.hpp>
+#include <flight/modules/tasks/TelemetryTask.hpp>
 #include <flight/modules/tasks/ValveTask.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
@@ -80,7 +80,7 @@ void Supervisor::parse_config() {
     for (const string& task : global_config.task_config.tasks) {
         print("Found task: " + task);
         if (task == "sensor") tasks.push_back(new SensorTask());
-        // if (task == "telemetry") tasks.push_back(new TelemetryTask());
+        if (task == "telemetry") tasks.push_back(new TelemetryTask());
         if (task == "valve") tasks.push_back(new ValveTask());
     }
 
