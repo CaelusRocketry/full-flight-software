@@ -18,13 +18,13 @@ private:
 #else
     XBee* telemetry;
 #endif
+    void enqueue();
 
 public:
-    TelemetryTask() {}
-    void initialize();
-    void read();
-    void enqueue();
-    void actuate();
+    TelemetryTask() = default;
+    void initialize() override;
+    void read() override;
+    void actuate() override;
 };
 
 

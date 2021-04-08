@@ -11,7 +11,7 @@ using namespace std;
 class Task {
     public:
         virtual ~Task() = default;
-        Task() {}
+        Task() = default;
         virtual void initialize() = 0;
         virtual void read() = 0;
         virtual void actuate() = 0;

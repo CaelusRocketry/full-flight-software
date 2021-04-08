@@ -139,7 +139,8 @@ long double Util::getTime(){
 
 void Util::pause(int millis){
     #ifdef DESKTOP
-        tthread::this_thread::sleep_for(std::chrono::duration<double>(millis * 1000));
+        long double curr_time = getTime();
+        while(getTime() < curr_time + millis);
     #else
         delay(millis);
     #endif
