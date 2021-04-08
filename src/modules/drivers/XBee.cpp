@@ -36,7 +36,7 @@
     bool XBee::write(const Packet& packet) {
 
         string output;
-        Packet::to_string(output, packet);
+        // Packet::to_string(output, packet);
 
         string packet_string = "^" + output + "$";
         print("XBee: Sending packet: " + packet_string);
