@@ -5,6 +5,8 @@
 #include <flight/modules/drivers/Telemetry.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Errors.hpp>
+#include <flight/modules/lib/Util.hpp>
+#include <thread>
 
 using asio::ip::address;
 
@@ -33,11 +35,11 @@ queue<string> Telemetry::read(int num_messages) {
 // This sends the packet to the GUI!
 bool Telemetry::write(const Packet& packet) {
     // Convert to JSON and then to a string
-    json packet_json;
-    to_json(packet_json, packet);
+    string output;
+    Packet::to_string(output, packet);
 
     // Note: add "END" at the end of the packet, so packets are split correctly
-    string packet_string = packet_json.dump() + "END";
+    string packet_string = output + "END";
     print("Telemetry: Sending packet: " + packet_string);
 
     try {
@@ -48,7 +50,7 @@ bool Telemetry::write(const Packet& packet) {
         throw SOCKET_WRITE_ERROR();
     }
 
-    this_thread::sleep_for(chrono::milliseconds(global_config.telemetry.DELAY));
+    Util::pause(global_config.telemetry.DELAY);
     return true;
 }
 
@@ -67,7 +69,7 @@ void Telemetry::recv_loop() {
             mtx.unlock();
 
             print("Telemetry: Received: " + msg);
-            this_thread::sleep_for(chrono::seconds(global_config.telemetry.DELAY));
+            Util::pause(global_config.telemetry.DELAY);
         }
         catch (std::exception& e){
             print(e.what());
@@ -105,7 +107,7 @@ bool Telemetry::connect() {
         throw SOCKET_CONNECTION_ERROR();
     }
 
-    tthread::thread t(&Telemetry::recv_loop, this);
+    std::thread t([this] { this->recv_loop(); });
     connection = true;
     TERMINATE_FLAG = false;
     recv_thread = &t;

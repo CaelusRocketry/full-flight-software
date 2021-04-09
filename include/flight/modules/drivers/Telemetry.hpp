@@ -13,7 +13,7 @@
 #include <asio/basic_stream_socket.hpp>
 #include <unistd.h>
 #include <mutex>
-#include <thread/tinythread.h>
+// #include <thread/tinythread.h>
 #include <flight/modules/lib/Packet.hpp>
 
 using namespace std;
@@ -25,8 +25,8 @@ private:
     queue<string> ingest_queue;
 
     // lockable object used to specify when things need exclusive access.
-    tthread::mutex mtx;
-    tthread::thread* recv_thread = nullptr;
+    std::mutex mtx;
+    std::thread* recv_thread = nullptr;
     bool TERMINATE_FLAG = false;
 
     asio::io_context io_context;

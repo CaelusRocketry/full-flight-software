@@ -2,7 +2,6 @@
 
 #ifdef DESKTOP
     #include <chrono>
-    #include <thread/tinythread.h>
 #else
     #include "Arduino.h"
 #endif

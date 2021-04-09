@@ -1,4 +1,3 @@
-#include <thread> // For time delay
 #include <set>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Supervisor.hpp>
