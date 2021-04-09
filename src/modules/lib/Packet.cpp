@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 #include <flight/modules/lib/Util.hpp>
 
-void to_string(string& output, const Packet& packet) {
+void Packet::to_string(string& output, const Packet& packet) {
     Util::doc.clear();
     
     Util::doc["priority"] = static_cast<int>(packet.priority);
@@ -18,7 +18,7 @@ void to_string(string& output, const Packet& packet) {
     serializeJson(Util::doc, output);
 }
 
-void from_json(const JsonObject& j, Packet& packet) {
+void Packet::from_json(const JsonObject& j, Packet& packet) {
     // First, get timestamp and log priority
     long double timestamp = j["timestamp"].as<long double>();
     auto priority = static_cast<LogPriority>(j["priority"].as<int>());

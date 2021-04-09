@@ -58,7 +58,7 @@ void TelemetryTask::read() {
 
                 Packet pack;
                 JsonObject j = Util::deserialize(processed_packet_string);
-                // Packet::from_json(j, pack);
+                Packet::from_json(j, pack);
 
                 global_registry.telemetry.ingest_queue.push(pack);
                 }
