@@ -22,6 +22,7 @@ private:
 
 public:
     TelemetryTask() = default;
+    ~TelemetryTask() = default;
     void initialize() override;
     void read() override;
     void actuate() override;

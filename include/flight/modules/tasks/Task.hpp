@@ -10,11 +10,11 @@ using namespace std;
 
 class Task {
     public:
-        virtual ~Task() = default;
-        Task() = default;
-        virtual void initialize() = 0;
-        virtual void read() = 0;
-        virtual void actuate() = 0;
+        virtual ~Task() {};
+        Task() {};
+        virtual void initialize() {};
+        virtual void read() {};
+        virtual void actuate() {};
 };
 
 
