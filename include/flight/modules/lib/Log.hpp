@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <ArduinoJson.h>
+#include <flight/modules/lib/Util.hpp>
+#include <flight/modules/lib/logger_util.hpp>
 
 using namespace std;
 using ArduinoJson::StaticJsonDocument;
@@ -24,9 +26,16 @@ public:
         : header(header),
           message(message),
           timestamp(timestamp) {
+        print("Constructor Log details:");
+        print(getHeader());
+        string msg;
+        serializeJson(getMessage(), msg);
+        print(msg);
+        print(Util::to_string(getTimestamp()));
         if (save) {
             this->save();
         }
+
     }
 
     static void to_string(string &output, const Log& log);

@@ -41,8 +41,15 @@ void TelemetryControl::execute() {
             Packet packet = ingest_queue.top();
             ingest_queue.pop();
 
+            string packet_to_str;
+            Packet::to_string(packet_to_str, packet);
+            print("TelemetryControl packet to string: " + packet_to_str);
+
             //TODO: figure out if log command is outdated
             for(const Log& log_ : packet.getLogs()) {
+                string to_str_log;
+                Log::to_string(to_str_log, log_);
+                print("TelemetryControl log to string: " + to_str_log);
                 ingest(log_);
             }
         }
@@ -66,6 +73,7 @@ void TelemetryControl::ingest(const Log& log) {
     }
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
+        print("TelemetryControl Packet Header: " + header);
         throw INVALID_HEADER_ERROR();
     }
 

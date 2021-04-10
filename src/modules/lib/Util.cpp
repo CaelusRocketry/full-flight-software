@@ -9,14 +9,17 @@
 StaticJsonDocument<15000> Util::doc;
 
 vector<string> Util::split(const string &s, const string &delimiter){
+    string temp = s;
     vector<string> result;
-    unsigned int start = 0;
-    unsigned int end = 0;
-    while (end != string::npos) {
-        end = s.find(delimiter, start);
-        result.push_back(s.substr(start, end-start));
-        start = end + delimiter.length();
+
+    size_t pos = 0;
+    std::string token;
+    while ((pos = temp.find(delimiter)) != std::string::npos) {
+        token = temp.substr(0, pos);
+        result.push_back(token);
+        temp.erase(0, pos + delimiter.length());
     }
+
     return result;
 }
 
@@ -42,7 +45,7 @@ template int Util::getIndex<int>(vector<int>, int); // Instantiate the template 
 template int Util::getIndex<float>(vector<float>, float); // Instantiate the template for type int
 
 
-void Util::serialize(JsonObject obj, string output){
+void Util::serialize(JsonObject obj, string& output){
     serializeJson(obj, output);
 }
 

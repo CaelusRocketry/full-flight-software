@@ -25,14 +25,16 @@ void TelemetryTask::read() {
         
         // NOTE: ONLY WORKS FOR XBEE, with "^" and "$" formatting
         for (const string &packet_string = packets.front(); !packets.empty(); packets.pop()) {
-            print("Telemetry: Read packet group: " + packet_string);
+            print("TelemetryTask: Read packet group: " + packet_string);
             if (!packet_string.empty() && packet_string[0] == '{') {
-                print("Telemetry: Processing packet: " + packet_string);
+                print("TelemetryTask: Processing packet: " + packet_string);
+                print("");
                 string processed_packet_string = packet_string;
 
                 // get rid of {} in the message field if necessary
                 if(processed_packet_string.find("\"message\": {") != string::npos) {
-
+                    print("TelemetryTask: reformatting packet message: " + processed_packet_string);
+                    print("");
                     int start = processed_packet_string.find("\"message\": {");
 
                     if (processed_packet_string.find("\"message\": {}") != string::npos) {
@@ -53,12 +55,22 @@ void TelemetryTask::read() {
                                 inside_str + "\"" +
                                 processed_packet_string.substr(start + message_str.length() + end + 1);
                     }
-
+                    print("TelemetryTask: finished reformatting packet message: " + processed_packet_string);
+                    print("");
                 }
 
                 Packet pack;
+                print("Hello: " + processed_packet_string);
                 JsonObject j = Util::deserialize(processed_packet_string);
+                string output2;
+                Util::serialize(j, output2);
+                print("Telemtask: json string " + output2);
                 Packet::from_json(j, pack);
+
+                string output;
+                Packet::to_string(output, pack);
+
+                print("TelemetryTask: packet string " + output);
 
                 global_registry.telemetry.ingest_queue.push(pack);
                 }

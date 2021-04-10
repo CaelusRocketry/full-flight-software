@@ -22,7 +22,7 @@ namespace Util {
     template <typename T> int getIndex(vector<T> arr, T val);
     // int getIndex(vector<int> arr, int val);
 
-    void serialize(JsonObject obj, string output);
+    void serialize(JsonObject obj, string& output);
     JsonObject deserialize(string str);
     double min(double a, double b);
     double max(double a, double b);

@@ -27,8 +27,13 @@ queue<string> Telemetry::read(int num_messages) {
                 
                 print("Telemetry: Received: " + msg); //TODO: FIX THIS MSG CAN POTENTIALLY BE INCOMPLETE
 
+                vector<string> split_msg = Util::split(msg, string("END"));
                 std::queue<string> q;
-                q.push(msg);
+
+                for(string s : split_msg) {
+                    q.push(s);
+                    print("Telemetry: split packet: " + s);
+                }
 
                 return q;
             }
