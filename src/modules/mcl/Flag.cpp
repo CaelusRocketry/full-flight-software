@@ -7,8 +7,8 @@
 void Flag::enqueue(const Log& log, LogPriority logPriority) {
     string output;
     Log::to_string(output, log);
-    print("Flag: Enqueue: " + output);
-    print("Flag: Log priority: " + Util::to_string(static_cast<int>(logPriority)));
+    // print("Flag: Enqueue: " + output);
+    // print("Flag: Log priority: " + Util::to_string(static_cast<int>(logPriority)));
 
     long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
     Packet packet(logPriority, millisecond_timestamp / 1000);
@@ -18,16 +18,16 @@ void Flag::enqueue(const Log& log, LogPriority logPriority) {
 
 void Flag::log_info(const string &header, JsonObject &message) {
     long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
-    print("----------------------------------");
-    print("HIIII!!!: " + header);
-    string output;
-    serializeJson(message, output);
-    print(output);
-    if(output.length() > 200){
-        int a = 1;
-        int b = 0;
-        int c = (a / b);
-    }
+    // print("----------------------------------");
+    // print("HIIII!!!: " + header);
+    // string output;
+    // serializeJson(message, output);
+    // print(output);
+    // if(output.length() > 200){
+    //     int a = 1;
+    //     int b = 0;
+    //     int c = (a / b);
+    // }
     Log log(header, message, millisecond_timestamp / 1000);
     enqueue(log, LogPriority::INFO);
 }
