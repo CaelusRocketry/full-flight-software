@@ -1,4 +1,4 @@
-#ifdef DESKTOP
+// #ifdef DESKTOP
 
 #include <chrono>
 #include <flight/modules/lib/logger_util.hpp>
@@ -16,19 +16,32 @@ Telemetry::Telemetry() {
 }
 
 queue<string> Telemetry::read(int num_messages) {
-    mtx.lock(); // prevents anything else from a different thread from accessing the ingest_queue until we're done
-    if (num_messages > ingest_queue.size() || num_messages == -1){
-        num_messages = ingest_queue.size();
+    if (connection && !TERMINATE_FLAG) {
+        try {
+            // Read in data from socket
+            if(socket.available() > 0) {
+                std::array<char, 1024> buf;
+                socket.read_some(asio::buffer(buf));
+
+                string msg(buf.data());
+                
+                print("Telemetry: Received: " + msg); //TODO: FIX THIS MSG CAN POTENTIALLY BE INCOMPLETE
+
+                std::queue<string> q;
+                q.push(msg);
+
+                return q;
+            }
+        }
+        catch (std::exception& e){
+            print(e.what());
+            end();
+            throw SOCKET_READ_ERROR();
+        }
     }
 
     // type of list where elements are exclusively inserted from one side and removed from the other.
-    queue<string> q;
-    for (int i = 0; i < num_messages; i++){
-        q.push(ingest_queue.front());
-        ingest_queue.pop();
-    }
-
-    mtx.unlock();
+    std::queue<string> q;
     return q;
 }
 
@@ -55,29 +68,29 @@ bool Telemetry::write(const Packet& packet) {
 }
 
 // This gets called in the main thread
-void Telemetry::recv_loop() {
-    while (connection && !TERMINATE_FLAG) {
-        try {
-            // Read in data from socket
-            std::array<char, 1024> buf;
-            socket.read_some(asio::buffer(buf));
+// void Telemetry::recv_loop() {
+//     while (connection && !TERMINATE_FLAG) {
+//         try {
+//             // Read in data from socket
+//             std::array<char, 1024> buf;
+//             socket.read_some(asio::buffer(buf));
 
-            string msg(buf.data());
+//             string msg(buf.data());
 
-            mtx.lock();
-            ingest_queue.push(msg);
-            mtx.unlock();
+//             mtx.lock();
+//             ingest_queue.push(msg);
+//             mtx.unlock();
 
-            print("Telemetry: Received: " + msg);
-            Util::pause(global_config.telemetry.DELAY);
-        }
-        catch (std::exception& e){
-            print(e.what());
-            end();
-            throw SOCKET_READ_ERROR();
-        }
-    }
-}
+//             print("Telemetry: Received: " + msg);
+//             Util::pause(global_config.telemetry.DELAY);
+//         }
+//         catch (std::exception& e){
+//             print(e.what());
+//             end();
+//             throw SOCKET_READ_ERROR();
+//         }
+//     }
+// }
 
 bool Telemetry::get_status() const {
     return connection;
@@ -107,11 +120,13 @@ bool Telemetry::connect() {
         throw SOCKET_CONNECTION_ERROR();
     }
 
-    std::thread t([this] { this->recv_loop(); });
-    connection = true;
-    TERMINATE_FLAG = false;
-    recv_thread = &t;
-    recv_thread->detach();
+    socket.non_blocking(true);
+
+    // std::thread t([this] { this->recv_loop(); });
+    // connection = true;
+    // TERMINATE_FLAG = false;
+    // recv_thread = &t;
+    // recv_thread->detach();
 
     return true;
 }
@@ -122,4 +137,4 @@ void Telemetry::end() {
     connection = false;
 }
 
-#endif
+// #endif

@@ -25,8 +25,8 @@ private:
     queue<string> ingest_queue;
 
     // lockable object used to specify when things need exclusive access.
-    std::mutex mtx;
-    std::thread* recv_thread = nullptr;
+    // std::mutex mtx;
+    // std::thread* recv_thread = nullptr;
     bool TERMINATE_FLAG = false;
 
     asio::io_context io_context;
@@ -36,7 +36,7 @@ public:
     Telemetry();
     queue<string> read(int num_messages);
     bool write(const Packet& packet);
-    void recv_loop();
+    // void recv_loop();
     bool get_status() const;
     void reset();
     bool connect();
