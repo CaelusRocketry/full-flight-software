@@ -1,4 +1,4 @@
-// #ifdef DESKTOP
+#ifdef DESKTOP
 
 #include <chrono>
 #include <flight/modules/lib/logger_util.hpp>
@@ -122,6 +122,9 @@ bool Telemetry::connect() {
 
     socket.non_blocking(true);
 
+    connection = true;
+    TERMINATE_FLAG = false;
+
     // std::thread t([this] { this->recv_loop(); });
     // connection = true;
     // TERMINATE_FLAG = false;
@@ -137,4 +140,4 @@ void Telemetry::end() {
     connection = false;
 }
 
-// #endif
+#endif
