@@ -31,7 +31,7 @@ public:
         string msg;
         serializeJson(getMessage(), msg);
         print(msg);
-        print(Util::to_string(getTimestamp()));
+        // print(Util::to_string(getTimestamp()));
         if (save) {
             this->save();
         }

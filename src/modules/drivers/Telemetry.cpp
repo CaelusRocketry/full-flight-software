@@ -8,6 +8,8 @@
 #include <flight/modules/lib/Util.hpp>
 #include <thread>
 
+#include <iostream> //TODO: GETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTRIGDDDDDDDDDDDDDDDDDDDDDDDDDD OF THISSSSSSSSSSSSSSSSSSSSS
+
 using asio::ip::address;
 
 Telemetry::Telemetry() {
@@ -54,19 +56,31 @@ queue<string> Telemetry::read(int num_messages) {
 bool Telemetry::write(const Packet& packet) {
     // Convert to JSON and then to a string
     string output;
-    Packet::to_string(output, packet);
+    print(":O");
+    try {
+        Packet::to_string(output, packet);
+    }
+    catch(std::exception& e) {
+        print("lkjsddddddddddddddddddddddddddddd EERRORR");
+        std::cout << e.what();
+    }
+    
+    print("!!!!!!!!");
 
     // Note: add "END" at the end of the packet, so packets are split correctly
     string packet_string = output + "END";
     print("Telemetry: Sending packet: " + packet_string);
-
+    // Util::pause(1000);
     try {
+        print("dd");
         asio::write(socket, asio::buffer(packet_string), asio::transfer_all());
+        print(":)))");
     }
     catch (std::exception& e) {
         print(e.what());
         throw SOCKET_WRITE_ERROR();
     }
+    print("sssssssssd");
 
     Util::pause(global_config.telemetry.DELAY);
     return true;
@@ -129,6 +143,8 @@ bool Telemetry::connect() {
 
     connection = true;
     TERMINATE_FLAG = false;
+
+    // Util::pause(1000);
 
     // std::thread t([this] { this->recv_loop(); });
     // connection = true;

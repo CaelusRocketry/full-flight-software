@@ -85,21 +85,27 @@ void TelemetryTask::actuate() {
     if (global_flag.telemetry.reset) {
         telemetry->reset();
     } else {
+        print("here 1");
         enqueue();
+        print("here 2");
         auto& send_queue = global_flag.telemetry.send_queue;
 
         // for each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
+            print("here 2.5");
             telemetry->write(packet);
         }
+        print("here 3");
     }
 }
 
 void TelemetryTask::enqueue() {
+    print("here 1.5");
     auto &enqueue_queue = global_flag.telemetry.enqueue;
 
     // for each packet in the enqueue_queue, push that packet to the send_queue
     for(auto &packet = enqueue_queue.top(); !enqueue_queue.empty(); enqueue_queue.pop()) {
+        print("here 1.75");
         global_flag.telemetry.send_queue.push(packet);
     }
 }

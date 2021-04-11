@@ -48,7 +48,7 @@ public:
         string SOCKETIO_HOST;
         int SOCKETIO_PORT;
 
-        int DELAY;
+        double DELAY;
 
         int XBEE_RX_PIN;
         int XBEE_TX_PIN;

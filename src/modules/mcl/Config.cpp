@@ -11,7 +11,7 @@ Config::Config(JsonObject& json) {
     print("Config: Reading telemetry data");
     telemetry.GS_IP = json["telemetry"]["GS_IP"].as<string>();
     telemetry.GS_PORT = json["telemetry"]["GS_PORT"].as<int>();
-    telemetry.DELAY = json["telmetry"]["DELAY"].as<int>();
+    telemetry.DELAY = json["telmetry"]["DELAY"].as<double>() * 1000;
     telemetry.SOCKETIO_HOST = json["telmetry"]["SOCKETIO_HOST"].as<string>();
     telemetry.SOCKETIO_PORT = json["telmetry"]["SOCKETIO_PORT"].as<int>();
     telemetry.XBEE_RX_PIN = json["telmetry"]["XBEE_RX_PIN"].as<int>();
@@ -102,7 +102,7 @@ Config::Config(JsonObject& json) {
 
     /* Read timer config */
     print("Config: Reading timer config");
-    timer.delay = json["timer"]["delay"].as<double>();
+    timer.delay = json["timer"]["delay"].as<double>() * 1000;
 
     /* Read pressure control stages list */
     print("Config: Reading pressure control stages list");

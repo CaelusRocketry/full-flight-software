@@ -3,20 +3,34 @@
 #include <ArduinoJson.h>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
+#include <iostream> //TODO: GGGGGGGGGEEEEEEEEEEEEEEEEETTTTTTTTTTTTTTT RID OF THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 void Packet::to_string(string& output, const Packet& packet) {
     Util::doc.clear();
+    print("s1");
     
     Util::doc["priority"] = static_cast<int>(packet.priority);
+    print("s2");
     Util::doc["timestamp"] = packet.timestamp;
+    print("s3");
 
     string logs;
+    print("s4");
     for(Log l : packet.logs) {
-        Log::to_string(logs, l);
+        print("s4.5");
+        try {
+            Log::to_string(logs, l);
+        }
+        catch(std::exception& e) {
+            print(":((((((((9 ERORRROR");
+            std::cout << e.what();
+        }
     }
-
+    print("s5");
     Util::doc["logs"] = logs;
+    print("s6");
     serializeJson(Util::doc, output);
+    print("s7");
 }
 
 void Packet::from_json(const JsonObject& j, Packet& packet) {

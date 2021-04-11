@@ -17,38 +17,47 @@ void Log::to_string(string& output, const Log& log) {
 
     // JsonObject& msgLog = std::reference_wrapper<ObjectRef>(log.getMessage()).get();
     // Util::doc.clear();
-
-    StaticJsonDocument<500> newDoc;
+    print("a1");
+    StaticJsonDocument<1500> newDoc;
+    print("a2");
     JsonObject object = newDoc.to<JsonObject>();
+    print("a3");
     JsonObject messageObject = newDoc.createNestedObject("message");
+    print("a4");
     JsonObject msgLog = log.getMessage();
-    // string msg;
-    // serializeJson(msgLog, msg);
-    // print(msg);
+    print("a5");
+    string msg;
+    serializeJson(msgLog, msg);
+    print(msg);
     for(JsonPair kv : msgLog){
-        // print("ADI");
+        print("ADI");
         string key = kv.key().c_str();
         print(key);
-        // print("ADI2");
+        print("ADI2");
         string value = kv.value().as<string>();
         print(value);
-        // print("ADI3");
+        print("ADI3");
         if(value.find("{") != string::npos){
-            // print("HI");
+            print("HI");
             JsonObject depth2 = messageObject.createNestedObject(key);
             for(JsonPair kv2 : kv.value().as<JsonObject>()){
+                print("a6");
                 string key2 = kv2.key().c_str();
                 string value2 = kv2.value().as<string>();
                 depth2[key2] = value2;
             }
         }
         else{
+            print("a7");
             messageObject[key] = value;
         }
     }
+    print("a8");
     object["header"] = log.getHeader();
+    print("a9");
     object["timestamp"] = log.getTimestamp();
-    print("END");
+    print("a10");
+    print("DONE");
 
     // object["thing"] = msgLog;
     // serializeJson(object, output);
@@ -69,6 +78,7 @@ void Log::to_string(string& output, const Log& log) {
     // print(Util::to_string(log.getTimestamp()));
 
     serializeJson(newDoc, output);
+    print("a11 serialize");
     print(output);
     // int a = 1;
     // int b = 0;
