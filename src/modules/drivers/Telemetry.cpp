@@ -81,7 +81,7 @@ bool Telemetry::write(const Packet& packet) {
         throw SOCKET_WRITE_ERROR();
     }
     print("sssssssssd");
-
+    print(Util::to_string(global_config.telemetry.DELAY));
     Util::pause(global_config.telemetry.DELAY);
     return true;
 }

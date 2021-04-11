@@ -2,7 +2,7 @@
   "telemetry": {
     "GS_IP": "127.0.0.1",
     "GS_PORT": 5005,
-    "DELAY": 1,
+    "DELAY": 0.5,
     "SOCKETIO_HOST": "127.0.0.1",
     "SOCKETIO_PORT": 5000,
     "XBEE_RX_PIN": 10, 

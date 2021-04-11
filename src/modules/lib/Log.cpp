@@ -26,9 +26,28 @@ void Log::to_string(string& output, const Log& log) {
     print("a4");
     JsonObject msgLog = log.getMessage();
     print("a5");
-    string msg;
-    serializeJson(msgLog, msg);
-    print(msg);
+    if(msgLog.size() == 0) {
+        print("daskaasdasdasdadasd [bruh moment onii chan");
+    }
+    else {
+        print("sizeeeeeee " + Util::to_string((int) msgLog.size()));
+        for(JsonPair kv : msgLog) {
+            print(string(kv.key().c_str()));
+            print(string(kv.value().as<string>()));
+        }
+    }
+    try {
+        string msg;
+        print("??????????");
+        serializeJson(msgLog, msg);
+        print("bruh");
+        print(msg);
+    }
+    catch(std::exception& e) {
+        print("SDFKJLLLLL ERORROROROOROROR");
+        std::cout << e.what();
+    }
+    
     for(JsonPair kv : msgLog){
         print("ADI");
         string key = kv.key().c_str();
