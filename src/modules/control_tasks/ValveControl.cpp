@@ -37,17 +37,24 @@ void ValveControl::execute() {
 }
 
 void ValveControl::send_valve_data() {
-    JsonObject valve_data_json;
+    const size_t CAPACITY = JSON_OBJECT_SIZE(50);
+    StaticJsonDocument<CAPACITY> doc;
+    JsonObject valve_data_json = doc.to<JsonObject>();
 
     for (const auto& type_pair : global_config.valves.list) {
         string type = type_pair.first;
+        JsonObject type_json = valve_data_json.createNestedObject(type);
         for (const auto& location_pair : type_pair.second) {
             string location = location_pair.first;
             RegistryValveInfo valve_info = global_registry.valves[type][location];
-            valve_data_json[type][location] = static_cast<int>(valve_info.state);
+
+            type_json[location] = static_cast<int>(valve_info.state);
         }
     }
-    // print(valve_data_json.dump());
+
+    // add timestamp?
+
+    valve_data_json["timestamp"] = Util::getTime() / 1000;
     global_flag.log_info("valve_data", valve_data_json);
 }
 

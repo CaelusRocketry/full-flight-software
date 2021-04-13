@@ -33,8 +33,8 @@ void TelemetryTask::read() {
 
                 // get rid of {} in the message field if necessary
                 if(processed_packet_string.find("\"message\": {") != string::npos) {
-                    print("TelemetryTask: reformatting packet message: " + processed_packet_string);
-                    print("");
+                    // print("TelemetryTask: reformatting packet message: " + processed_packet_string);
+                    // print("");
                     int start = processed_packet_string.find("\"message\": {");
 
                     if (processed_packet_string.find("\"message\": {}") != string::npos) {
@@ -55,22 +55,22 @@ void TelemetryTask::read() {
                                 inside_str + "\"" +
                                 processed_packet_string.substr(start + message_str.length() + end + 1);
                     }
-                    print("TelemetryTask: finished reformatting packet message: " + processed_packet_string);
-                    print("");
+                    // print("TelemetryTask: finished reformatting packet message: " + processed_packet_string);
+                    // print("");
                 }
 
                 Packet pack;
-                print("Hello: " + processed_packet_string);
+                // print("Hello: " + processed_packet_string);
                 JsonObject j = Util::deserialize(processed_packet_string);
                 string output2;
                 Util::serialize(j, output2);
-                print("Telemtask: json string " + output2);
+                // print("Telemtask: json string " + output2);
                 Packet::from_json(j, pack);
 
                 string output;
                 Packet::to_string(output, pack);
 
-                print("TelemetryTask: packet string " + output);
+                // print("TelemetryTask: packet string " + output);
 
                 global_registry.telemetry.ingest_queue.push(pack);
                 }
@@ -85,27 +85,27 @@ void TelemetryTask::actuate() {
     if (global_flag.telemetry.reset) {
         telemetry->reset();
     } else {
-        print("here 1");
+        // print("here 1");
         enqueue();
-        print("here 2");
+        // print("here 2");
         auto& send_queue = global_flag.telemetry.send_queue;
 
         // for each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
-            print("here 2.5");
+            // print("here 2.5");
             telemetry->write(packet);
         }
-        print("here 3");
+        // print("here 3");
     }
 }
 
 void TelemetryTask::enqueue() {
-    print("here 1.5");
+    // print("here 1.5");
     auto &enqueue_queue = global_flag.telemetry.enqueue;
 
     // for each packet in the enqueue_queue, push that packet to the send_queue
     for(auto &packet = enqueue_queue.top(); !enqueue_queue.empty(); enqueue_queue.pop()) {
-        print("here 1.75");
+        // print("here 1.75");
         global_flag.telemetry.send_queue.push(packet);
     }
 }

@@ -26,9 +26,9 @@ public:
         : header(header),
           message(message),
           timestamp(timestamp) {
-        print("Constructor Log details:");
-        print(getHeader());
-        print(getMessage());
+        // print("Constructor Log details:");
+        // print(getHeader());
+        // print(getMessage());
         // string msg;
         // ArduinoJson::serializeJson(getMessage(), msg);
         // print(msg);

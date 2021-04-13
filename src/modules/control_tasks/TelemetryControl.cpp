@@ -2,7 +2,7 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 #include <queue>
-
+#include <flight/modules/mcl/Flag.hpp>
 #include <ArduinoJson.h>
 
 //TODO: add custom packet enqueuing interface to gs???
@@ -101,8 +101,9 @@ void TelemetryControl::ingest(const Log& log) {
     (this->*function)(param_values); // call function which maps to the GS command sent w/ all params necessary
 }
 void TelemetryControl::heartbeat(const vector<string>& args) {
-    JsonObject obj = Util::deserialize("{\"header\": \"heartbeat\", \"response\": \"OK\"}");
-    global_flag.log_info("response", obj);
+    JsonObject obj = Util::deserialize(
+        "{\"header\": \"heartbeat\", \"response\": \"OK\", \"timestamp\" : " + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) + " }");
+    global_flag.log_info("heartbeat", obj);
 }
 
 void TelemetryControl::soft_abort(const vector<string>& args) {

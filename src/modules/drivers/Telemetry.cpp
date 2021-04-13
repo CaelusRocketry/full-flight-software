@@ -28,13 +28,14 @@ queue<string> Telemetry::read(int num_messages) {
                 string msg(buf.data());
                 
                 print("Telemetry: Received: " + msg); //TODO: FIX THIS MSG CAN POTENTIALLY BE INCOMPLETE
+                print("");
 
                 vector<string> split_msg = Util::split(msg, string("END"));
                 std::queue<string> q;
 
                 for(string s : split_msg) {
                     q.push(s);
-                    print("Telemetry: split packet: " + s);
+                    // print("Telemetry: split packet: " + s);
                 }
 
                 return q;
@@ -56,36 +57,37 @@ queue<string> Telemetry::read(int num_messages) {
 bool Telemetry::write(const Packet& packet) {
     // Convert to JSON and then to a string
     string output;
-    print(":O");
+    // print(":O");
     try {
         Packet::to_string(output, packet);
     }
     catch(std::exception& e) {
-        print("lkjsddddddddddddddddddddddddddddd EERRORR");
+        print("ERROR:");
         print(e.what());
     }
     
-    print("!!!!!!!!");
+    // print("!!!!!!!!");
 
     // Note: add "END" at the end of the packet, so packets are split correctly
     string packet_string = output + "END";
     print("Telemetry: Sending packet: " + packet_string);
+    print("");
 
     if(packet_string.find("sensor") != string::npos) {
         // print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n BIG OOGA BOOGA PAY ATTENTION ABOVE \n\n\n\n\n\n\n\n\n\n\n\n");
     }
     // Util::pause(1000);
     try {
-        print("dd");
+        // print("dd");
         asio::write(socket, asio::buffer(packet_string), asio::transfer_all());
-        print(":)))");
+        // print(":)))");
     }
     catch (std::exception& e) {
         print(e.what());
         throw SOCKET_WRITE_ERROR();
     }
-    print("sssssssssd");
-    print(Util::to_string(global_config.telemetry.DELAY));
+    // print("sssssssssd");
+    // print(Util::to_string(global_config.telemetry.DELAY));
     Util::pause(global_config.telemetry.DELAY);
     return true;
 }

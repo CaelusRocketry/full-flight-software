@@ -91,15 +91,15 @@ void Log::to_string(string& output, const Log& log) {
     // print(msg2);
     // print(Util::to_string(log.getTimestamp()));
 
-    print("Creating log from string");
+    // print("Creating log from string");
     StaticJsonDocument<1500> newDoc;
     JsonObject object = newDoc.to<JsonObject>();
     object["header"] = log.getHeader();
     object["timestamp"] = log.getTimestamp();
     object["message"] = log.getMessage();
-    print("Done creating Log from string");
+    // print("Done creating Log from string");
     ArduinoJson::serializeJson(newDoc, output);
-    print(output);
+    // print(output);
     // int a = 1;
     // int b = 0;
     // int c = a / b;
@@ -112,8 +112,8 @@ void Log::from_json(const JsonObject& j, Log& log) {
     string msg, messageString;
     ArduinoJson::serializeJson(j, msg);
     Util::serialize(j, messageString);
-    print("Message: " + msg);
-    print("Message 2: " + j["message"].as<string>());
+    // print("Message: " + msg);
+    // print("Message 2: " + j["message"].as<string>());
     log = Log(header, messageString, timestamp);
 }
 

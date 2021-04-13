@@ -7,7 +7,6 @@
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Util.hpp>
-#include <iostream> //////////////////////////////GETTTTTTTTTTTTTTTTTTTTTTTTTT RID OF THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 SensorControl::SensorControl() {
     this->last_send_time = 0;
@@ -153,6 +152,8 @@ void SensorControl::send_sensor_data() {
             location_json["status"] = int(sensor.status);
         }
     }
+
+    sensor_data_json["timestamp"] = Util::getTime() / 1000;
 
     global_flag.log_info("sensor_data", sensor_data_json);
 }
