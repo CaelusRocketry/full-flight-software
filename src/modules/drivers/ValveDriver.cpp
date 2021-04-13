@@ -50,9 +50,11 @@ void ValveDriver::actuate(int pin, ActuationType actuation_type){
     valve_actuations[idx] = actuation_type;
     if(actuation_type == ActuationType::OPEN_VENT){
         valve_states[idx] = SolenoidState::OPEN;
+        writeVal(pin, HIGH);
     }
     else if(actuation_type == ActuationType::CLOSE_VENT){
         valve_states[idx] = SolenoidState::CLOSED;
+        writeVal(pin, LOW);
     }
 }
 
