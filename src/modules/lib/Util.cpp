@@ -46,7 +46,7 @@ template int Util::getIndex<float>(vector<float>, float); // Instantiate the tem
 
 
 void Util::serialize(JsonObject obj, string& output){
-    serializeJson(obj, output);
+    ArduinoJson::serializeJson(obj, output);
 }
 
 JsonObject Util::deserialize(string str){

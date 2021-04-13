@@ -16,21 +16,22 @@ using ArduinoJson::StaticJsonDocument;
 class Log {
 private:
     string header;
-    JsonObject message;
+    string message;
     long double timestamp;
 
 public:
     Log() = default;
 
-    Log(const string& header, const JsonObject& message, long double timestamp, bool save = true)
+    Log(const string& header, const string& message, long double timestamp, bool save = true)
         : header(header),
           message(message),
           timestamp(timestamp) {
         print("Constructor Log details:");
         print(getHeader());
-        string msg;
-        serializeJson(getMessage(), msg);
-        print(msg);
+        print(getMessage());
+        // string msg;
+        // ArduinoJson::serializeJson(getMessage(), msg);
+        // print(msg);
         // print(Util::to_string(getTimestamp()));
         if (save) {
             this->save();
@@ -43,7 +44,7 @@ public:
     void save(const string& filename = "black_box.txt") const;
     Log copy();
     string getHeader() const;
-    JsonObject getMessage() const;
+    string getMessage() const;
     long double getTimestamp() const;
 };
 

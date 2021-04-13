@@ -58,7 +58,8 @@ void TelemetryControl::execute() {
 
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
-    JsonObject params = log.getMessage();
+    JsonObject params = Util::deserialize(log.getMessage());
+    // JsonObject params = log.getMessage();
     
     string dump;
     Log::to_string(dump, log);

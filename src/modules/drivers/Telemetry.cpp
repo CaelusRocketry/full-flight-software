@@ -72,7 +72,7 @@ bool Telemetry::write(const Packet& packet) {
     print("Telemetry: Sending packet: " + packet_string);
 
     if(packet_string.find("sensor") != string::npos) {
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n BIG OOGA BOOGA PAY ATTENTION ABOVE \n\n\n\n\n\n\n\n\n\n\n\n");
+        // print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n BIG OOGA BOOGA PAY ATTENTION ABOVE \n\n\n\n\n\n\n\n\n\n\n\n");
     }
     // Util::pause(1000);
     try {

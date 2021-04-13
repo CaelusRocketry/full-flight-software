@@ -49,6 +49,10 @@ class Flag {
         void log_debug(const string& header, JsonObject& message);
         void log_warning(const string& header, JsonObject& message);
         void log_critical(const string& header, JsonObject& message);
+        void log_info(const string& header, const string& message);
+        void log_debug(const string& header, const string& message);
+        void log_warning(const string& header, const string& message);
+        void log_critical(const string& header, const string& message);
 };
 
 extern Flag global_flag;

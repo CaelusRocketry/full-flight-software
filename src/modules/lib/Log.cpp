@@ -17,66 +17,61 @@ void Log::to_string(string& output, const Log& log) {
 
     // JsonObject& msgLog = std::reference_wrapper<ObjectRef>(log.getMessage()).get();
     // Util::doc.clear();
-    print("a1");
-    StaticJsonDocument<1500> newDoc;
-    print("a2");
-    JsonObject object = newDoc.to<JsonObject>();
-    print("a3");
-    JsonObject messageObject = newDoc.createNestedObject("message");
-    print("a4");
-    JsonObject msgLog = log.getMessage();
-    print("a5");
-    if(msgLog.size() == 0) {
-        print("daskaasdasdasdadasd [bruh moment onii chan");
-    }
-    else {
-        print("sizeeeeeee " + Util::to_string((int) msgLog.size()));
-        for(JsonPair kv : msgLog) {
-            print(string(kv.key().c_str()));
-            print(string(kv.value().as<string>()));
-        }
-    }
-    try {
-        string msg;
-        print("??????????");
-        serializeJson(msgLog, msg);
-        print("bruh");
-        print(msg);
-    }
-    catch(std::exception& e) {
-        print("SDFKJLLLLL ERORROROROOROROR");
-        std::cout << e.what();
-    }
+
+
+    // JsonObject messageObject = newDoc.createNestedObject("message");
+    // print("a4");
+    // string msgLog = log.getMessage();
+    // print("a5");
+    // print(Util::to_string((int)msgLog.size()));
+    // print("whats up");
+    // if(msgLog.size() == 0) {
+    //     print("Empty msgLog");
+    // }
+    // else {
+    //     print("sizeeeeeee " + Util::to_string((int) msgLog.size()));
+    //     for(JsonPair kv : msgLog) {
+    //         print(string(kv.key().c_str()));
+    //         print(string(kv.value().as<string>()));
+    //     }
+    // }
+    // print("ayyo");
+    // try {
+    //     string msg;
+    //     print("??????????");
+    //     ArduinoJson::serializeJson(msgLog, msg);
+    //     print("bruh");
+    //     print(msg);
+    // }
+    // catch(std::exception& e) {
+    //     print("SDFKJLLLLL ERORROROROOROROR");
+    //     std::cout << e.what();
+    // }
     
-    for(JsonPair kv : msgLog){
-        print("ADI");
-        string key = kv.key().c_str();
-        print(key);
-        print("ADI2");
-        string value = kv.value().as<string>();
-        print(value);
-        print("ADI3");
-        if(value.find("{") != string::npos){
-            print("HI");
-            JsonObject depth2 = messageObject.createNestedObject(key);
-            for(JsonPair kv2 : kv.value().as<JsonObject>()){
-                print("a6");
-                string key2 = kv2.key().c_str();
-                string value2 = kv2.value().as<string>();
-                depth2[key2] = value2;
-            }
-        }
-        else{
-            print("a7");
-            messageObject[key] = value;
-        }
-    }
-    print("a8");
-    object["header"] = log.getHeader();
-    print("a9");
-    object["timestamp"] = log.getTimestamp();
-    print("a10");
-    print("DONE");
+    // for(JsonPair kv : msgLog){
+    //     print("ADI");
+    //     string key = kv.key().c_str();
+    //     print(key);
+    //     print("ADI2");
+    //     string value = kv.value().as<string>();
+    //     print(value);
+    //     print("ADI3");
+    //     if(value.find("{") != string::npos){
+    //         print("HI");
+    //         JsonObject depth2 = messageObject.createNestedObject(key);
+    //         for(JsonPair kv2 : kv.value().as<JsonObject>()){
+    //             print("a6");
+    //             string key2 = kv2.key().c_str();
+    //             string value2 = kv2.value().as<string>();
+    //             depth2[key2] = value2;
+    //         }
+    //     }
+    //     else{
+    //         print("a7");
+    //         messageObject[key] = value;
+    //     }
+    // }
+
 
     // object["thing"] = msgLog;
     // serializeJson(object, output);
@@ -96,8 +91,14 @@ void Log::to_string(string& output, const Log& log) {
     // print(msg2);
     // print(Util::to_string(log.getTimestamp()));
 
-    serializeJson(newDoc, output);
-    print("a11 serialize");
+    print("Creating log from string");
+    StaticJsonDocument<1500> newDoc;
+    JsonObject object = newDoc.to<JsonObject>();
+    object["header"] = log.getHeader();
+    object["timestamp"] = log.getTimestamp();
+    object["message"] = log.getMessage();
+    print("Done creating Log from string");
+    ArduinoJson::serializeJson(newDoc, output);
     print(output);
     // int a = 1;
     // int b = 0;
@@ -108,11 +109,12 @@ void Log::from_json(const JsonObject& j, Log& log) {
     string header = j["header"].as<string>();
     JsonObject message = j["message"];
     double timestamp = j["timestamp"].as<double>(); // TODO: Timestamp is an int for some reason?
-    string msg;
-    serializeJson(j, msg);
+    string msg, messageString;
+    ArduinoJson::serializeJson(j, msg);
+    Util::serialize(j, messageString);
     print("Message: " + msg);
     print("Message 2: " + j["message"].as<string>());
-    log = Log(header, message, timestamp);
+    log = Log(header, messageString, timestamp);
 }
 
 // Log string to black_box.txt
@@ -141,7 +143,7 @@ string Log::getHeader() const {
     return header;
 }
 
-JsonObject Log::getMessage() const {
+string Log::getMessage() const {
     return message;
 }
 

@@ -6,18 +6,12 @@
 // #include <iostream> 
 
 void Packet::to_string(string& output, const Packet& packet) {
+    print("Converting packet to string");
     Util::doc.clear();
-    print("s1");
-    
     Util::doc["priority"] = static_cast<int>(packet.priority);
-    print("s2");
     Util::doc["timestamp"] = packet.timestamp;
-    print("s3");
-
     string logs;
-    print("s4");
     for(Log l : packet.logs) {
-        print("s4.5");
         try {
             Log::to_string(logs, l);
         }
@@ -26,11 +20,9 @@ void Packet::to_string(string& output, const Packet& packet) {
             print(e.what());
         }
     }
-    print("s5");
     Util::doc["logs"] = logs;
-    print("s6");
-    serializeJson(Util::doc, output);
-    print("s7");
+    ArduinoJson::serializeJson(Util::doc, output);
+    print("Converted packet to string");
 }
 
 void Packet::from_json(const JsonObject& j, Packet& packet) {
@@ -40,7 +32,7 @@ void Packet::from_json(const JsonObject& j, Packet& packet) {
     packet = Packet(priority, timestamp);
     // Then, add logs
     string temp;
-    serializeJson(j["logs"].as<JsonArray>(), temp);
+    ArduinoJson::serializeJson(j["logs"].as<JsonArray>(), temp);
     print("Log array: " + temp);
     // for(JsonObject json_log : j["logs"].as<JsonArray>()) {
     JsonArray temp2 = j["logs"].as<JsonArray>();
@@ -50,16 +42,8 @@ void Packet::from_json(const JsonObject& j, Packet& packet) {
         if(json_log.isNull()){
             continue;
         }
-        string ankit;
-        Util::serialize(json_log, ankit);
-        print("Ankit: " + ankit);
         Log l;
         Log::from_json(json_log, l);
-
-        string srikar;
-        Log::to_string(srikar, l);
-        print("Srikar: " + srikar);
-
         packet.logs.push_back(l);
     }
 }
