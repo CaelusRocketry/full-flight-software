@@ -14,7 +14,7 @@
 
 class SensorControl : public Control {
 private:
-    long last_send_time;
+    long double last_send_time;
     long send_interval;
     std::map<string, std::map<string, Kalman>> kalman_filters;
 

@@ -23,7 +23,7 @@ Config::Config(JsonObject& json) {
     print("Config: Reading sensor list");
     sensors.address = json["sensors"]["address"].as<string>();
     sensors.baud = json["sensors"]["baud"].as<int>();
-    sensors.send_interval = json["sensors"]["send_interval"].as<int>();
+    sensors.send_interval = json["sensors"]["send_interval"].as<double>();
 
     JsonObject temp = json["sensors"]["list"];
     for(JsonObject::iterator it=temp.begin(); it != temp.end(); ++it){

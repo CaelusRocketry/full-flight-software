@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
-#include <iostream> //TODO: GGGGGGGGGEEEEEEEEEEEEEEEEETTTTTTTTTTTTTTT RID OF THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+// #include <iostream> 
 
 void Packet::to_string(string& output, const Packet& packet) {
     Util::doc.clear();
@@ -23,7 +23,7 @@ void Packet::to_string(string& output, const Packet& packet) {
         }
         catch(std::exception& e) {
             print(":((((((((9 ERORRROR");
-            std::cout << e.what();
+            print(e.what());
         }
     }
     print("s5");

@@ -8,7 +8,7 @@
 #include <flight/modules/lib/Util.hpp>
 #include <thread>
 
-#include <iostream> //TODO: GETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTRIGDDDDDDDDDDDDDDDDDDDDDDDDDD OF THISSSSSSSSSSSSSSSSSSSSS
+// #include <iostream> //TODO: GETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTRIGDDDDDDDDDDDDDDDDDDDDDDDDDD OF THISSSSSSSSSSSSSSSSSSSSS
 
 using asio::ip::address;
 
@@ -62,7 +62,7 @@ bool Telemetry::write(const Packet& packet) {
     }
     catch(std::exception& e) {
         print("lkjsddddddddddddddddddddddddddddd EERRORR");
-        std::cout << e.what();
+        print(e.what());
     }
     
     print("!!!!!!!!");
@@ -70,6 +70,10 @@ bool Telemetry::write(const Packet& packet) {
     // Note: add "END" at the end of the packet, so packets are split correctly
     string packet_string = output + "END";
     print("Telemetry: Sending packet: " + packet_string);
+
+    if(packet_string.find("sensor") != string::npos) {
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n BIG OOGA BOOGA PAY ATTENTION ABOVE \n\n\n\n\n\n\n\n\n\n\n\n");
+    }
     // Util::pause(1000);
     try {
         print("dd");

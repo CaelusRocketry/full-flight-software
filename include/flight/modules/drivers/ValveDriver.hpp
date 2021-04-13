@@ -13,7 +13,7 @@ private:
     vector<ActuationType> valve_actuations;
     int NUM_VALVES = 0;
 
-    float writeValue(int pin, int value);
+    void writeVal(int pin, int signal);
     int getIndex(int pin);
     void openVent(int pin);
     void closeVent(int pin);

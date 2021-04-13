@@ -7,6 +7,7 @@
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Util.hpp>
+#include <iostream> //////////////////////////////GETTTTTTTTTTTTTTTTTTTTTTTTTT RID OF THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 SensorControl::SensorControl() {
     this->last_send_time = 0;
@@ -45,7 +46,7 @@ void SensorControl::execute() {
     print("Sensor control: Controlling");
     boundary_check();
 
-    long now = Util::getTime();
+    long double now = Util::getTime();
 
     if(last_send_time == 0 || now > last_send_time + send_interval) {
         send_sensor_data();

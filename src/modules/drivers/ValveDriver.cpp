@@ -50,15 +50,21 @@ void ValveDriver::actuate(int pin, ActuationType actuation_type){
     valve_actuations[idx] = actuation_type;
     if(actuation_type == ActuationType::OPEN_VENT){
         valve_states[idx] = SolenoidState::OPEN;
+
+        #ifndef DESKTOP
         writeVal(pin, HIGH);
+        #endif
     }
     else if(actuation_type == ActuationType::CLOSE_VENT){
         valve_states[idx] = SolenoidState::CLOSED;
+
+        #ifndef DESKTOP
         writeVal(pin, LOW);
+        #endif
     }
 }
 
-void writeVal(int pin, bool signal){
+void ValveDriver::writeVal(int pin, int signal){
     #ifdef DESKTOP
         // TODO figure this out
     #else
