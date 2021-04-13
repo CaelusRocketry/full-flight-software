@@ -9,6 +9,8 @@
 
 #include <flight/modules/lib/Packet.hpp>
 #include <flight/modules/lib/Enums.hpp>
+#include <flight/modules/lib/Util.hpp>
+#include <ArduinoJson.h>
 
 using namespace std;
 
@@ -27,7 +29,7 @@ class Flag {
             bool progress = false;
 
             // calculated in milliseconds
-            long mcl_start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();;
+            long double mcl_start_time = Util::getTime();
         } general;
 
         /* Telemetry Flags */
@@ -40,13 +42,17 @@ class Flag {
         } telemetry;
 
         /* Valve Flags */
-        map<string, map<string, FlagValveInfo>> valves;
+        std::map<string, std::map<string, FlagValveInfo>> valves;
 
         void enqueue(const Log& log, LogPriority logPriority);
-        void log_info(const string& header, const json& message);
-        void log_debug(const string& header, const json& message);
-        void log_warning(const string& header, const json& message);
-        void log_critical(const string& header, const json& message);
+        void log_info(const string& header, JsonObject& message);
+        void log_debug(const string& header, JsonObject& message);
+        void log_warning(const string& header, JsonObject& message);
+        void log_critical(const string& header, JsonObject& message);
+        void log_info(const string& header, const string& message);
+        void log_debug(const string& header, const string& message);
+        void log_warning(const string& header, const string& message);
+        void log_critical(const string& header, const string& message);
 };
 
 extern Flag global_flag;

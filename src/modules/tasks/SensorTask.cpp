@@ -9,40 +9,62 @@ void SensorTask::initialize() {
         /* Pair of <string, sensorinfo> */
         for (const auto& location_ : type_.second) {
             sensor_list.push_back(make_pair(type_.first, location_.first));
+
+            int pin;
+            if(type_.first == "pressure") {
+                pin = location_.second.pressure_pin;
+                pressure_pins.push_back(pin);
+            }
+            if (type_.first == "thermocouple")
+            {
+                pin = location_.second.thermo_pins[0];
+                thermo_pins.push_back( location_.second.thermo_pins );
+            }
+
+            pin_sensor_mappings[pin] = make_pair(type_.first, location_.first);
         }
     }
 
-    sensor = new Arduino("PseudoSensor");
-    log("Sensor: Initialized");
+    #ifdef DESKTOP
+        pressure_driver = new PseudoPressureDriver(pressure_pins);
+        thermo_driver = new PseudoThermoDriver(thermo_pins);
+    #else
+        pressure_driver = new PressureDriver(pressure_pins);
+        thermo_driver = new ThermoDriver(thermo_pins);
+    #endif
+
+    print("Sensor: Initialized");
 }
 
 void SensorTask::read() {
-    log("Sensor: Reading");
-    unsigned char *data = sensor->read(); // data returned as an array of chars
+    print("Sensor: Reading");
+    pressure_driver->read();
+    thermo_driver->read();
 
-    // Convert char array to double array
-    union {
-        double values[NUM_SENSORS];
-        unsigned char bytes[NUM_SENSORS * sizeof(double)];
-    } conv;
-
-    for (int i = 0; i < NUM_SENSORS * sizeof(double); i++) {
-        conv.bytes[i] = data[i];
-    }
-
-    double *values = conv.values;
-
-    // Update registry
-    for (int i = 0; i < NUM_SENSORS; i++) {
-        auto sensor_ = sensor_list[i];
-        double value = values[i];
-
-        // sensor type, i.e thermocouple, pressure, etc.
-        string type = sensor_.first;
+    // Update pressure sensor values
+    for(unsigned int i = 0; i < pressure_pins.size(); i++){
+        int pin = pressure_pins[i];
+        pair<string, string> sensor_info = pin_sensor_mappings[pin];
+        string type = sensor_info.first;
         // specific sensor, pressure sensor 1, pressure sensor 2, etc.
-        string loc = sensor_.second;
+        string loc = sensor_info.second;
+        float value = pressure_driver->getPressureValue(pin);
+        print(type + " " + loc + ": " + Util::to_string((double) value));
         global_registry.sensors[type][loc].measured_value = value;
     }
+
+    // Update thermo sensor values
+    for(unsigned int i = 0; i < thermo_pins.size(); i++){
+        int pin = thermo_pins[i][0];                
+        pair<string, string> sensor_info = pin_sensor_mappings[pin];
+        string type = sensor_info.first;
+        // specific sensor, pressure sensor 1, pressure sensor 2, etc.
+        string loc = sensor_info.second;
+        float value = thermo_driver->getThermoValue(pin);
+        print(type + " " + loc + ": " + Util::to_string((double) value));
+        global_registry.sensors[type][loc].measured_value = value;
+    }
+
 }
 
 void SensorTask::actuate() {}

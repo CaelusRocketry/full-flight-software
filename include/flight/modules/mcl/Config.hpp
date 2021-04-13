@@ -1,15 +1,12 @@
-//
-// Created by myfatemi04 on 12/27/2020.
-//
-
 #ifndef FLIGHT_CONFIG_HPP
 #define FLIGHT_CONFIG_HPP
 
-#include <nlohmann/json.hpp>
+#include <ArduinoJson.h>
+#include <string>
+#include <map>
+#include <vector>
 
-using nlohmann::json;
 using std::string;
-using std::map;
 using std::vector;
 
 struct ConfigBoundary {
@@ -19,9 +16,6 @@ struct ConfigStage {
     ConfigBoundary safe, warn;
 };
 
-void to_json(json& j, const ConfigBoundary& boundary);
-void from_json(const json& j, ConfigBoundary& boundary);
-
 struct ConfigSensorInfo {
     struct {
         double process_variance, measurement_variance, kalman_value;
@@ -29,20 +23,15 @@ struct ConfigSensorInfo {
     struct {
         ConfigStage waiting, pressurization, autosequence, postburn;
     } boundaries;
-    int pin;
+    int pressure_pin;
+    vector<int> thermo_pins;
 };
-
-void to_json(json& j, const ConfigSensorInfo& sensor_info);
-void from_json(const json& j, ConfigSensorInfo& sensor_info);
 
 struct ConfigValveInfo {
     int pin;
-    string natural_state;
+    string natural;
     bool special;
 };
-
-void to_json(json& j, const ConfigValveInfo& valve_info);
-void from_json(const json& j, ConfigValveInfo& valve_info);
 
 class Config {
 public:
@@ -50,7 +39,7 @@ public:
     Config() = default;
 
     /* Reads config from a JSON object */
-    explicit Config(json& json);
+    explicit Config(JsonObject& json);
 
     struct {
         string GS_IP;
@@ -59,18 +48,22 @@ public:
         string SOCKETIO_HOST;
         int SOCKETIO_PORT;
 
-        int DELAY;
+        double DELAY;
+
+        int XBEE_RX_PIN;
+        int XBEE_TX_PIN;
+        int XBEE_BAUD_RATE;
     } telemetry;
 
     struct {
-        map<string, map<string, ConfigSensorInfo>> list;
+        std::map<string, std::map<string, ConfigSensorInfo>> list;
         string address;
         int baud;
         double send_interval;
     } sensors;
 
     struct {
-        map<string, map<string, ConfigValveInfo>> list;
+        std::map<string, std::map<string, ConfigValveInfo>> list;
         string address;
         int baud;
         double send_interval;

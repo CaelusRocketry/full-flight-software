@@ -4,9 +4,9 @@
 #include <flight/modules/lib/logger_util.hpp>
 
 void Registry::initialize() {
-    log("Registry: Initializing");
+    print("Registry: Initializing");
 
-    log("Registry: Reading Sensors List");
+    print("Registry: Reading Sensors List");
     // Sensor fields
     for (const auto& type_pair : global_config.sensors.list) {
         string type = type_pair.first;
@@ -19,7 +19,7 @@ void Registry::initialize() {
         }
     }
 
-    log("Registry: Reading Valves List");
+    print("Registry: Reading Valves List");
     // Valve fields
     for (const auto& type_pair : global_config.valves.list) { // [solenoid]
         string type = type_pair.first;
@@ -32,13 +32,12 @@ void Registry::initialize() {
         }
     }
 
-    log("Registry: Setting default values for telemetry and general fields");
+    print("Registry: Setting default values for telemetry and general fields");
     // Telemetry fields
     telemetry.status = false;
     telemetry.resetting = false;
 
     // General fields
-    general.hard_abort = false;
     general.soft_abort = false;
     general.stage = Stage::WAITING;
     general.stage_status = 0.0;

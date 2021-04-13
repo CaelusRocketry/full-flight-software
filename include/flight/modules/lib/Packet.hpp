@@ -1,31 +1,27 @@
-//
-// Created by AC on 4/24/2020.
-//
-
 #ifndef FLIGHT_PACKET_HPP
 #define FLIGHT_PACKET_HPP
 
 #include <string>
 #include <vector>
-#include <chrono>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Log.hpp>
+#include <ArduinoJson.h>
+
 
 using namespace std;
+using ArduinoJson::StaticJsonDocument;
 
-class Packet;
-
-void to_json(json& j, const Packet& packet);
-void from_json(const json& j, Packet& packet);
+// class Packet;
 
 // Packet class groups together logs of similar priority
 class Packet {
 private:
-    vector<Log> logs;
-    long double timestamp;
-    LogPriority priority;
 
 public:
+    vector<Log> logs;
+    LogPriority priority;
+    long double timestamp;
+
     Packet() = default;
 
     explicit Packet(LogPriority logPriority, long double timestamp)
@@ -35,8 +31,11 @@ public:
     void add(const Log& log);
     vector<Log> getLogs();
 
-    friend void to_json(json& j, const Packet& packet);
-    friend void from_json(const json& j, Packet& packet);
+    static void to_string(string& output, const Packet& packet);
+    static void from_json(const JsonObject& j, Packet& packet);
+
+    friend void to_json_doc(StaticJsonDocument<5000>& j, const Packet& packet);
+    friend void from_json(const JsonObject& j, Packet& packet);
 
     struct compareTo {
         bool operator()(const Packet& lhs, const Packet& rhs) {

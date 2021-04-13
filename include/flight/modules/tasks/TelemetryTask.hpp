@@ -3,18 +3,29 @@
 
 #include <string>
 #include <flight/modules/tasks/Task.hpp>
-#include <flight/modules/drivers/Telemetry.hpp>
+
+#ifdef DESKTOP
+    #include <flight/modules/drivers/Telemetry.hpp>
+#else 
+    #include <flight/modules/drivers/XBee.hpp>
+#endif
+
 
 class TelemetryTask : public Task {
 private:
-    Telemetry telemetry;
+#ifdef DESKTOP
+    Telemetry* telemetry;
+#else
+    XBee* telemetry;
+#endif
+    void enqueue();
 
 public:
-    TelemetryTask() {}
-    void initialize();
-    void read();
-    void enqueue();
-    void actuate();
+    TelemetryTask() = default;
+    ~TelemetryTask() = default;
+    void initialize() override;
+    void read() override;
+    void actuate() override;
 };
 
 

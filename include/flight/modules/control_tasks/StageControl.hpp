@@ -3,7 +3,7 @@
 
 #include <flight/modules/control_tasks/Control.hpp>
 #include <flight/modules/lib/Enums.hpp>
-#include <flight/modules/lib/Util.hpp>
+#include <flight/modules/lib/Errors.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <vector>
 

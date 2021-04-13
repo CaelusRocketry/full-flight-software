@@ -1,130 +1,134 @@
-//
-// Created by legoc on 12/27/2020.
-//
-
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Registry.hpp>
+#include <flight/modules/lib/Util.hpp>
 
-/* BOUNDARY JSON SERIALIZATION */
+Config::Config(JsonObject& json) {
+    print("Config: Initializing");
 
-void to_json(json& j, const ConfigBoundary& boundary) {
-    j = json{boundary.lower, boundary.upper};
-}
-
-void from_json(const json& j, ConfigBoundary& boundary) {
-    j[0].get_to(boundary.lower);
-    j[1].get_to(boundary.upper);
-}
-
-/* SENSOR JSON SERIALIZATION */
-
-void to_json(json& j, const ConfigSensorInfo& sensor_info) {
-    j = json{
-        {"kalman_args", {
-            {"process_variance", sensor_info.kalman_args.process_variance},
-            {"measurement_variance", sensor_info.kalman_args.measurement_variance},
-            {"kalman_value", sensor_info.kalman_args.kalman_value}
-        }},
-        {"boundaries", {
-            {"safe", sensor_info.boundaries.waiting.safe},
-            {"warn", sensor_info.boundaries.waiting.warn}
-        }},
-        {"pin", sensor_info.pin},
-    };
-}
-
-void from_json(const json& j, ConfigSensorInfo& sensor_info) {
-    json kalman_args = j.at("kalman_args");
-    kalman_args.at("process_variance").get_to(sensor_info.kalman_args.process_variance);
-    kalman_args.at("measurement_variance").get_to(sensor_info.kalman_args.measurement_variance);
-    kalman_args.at("kalman_value").get_to(sensor_info.kalman_args.kalman_value);
-    Stage curr_stage = global_registry.general.stage;
-    if(curr_stage == Stage::WAITING){
-        j.at("boundaries").at("waiting").at("safe").get_to(sensor_info.boundaries.waiting.safe);
-        j.at("boundaries").at("waiting").at("warn").get_to(sensor_info.boundaries.waiting.warn);
-    }
-    else if(curr_stage == Stage::PRESSURIZATION){
-        j.at("boundaries").at("pressurization").at("safe").get_to(sensor_info.boundaries.pressurization.safe);
-        j.at("boundaries").at("pressurization").at("warn").get_to(sensor_info.boundaries.pressurization.warn);
-    }
-    else if(curr_stage == Stage::AUTOSEQUENCE){
-        j.at("boundaries").at("autosequence").at("safe").get_to(sensor_info.boundaries.autosequence.safe);
-        j.at("boundaries").at("autosequence").at("warn").get_to(sensor_info.boundaries.autosequence.warn);
-    }
-    else if(curr_stage == Stage::POSTBURN){
-        j.at("boundaries").at("postburn").at("safe").get_to(sensor_info.boundaries.postburn.safe);
-        j.at("boundaries").at("postburn").at("warn").get_to(sensor_info.boundaries.postburn.warn);
-    }
-    j.at("pin").get_to(sensor_info.pin);
-}
-
-/* VALVE JSON SERIALIZATION */
-
-void to_json(json& j, const ConfigValveInfo& valve_info) {
-    j = json{
-        {"pin", valve_info.pin},
-        {"natural", valve_info.natural_state},
-        {"special", valve_info.special}
-    };
-}
-
-void from_json(const json& j, ConfigValveInfo& valve_info) {
-    j.at("pin").get_to(valve_info.pin);
-    j.at("natural").get_to(valve_info.natural_state);
-    j.at("special").get_to(valve_info.special);
-}
-
-using nlohmann::json;
-
-Config::Config(json& json) {
-    log("Config: Initializing");
-
-    log("Config: Reading telemetry data");
     /* Read telemetry */
-    json.at("telemetry").at("GS_IP").get_to(telemetry.GS_IP);
-    json.at("telemetry").at("GS_PORT").get_to(telemetry.GS_PORT);
-    json.at("telemetry").at("DELAY").get_to(telemetry.DELAY);
-    json.at("telemetry").at("SOCKETIO_HOST").get_to(telemetry.SOCKETIO_HOST);
-    json.at("telemetry").at("SOCKETIO_PORT").get_to(telemetry.SOCKETIO_PORT);
+    print("Config: Reading telemetry data");
+    telemetry.GS_IP = json["telemetry"]["GS_IP"].as<string>();
+    telemetry.GS_PORT = json["telemetry"]["GS_PORT"].as<int>();
+    telemetry.DELAY = json["telmetry"]["DELAY"].as<double>() * 1000;
+    telemetry.SOCKETIO_HOST = json["telmetry"]["SOCKETIO_HOST"].as<string>();
+    telemetry.SOCKETIO_PORT = json["telmetry"]["SOCKETIO_PORT"].as<int>();
+    telemetry.XBEE_RX_PIN = json["telmetry"]["XBEE_RX_PIN"].as<int>();
+    telemetry.XBEE_TX_PIN = json["telmetry"]["XBEE_TX_PIN"].as<int>();
+    telemetry.XBEE_BAUD_RATE = json["telmetry"]["XBEE_BAUD_RATE"].as<int>();
 
-    log("Config: Reading sensor list");
+
     /* Read sensor list */
-    json.at("sensors").at("list").get_to(sensors.list);
-    json.at("sensors").at("address").get_to(sensors.address);
-    json.at("sensors").at("baud").get_to(sensors.baud);
-    json.at("sensors").at("send_interval").get_to(sensors.send_interval);
+    print("Config: Reading sensor list");
+    sensors.address = json["sensors"]["address"].as<string>();
+    sensors.baud = json["sensors"]["baud"].as<int>();
+    sensors.send_interval = json["sensors"]["send_interval"].as<double>();
 
-    log("Config: Reading valve list");
+    JsonObject temp = json["sensors"]["list"];
+    for(JsonObject::iterator it=temp.begin(); it != temp.end(); ++it){
+        string sensor_type = it->key().c_str();
+        JsonObject sensor_locs = it->value();
+    // for (JsonVariant sensor_type : json["sensors"]["list"]) {
+        for(JsonObject::iterator it2=sensor_locs.begin(); it2 != sensor_locs.end(); ++it2){
+        // for(JsonVariant sensor: sensor_type) {
+            string sensor_loc = it2->key().c_str();
+            JsonObject sensor = it2->value();
+            ConfigSensorInfo info;
+
+            info.kalman_args.process_variance = sensor["kalman_args"]["process_variance"].as<double>();
+            info.kalman_args.measurement_variance = sensor["kalman_args"]["measurement_variance"].as<double>();
+            info.kalman_args.kalman_value = sensor["kalman_args"]["kalman_value"].as<double>();
+
+            info.boundaries.waiting.safe.lower = sensor["boundaries"]["waiting"]["safe"][0].as<double>();
+            info.boundaries.waiting.warn.upper = sensor["boundaries"]["waiting"]["warn"][1].as<double>();
+
+            info.boundaries.pressurization.safe.lower = sensor["boundaries"]["pressurization"]["safe"][0].as<double>();
+            info.boundaries.pressurization.warn.upper = sensor["boundaries"]["pressurization"]["warn"][1].as<double>();
+
+            info.boundaries.autosequence.safe.lower = sensor["boundaries"]["autosequence"]["safe"][0].as<double>();
+            info.boundaries.autosequence.warn.upper = sensor["boundaries"]["autosequence"]["warn"][1].as<double>();
+
+            info.boundaries.postburn.safe.lower = sensor["boundaries"]["postburn"]["safe"][0].as<double>();
+            info.boundaries.postburn.warn.upper = sensor["boundaries"]["postburn"]["warn"][1].as<double>();
+
+            if(sensor_type == "pressure") {
+                info.pressure_pin = sensor["pressure_pin"].as<int>();
+            }
+            if(sensor_type == "thermocouple") {
+                JsonArray thermo_pins_arr = sensor["thermo_pins"].as<JsonArray>();
+                for(JsonVariant value : thermo_pins_arr) {
+                    info.thermo_pins.push_back( value.as<int>() );
+                }
+            }
+
+            sensors.list[sensor_type][sensor_loc] = info;
+        }
+    }
+
     /* Read valve list */
-    json.at("valves").at("list").get_to(valves.list);
-    json.at("valves").at("address").get_to(valves.address);
-    json.at("valves").at("baud").get_to(valves.baud);
-    json.at("valves").at("send_interval").get_to(valves.send_interval);
+    print("Config: Reading valve list");
+    valves.address = json["valves"]["address"].as<string>();
+    valves.baud = json["valves"]["baud"].as<int>();
+    valves.send_interval = json["valves"]["send_interval"].as<int>();
+    
+    temp = json["valves"]["list"];
+    for(JsonObject::iterator it=temp.begin(); it != temp.end(); ++it){
+        string valve_type = it->key().c_str();
+        JsonObject valve_locs = it->value();
+    // for (JsonVariant valve_type : json["valves"]["list"]) {
+        for(JsonObject::iterator it=valve_locs.begin(); it != valve_locs.end(); ++it){
+            string valve_loc = it->key().c_str();
+            JsonObject valve = it->value();
+        // for(JsonVariant valve: valve_type) {
+            ConfigValveInfo info;
+            info.pin = valve["pin"].as<int>();
+            info.natural = valve["natural"].as<string>();
+            info.special = valve["special"].as<bool>();
 
-    log("Config: Reading stage list");
+            valves.list[valve_type][valve_loc] = info;
+        }
+    }
+
     /* Read stage list */
-    json.at("stages").at("list").get_to(stages.list);
-    json.at("stages").at("request_interval").get_to(stages.request_interval);
-    json.at("stages").at("send_interval").get_to(stages.send_interval);
+    print("Config: Reading stage list");
+    JsonArray stage_list_json = json["stages"]["list"].as<JsonArray>();
+    for (JsonVariant value : stage_list_json) {
+        stages.list.push_back(value.as<string>());
+    }
+    // stages.list = json["stages"]["list"].as<vector<string>>();  // json.at("stages").at("list").get_to();
+    stages.request_interval = json["stages"]["request_interval"].as<double>();
+    stages.send_interval = json["stages"]["send_interval"].as<double>();
 
-    log("Config: Reading timer config");
     /* Read timer config */
-    json.at("timer").at("delay").get_to(timer.delay);
+    print("Config: Reading timer config");
+    timer.delay = json["timer"]["delay"].as<double>() * 1000;
 
-    log("Config: Reading pressure control stages list");
     /* Read pressure control stages list */
-    json.at("pressure_control").at("active_stages").get_to(pressure_control.active_stages);
-
-    log("Config: Reading arduino type");
+    print("Config: Reading pressure control stages list");
+    // pressure_control.active_stages = json["pressure_control"]["active_stages"].as<vector<string>>(); 
+    JsonArray pressure_control_active_json = json["pressure_control"]["active_stages"].as<JsonArray>();
+    for (JsonVariant value : pressure_control_active_json) {
+        pressure_control.active_stages.push_back(value.as<string>());
+    }
+    
     /* Read arduino type */
-    json.at("arduino_type").get_to(arduino_type);
+    print("Config: Reading arduino type");
+    arduino_type = json["arduino_type"].as<string>();
 
-    log("Config: Reading task config");
     /* Read task config */
-    json.at("task_config").at("tasks").get_to(task_config.tasks);
-    json.at("task_config").at("control_tasks").get_to(task_config.control_tasks);
+    print("Config: Reading task config");
+    JsonArray task_list_json = json["task_config"]["tasks"].as<JsonArray>();
+    for (JsonVariant value : task_list_json) {
+        print(value.as<string>());
+        task_config.tasks.push_back(value.as<string>());
+    }
+    JsonArray ct_list_json = json["task_config"]["control_tasks"].as<JsonArray>();
+    for (JsonVariant value : ct_list_json) {
+        task_config.control_tasks.push_back(value.as<string>());
+    }
+    // task_config.tasks = json["task_config"]["tasks"].as<vector<string>>(); 
+    // task_config.control_tasks = json["task_config"]["control_tasks"].as<vector<string>>(); 
 }
 
 // Define the value declared with extern in the header file

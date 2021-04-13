@@ -1,29 +1,26 @@
 #ifndef FLIGHT_VALVETASK_HPP
 #define FLIGHT_VALVETASK_HPP
 
-#define NUM_VALVES 3
-
 #include <vector>
+#include <string>
 #include <flight/modules/tasks/Task.hpp>
-#include <flight/modules/drivers/Arduino.hpp>
+#include <flight/modules/drivers/ValveDriver.hpp>
 #include <flight/modules/lib/Enums.hpp>
 
 class ValveTask : public Task {
     private:
-        Arduino* arduino;
+        ValveDriver* valve_driver;
         vector<pair<string, string>> valve_list;
-        string name;
-        pair<string, string> pin_to_valve[14];
-    public:
-        ValveTask(): name("Valve Arduino") {}
+        vector<int> pins;
+        unordered_map<int, pair<string, string>> pin_to_valve;
+        int get_pin(string valve_type, string valve_loc);
 
-        void begin();
-        void send_valve_info();
-        void get_command();
+    public:
+        ValveTask() {}
+
         void initialize();
         void read();
         void actuate();
-        void actuate_solenoids();
 };
 
 

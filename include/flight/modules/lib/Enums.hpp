@@ -34,11 +34,20 @@ enum class SensorLocation {
 };
 
 enum class SolenoidState {
-    OPEN = 0,
-    CLOSED = 1
+    CLOSED = 0,
+    OPEN = 1
+    
 };
 
-static unordered_map<SolenoidState, string> solenoid_state_map {
+struct EnumClassHash
+{
+    template <typename T>
+    std::size_t operator()(T t) const
+    {
+        return static_cast<std::size_t>(t);
+    }
+};
+static unordered_map<SolenoidState, string, EnumClassHash> solenoid_state_map {
         {SolenoidState::OPEN, "OPEN"},
         {SolenoidState::CLOSED, "CLOSED"}
 };
@@ -49,7 +58,7 @@ enum class SensorStatus {
     CRITICAL = 1
 };
 
-static unordered_map<SensorStatus, string> sensor_status_map {
+static unordered_map<SensorStatus, string, EnumClassHash> sensor_status_map {
         {SensorStatus::CRITICAL, "CRITICAL"},
         {SensorStatus::WARNING, "WARNING"},
         {SensorStatus::SAFE, "SAFE"}
@@ -80,7 +89,7 @@ static unordered_map<string, ActuationType> actuation_type_map {
         {"PULSE", ActuationType::PULSE}
 };
 
-static unordered_map<ActuationType, string> actuation_type_inverse_map {
+static unordered_map<ActuationType, string, EnumClassHash> actuation_type_inverse_map {
         {ActuationType::NONE, "NONE"},
         {ActuationType::CLOSE_VENT, "CLOSE_VENT"},
         {ActuationType::OPEN_VENT, "SAFE"},
@@ -103,7 +112,7 @@ static unordered_map<string, ValvePriority> valve_priority_map {
         {"ABORT_PRIORITY", ValvePriority::ABORT_PRIORITY}
 };
 
-static unordered_map<ValvePriority, string> valve_priority_inverse_map {
+static unordered_map<ValvePriority, string, EnumClassHash> valve_priority_inverse_map {
         {ValvePriority::NONE, "NONE"},
         {ValvePriority::LOW_PRIORITY, "LOW_PRIORITY"},
         {ValvePriority::PI_PRIORITY, "PI_PRIORITY"},
@@ -116,7 +125,7 @@ enum class Stage {
     AUTOSEQUENCE,
     POSTBURN
 };
-static unordered_map<Stage, string> stage_map {
+static unordered_map<Stage, string, EnumClassHash> stage_map {
     {Stage::WAITING, "waiting"},
     {Stage::PRESSURIZATION, "pressurization"},
     {Stage::AUTOSEQUENCE, "autosequence"},

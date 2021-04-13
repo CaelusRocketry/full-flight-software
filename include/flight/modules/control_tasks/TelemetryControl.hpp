@@ -1,7 +1,3 @@
-//
-// Created by Srikar on 4/15/2020.
-//
-
 #ifndef FLIGHT_TELEMETRYCONTROL_HPP
 #define FLIGHT_TELEMETRYCONTROL_HPP
 
@@ -10,6 +6,7 @@
 #include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/lib/Log.hpp>
 #include <flight/modules/drivers/Telemetry.hpp>
+#include <flight/modules/lib/Util.hpp>
 
 class TelemetryControl : public Control {
 
@@ -28,7 +25,6 @@ private:
         {"test", {"response"}}
     };
 
-    Telemetry telemetry;
 
     void ingest(const Log& log);
     void heartbeat(const vector<string>& args);

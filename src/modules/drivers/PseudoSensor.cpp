@@ -42,7 +42,7 @@ unsigned char* PseudoSensor::read() {
         conv.values[i] = val;
     }
     static unsigned char ret[NUM_SENSORS * sizeof(double)];
-    for (int i = 0; i < NUM_SENSORS * sizeof(double); i++) {
+    for (unsigned int i = 0; i < NUM_SENSORS * sizeof(double); i++) {
         ret[i] = conv.bytes[i];
     }
     return ret;

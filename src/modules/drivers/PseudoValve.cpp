@@ -5,6 +5,7 @@
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/lib/Errors.hpp>
+#include <flight/modules/lib/Util.hpp>
 
 // Extends PseudoArduino
 PseudoValve::PseudoValve(){
@@ -29,7 +30,7 @@ unsigned char* PseudoValve::read() {
     unsigned char *data = new unsigned char[num_solenoids * 3];
 
     // pin, state, actuation_type
-    for (int i = 0; i < solenoid_locs.size(); i++) {
+    for (unsigned int i = 0; i < solenoid_locs.size(); i++) {
         unsigned char solenoid_data[3];
         RegistryValveInfo solenoid = global_registry.valves["solenoid"][solenoid_locs[i]];
         int pin = global_config.valves.list["solenoid"][solenoid_locs[i]].pin;
@@ -50,12 +51,12 @@ unsigned char* PseudoValve::read() {
 void PseudoValve::actuate(const pair<string, string>& valve, const string& state1, double timer, const string& state2){
     valve_states[valve] = state1;
     if (timer != -1) {
-        this_thread::sleep_for(chrono::milliseconds((long)(timer * 1000)));
+        Util::pause((long)(timer * 1000));
     }
     valve_states[valve] = state2;
-    log("Finished actuating: " + valve.first + "." + valve.second);
+    print("Finished actuating: " + valve.first + "." + valve.second);
     if (timer != -1) {
-        log("Setting valve actuation type to NONE");
+        print("Setting valve actuation type to NONE");
         valve_actuations[valve] = "none";
     }
 }
@@ -106,7 +107,11 @@ void PseudoValve::write(unsigned char* msg) {
             break;
     }
     valve_actuations[valve] = actuation_type;
-    thread act([=] { actuate(valve, state1, timer, state2); });
 
-    act.detach();
+    // #ifdef DESKTOP
+    //     thread act([=] { actuate(valve, state1, timer, state2); });
+    //     act.detach();
+    // #else
+        actuate(valve, state1, timer, state2);
+    // #endif
 }

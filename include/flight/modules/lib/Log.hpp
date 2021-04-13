@@ -3,40 +3,48 @@
 
 #include <string>
 #include <vector>
-#include <chrono>
-#include <nlohmann/json.hpp>
+#include <ArduinoJson.h>
+#include <flight/modules/lib/Util.hpp>
+#include <flight/modules/lib/logger_util.hpp>
 
 using namespace std;
-using nlohmann::json;
+using ArduinoJson::StaticJsonDocument;
 
-class Log;
-
-void to_json(json& j, const Log& log);
-void from_json(const json& j, Log& log);
+// class Log;
 
 // Log class stores messages to be sent to and from ground and flight station
 class Log {
 private:
     string header;
-    json message;
+    string message;
     long double timestamp;
 
 public:
     Log() = default;
 
-    Log(const string& header, const json& message, long double timestamp, bool save = true)
+    Log(const string& header, const string& message, long double timestamp, bool save = true)
         : header(header),
           message(message),
           timestamp(timestamp) {
+        // print("Constructor Log details:");
+        // print(getHeader());
+        // print(getMessage());
+        // string msg;
+        // ArduinoJson::serializeJson(getMessage(), msg);
+        // print(msg);
+        // print(Util::to_string(getTimestamp()));
         if (save) {
             this->save();
         }
+
     }
 
+    static void to_string(string &output, const Log& log);
+    static void from_json(const JsonObject& j, Log& log);
     void save(const string& filename = "black_box.txt") const;
     Log copy();
     string getHeader() const;
-    json getMessage() const;
+    string getMessage() const;
     long double getTimestamp() const;
 };
 

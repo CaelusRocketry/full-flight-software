@@ -8,54 +8,58 @@
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/lib/logger_util.hpp>
-#include <chrono>
 #include <string>
+#include <flight/modules/lib/Util.hpp>
+#include <ArduinoJson.h>
 
 ValveControl::ValveControl() {
     // config send interval in seconds, convert to milliseconds
     this->send_interval = global_config.valves.send_interval * 1000;
-
     this->last_send_time = 0;
+    this->aborted = false;
 }
 
 void ValveControl::begin() {
-    log("Valve Control: Beginning");
-    global_flag.log_info("response",R"({"header": "info", "Description": "Valve Control started"})");
+    print("Valve Control: Beginning");
+    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Valve Control started\"}");
+    global_flag.log_info("response", obj);
 }
 
 void ValveControl::execute() {
-    log("Valve control: Controlling");
+    print("Valve control: Controlling");
     check_abort();
-    auto current_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    auto current_time = Util::getTime();
 
     if (last_send_time == 0 || current_time > last_send_time + send_interval) {
         send_valve_data();
-        last_send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        last_send_time = Util::getTime();
     }
 }
 
 void ValveControl::send_valve_data() {
-    json valve_data_json = json::object();
+    const size_t CAPACITY = JSON_OBJECT_SIZE(50);
+    StaticJsonDocument<CAPACITY> doc;
+    JsonObject valve_data_json = doc.to<JsonObject>();
 
     for (const auto& type_pair : global_config.valves.list) {
         string type = type_pair.first;
+        JsonObject type_json = valve_data_json.createNestedObject(type);
         for (const auto& location_pair : type_pair.second) {
             string location = location_pair.first;
             RegistryValveInfo valve_info = global_registry.valves[type][location];
-            valve_data_json[type][location] = static_cast<int>(valve_info.state);
-//            valve_data_json[type][location] = solenoid_state_map.at(valve_info.state);
-//            valve_data_json[type][location] = {
-//                {"state", solenoid_state_map.at(valve_info.state)},
-//                {"actuation_type", actuation_type_inverse_map.at(valve_info.actuation_type)}
-//            };
-            std::cout << valve_data_json.dump() << std::endl;
+
+            type_json[location] = static_cast<int>(valve_info.state);
         }
     }
 
+    // add timestamp?
+
+    valve_data_json["timestamp"] = Util::getTime() / 1000;
     global_flag.log_info("valve_data", valve_data_json);
 }
 
 void ValveControl::abort() {
+    print("Aborting");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 
@@ -68,10 +72,12 @@ void ValveControl::abort() {
             valve_flag.actuation_priority = ValvePriority::ABORT_PRIORITY;
         }
     }
+    this->aborted = true;
 }
 
 // Set the actuation type to NONE, with ABORT_PRIORITY priority
 void ValveControl::undo_abort() {
+    print("Undoing abort");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 
@@ -81,12 +87,13 @@ void ValveControl::undo_abort() {
             valve_flag.actuation_priority = ValvePriority::ABORT_PRIORITY;
         }
     }
+    this->aborted = false;
 }
 
 void ValveControl::check_abort() {
-    if (global_registry.general.hard_abort || global_registry.general.soft_abort) {
+    if (global_registry.general.soft_abort && !this->aborted) {
         abort();
-    } else if (!global_registry.general.soft_abort) {
+    } else if (!global_registry.general.soft_abort && this->aborted) {
         undo_abort();
     }
 }

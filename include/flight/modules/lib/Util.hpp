@@ -1,24 +1,39 @@
 #ifndef FLIGHT_UTIL_HPP
 #define FLIGHT_UTIL_HPP
 
-#include <iostream>
 #include <vector>
+#include <cmath>
 #include <map>
-#include <flight/modules/lib/logger_util.hpp>
-#include <flight/modules/mcl/Flag.hpp>
-#include <flight/modules/lib/Log.hpp>
 #include <flight/modules/lib/Enums.hpp>
-#include <flight/modules/lib/Packet.hpp>
 #include <flight/modules/lib/Errors.hpp>
+#include <ArduinoJson.h>
 
 using namespace std;
 
 namespace Util {
+    extern StaticJsonDocument<15000> doc;
+    extern StaticJsonDocument<15000> doc;
+
     /** Split a string by a delimiter */
-    vector<string> split(const string &s, const string &delimiter);
+    extern vector<string> split(const string &s, const string &delimiter);
 
     /** Replace all occurrences of a substring in str with a different string */
     string replaceAll(string str, const string& from, const string& to);
+
+    template <typename T> int getIndex(vector<T> arr, T val);
+    // int getIndex(vector<int> arr, int val);
+
+    void serialize(JsonObject obj, string& output);
+    JsonObject deserialize(string str);
+    double min(double a, double b);
+    double max(double a, double b);
+    string to_string(bool b);
+    string to_string(int i);
+    string to_string(long int i);
+    string to_string(double d);
+    string to_string(long double d);
+    long double getTime();
+    void pause(int millis);
 }
 
 #endif // FLIGHT_UTIL_HPP
