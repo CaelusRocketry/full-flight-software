@@ -6,7 +6,7 @@ New flight software for our projects, written in C++.
 
 First, clone the repository, and move into the directory where it was cloned. Then, install PlatformIO by running
 
-```pip install pio```
+```pip install platformio```
 
 After that's done, download the PlatformIO IDE extension in VS Code.
 
