@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cmath>
+#include <algorithm>
 #include <map>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Errors.hpp>

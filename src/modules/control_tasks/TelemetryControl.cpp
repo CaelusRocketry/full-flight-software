@@ -58,20 +58,25 @@ void TelemetryControl::execute() {
 
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
-    JsonObject params = Util::deserialize(log.getMessage());
-    // JsonObject params = log.getMessage();
+    JsonObject message = Util::deserialize(log.getMessage());
+    JsonObject params = Util::deserialize(message["message"].as<string>());
+
+    string output;
+    Util::serialize(params, output);
+    string new_msg_str = output;
     
     string dump;
     Log::to_string(dump, log);
 
 
-    if(string({dump[0]}) + string({dump[1]}) == "\"{") { // if its a converted packet
-        string new_msg_str = dump.substr(1, dump.length() - 2);
-        new_msg_str = Util::replaceAll(new_msg_str, "\\", "");
-        // cout << "new str: " << new_msg_str << endl;
-        // params = json::parse(new_msg_str);
-        // cout << params.dump() << endl;
-    }
+    // if(string({dump[0]}) == "{" || string({dump[1]}) == "{") { // if its a converted packet
+    //     new_msg_str = Util::replaceAll(new_msg_str, "\\", "");
+    //     print("removing slashes");
+    //     print(new_msg_str);
+    //     // cout << "new str: " << new_msg_str << endl;
+    //     // params = json::parse(new_msg_str);
+    //     // cout << params.dump() << endl;
+    // }
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
         print("TelemetryControl Packet Header: " + header);
@@ -86,6 +91,12 @@ void TelemetryControl::ingest(const Log& log) {
     /* if (argument_order.size() != params.size()) {
         throw PACKET_ARGUMENT_ERROR();
     } */
+
+    // output = "";
+    // Util::serialize(params, output);
+    // print(output);
+
+    // print(params["message"].as<string>());
 
     vector<string> param_values;
 
@@ -172,7 +183,7 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     long double millisecond_timestamp = Util::getTime();
     string value_str = Util::to_string(value);
     string kalman_str = Util::to_string(kalman_value);
-    string time_str = Util::to_string((double) (millisecond_timestamp / 1000));
+    string time_str = Util::to_string((int) (millisecond_timestamp / 1000));
     JsonObject obj = Util::deserialize("{\"header\": \"Sensor data request\", \"Status\": \"Success\", \"Sensor type\": " + args[0] + ", \"Sensor location\": " + args[1] + ", \"Sensor status\": " + sensor_status_str + ", \"Measured value\": " + value_str + ", \"Normalized value\": " + kalman_str + ", \"Last updated\": " + time_str + "}");
     global_flag.log_critical("response", obj);
 }
@@ -185,8 +196,8 @@ void TelemetryControl::valve_request(const vector<string>& args) {
     string valve_loc = args[1];
 
     if (!global_registry.valve_exists(valve_type, valve_loc)) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Valve data request\", \"Status\": \"Failure\", \"Description\": Unable to find valve, \"Valve type\": " + valve_type + ", \"Valve location\": " + valve_loc + "}");
-        global_flag.log_critical("response", obj);
+        print("{\"header\": \"Valve data request\", \"Status\": \"Failure\", \"Description\": Unable to find valve, \"Valve type\": " + valve_type + ", \"Valve location\": " + valve_loc + "}");
+        // global_flag.log_critical("response", obj);
         throw INVALID_VALVE_LOCATION_ERROR();
     }
 
@@ -196,8 +207,9 @@ void TelemetryControl::valve_request(const vector<string>& args) {
     actuation_priority = valve_priority_inverse_map.at(valve_registry.actuation_priority);
     long double millisecond_timestamp = Util::getTime();
 
-    string time_str = Util::to_string((double) (millisecond_timestamp / 1000));
+    string time_str = Util::to_string((int) (millisecond_timestamp / 1000));
     JsonObject obj = Util::deserialize("{\"header\": \"Valve data request\", \"Status\": \"Success\", \"Actuation type\": " + actuation_type + ", \"Actuation priority\": " + actuation_priority + ", \"Valve type\": " + valve_type + ", \"Valve location\": " + valve_loc + ", \"Last actuated\": " + time_str + "}");
+
     global_flag.log_critical("response", obj);
 }
 void TelemetryControl::progress(const vector<string>& args) {

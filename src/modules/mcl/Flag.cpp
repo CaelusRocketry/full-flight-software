@@ -35,17 +35,30 @@ void Flag::log_info(const string &header, JsonObject &message) {
 }
 
 void Flag::log_debug(const string &header, JsonObject &message) {
-    // long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
+    long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
+    string messageString;
+    Util::serialize(message, messageString);
+    Log log(header, messageString, millisecond_timestamp / 1000);
+    enqueue(log, LogPriority::DEBUG);
     // enqueue(Log(header, message, millisecond_timestamp / 1000), LogPriority::DEBUG);
 }
 
 void Flag::log_warning(const string &header, JsonObject &message) {
-    // long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
+    long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
+    string messageString;
+    Util::serialize(message, messageString);
+    Log log(header, messageString, millisecond_timestamp / 1000);
+    enqueue(log, LogPriority::WARN);
     // enqueue(Log(header, message, millisecond_timestamp / 1000), LogPriority::WARN);
 }
 
 void Flag::log_critical(const string &header, JsonObject &message) {
-    // long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
+    long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
+
+    string messageString;
+    Util::serialize(message, messageString);
+    Log log(header, messageString, millisecond_timestamp / 1000);
+    enqueue(log, LogPriority::CRIT);
     // enqueue(Log(header, message, millisecond_timestamp / 1000), LogPriority::CRIT);
 }
 
