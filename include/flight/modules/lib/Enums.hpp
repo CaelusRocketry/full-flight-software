@@ -70,9 +70,14 @@ enum class ValveType {
 };
 
 enum class ValveLocation {
-    PRESSURE_RELIEF,
-    PROPELLANT_VENT,
-    MAIN_PROPELLANT_VALVE
+    ETHANOL_DRAIN,
+    ETHANOL_PRESSURIZATION,
+    ETHANOL_VENT,
+    ETHANOL_MPV,
+    NITROUS_DRAIN,
+    NITROUS_PRESSURIZATION,
+    NITROUS_VENT,
+    NITROUS_MPV,
 };
 
 enum class ActuationType {
