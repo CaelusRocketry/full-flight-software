@@ -113,7 +113,7 @@ void TelemetryControl::ingest(const Log& log) {
 }
 void TelemetryControl::heartbeat(const vector<string>& args) {
     JsonObject obj = Util::deserialize(
-        "{\"header\": \"heartbeat\", \"response\": \"OK\", \"timestamp\" : " + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) + " }");
+        "{\"header\": \"heartbeat\", \"response\": \"OK\", \"timestamp\" : \"" + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) + "\" }");
     global_flag.log_info("heartbeat", obj);
 }
 
@@ -134,7 +134,7 @@ void TelemetryControl::undo_soft_abort(const vector<string>& args) {
 }
 void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     if (!global_registry.valve_exists("solenoid", args[0])) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Unable to find actuatable solenoid\", \"Valve location\": " + args[0] + "}");
+        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Unable to find actuatable solenoid\", \"Valve location\": \"" + args[0] + "\"}");
         global_flag.log_critical("Valve actuation", obj);
         throw INVALID_SOLENOID_ERROR();
     }
@@ -142,7 +142,7 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     int current_priority = int(global_registry.valves["solenoid"][args[0]].actuation_priority);
 
     if (int(valve_priority_map[args[2]]) < current_priority) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Priority too low to actuate\", \"Valve location\": " + args[0] + ", \"Actuation type\": " + args[1] + ", \"Priority\": " + args[2] + "}");
+        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Priority too low to actuate\", \"Valve location\": \"" + args[0] + "\", \"Actuation type\": \"" + args[1] + "\", \"Priority\": \"" + args[2] + "\"}");
         global_flag.log_critical("Valve actuation", obj);
     }
 
@@ -154,7 +154,7 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
         valve_flag.actuation_type = actuation_type_map[args[1]];
         valve_flag.actuation_priority = valve_priority_map[args[2]];
     } catch(...) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Wrong packet message\", \"Valve location\": " + args[0] + ", \"Actuation type\": " + args[1] + ", \"Priority\": " + args[2] + "}");
+        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Wrong packet message\", \"Valve location\": \"" + args[0] + "\", \"Actuation type\": \"" + args[1] + "\", \"Priority\": \"" + args[2] + "\"}");
         global_flag.log_critical("Valve actuation", obj);
         throw INVALID_PACKET_MESSAGE_ERROR();
     }
@@ -171,7 +171,7 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     string sensor_loc = args[1];
 
     if (!global_registry.sensor_exists(sensor_type, sensor_loc)) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Sensor data\", \"Status\": \"Failure\", \"Description\": \"Unable to find sensor\", \"Sensor type\": " + args[0] + ", \"Sensor location\": " + args[1] + "}");
+        JsonObject obj = Util::deserialize("{\"header\": \"Sensor data\", \"Status\": \"Failure\", \"Description\": \"Unable to find sensor\", \"Sensor type\": \"" + args[0] + "\", \"Sensor location\": \"" + args[1] + "\"}");
         global_flag.log_critical("response", obj);
         throw INVALID_SENSOR_LOCATION_ERROR();
     }
@@ -185,8 +185,10 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     string value_str = Util::to_string((int) value);
     string kalman_str = Util::to_string((int) kalman_value);
     string time_str = Util::to_string((int) (millisecond_timestamp / 1000));
-    
-    JsonObject obj = Util::deserialize("{\"header\": \"Sensor data request\", \"Status\": \"Success\", \"Sensor type\": " + args[0] + ", \"Sensor location\": " + args[1] + ", \"Sensor status\": " + sensor_status_str + ", \"Measured value\": " + value_str + ", \"Normalized value\": " + kalman_str + ", \"Last updated\": " + time_str + "}");
+
+    string toDeserialize = "{\"header\": \"Sensor data request\", \"Status\": \"Success\", \"Sensor type\": \"" + args[0] + "\", \"Sensor location\": \"" + args[1] + "\", \"Sensor status\": \"" + sensor_status_str + "\", \"Measured value\": \"" + value_str + "\", \"Normalized value\": \"" + kalman_str + "\", \"Last updated\": \"" + time_str + "\"}";
+    print(toDeserialize);
+    JsonObject obj = Util::deserialize(toDeserialize);
     global_flag.log_critical("response", obj);
 }
 
@@ -210,7 +212,7 @@ void TelemetryControl::valve_request(const vector<string>& args) {
     long double millisecond_timestamp = Util::getTime();
 
     string time_str = Util::to_string((int) (millisecond_timestamp / 1000));
-    JsonObject obj = Util::deserialize("{\"header\": \"Valve data request\", \"Status\": \"Success\", \"Actuation type\": " + actuation_type + ", \"Actuation priority\": " + actuation_priority + ", \"Valve type\": " + valve_type + ", \"Valve location\": " + valve_loc + ", \"Last actuated\": " + time_str + "}");
+    JsonObject obj = Util::deserialize("{\"header\": \"Valve data request\", \"Status\": \"Success\", \"Actuation type\": \"" + actuation_type + "\", \"Actuation priority\": \"" + actuation_priority + "\", \"Valve type\": \"" + valve_type + "\", \"Valve location\": \"" + valve_loc + "\", \"Last actuated\": \"" + time_str + "\"}");
 
     global_flag.log_critical("response", obj);
 }
