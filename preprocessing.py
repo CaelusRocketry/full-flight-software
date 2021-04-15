@@ -1,6 +1,6 @@
 import json
 # The JSON file used will depend on the current test
-json_data = json.load(open("config.json"))
+json_data = json.load(open("full_config.json"))
 json_str = json.dumps(json_data)
 json_str = json_str.replace('"', '\\"')
 # print(json_str)

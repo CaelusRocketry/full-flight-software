@@ -95,7 +95,7 @@ double StageControl::calculate_status() const
 
 void StageControl::send_progression_request()
 {
-    JsonObject obj = Util::deserialize("{\"header\": \"Stage progression request\", \"Description\": \"Request to progress to the next stage\", \"Current stage\": " + stage_strings.at(stage_index) + ", \"Current stage\": " + stage_strings.at(stage_index + 1) + "}");
+    JsonObject obj = Util::deserialize("{\"header\": \"Stage progression request\", \"Description\": \"Request to progress to the next stage\", \"Current stage\": \"" + stage_strings.at(stage_index) + "\", \"Current stage\": \"" + stage_strings.at(stage_index + 1) + "\"}");
     global_flag.log_critical("response", obj);
 }
 
@@ -105,7 +105,7 @@ void StageControl::send_data()
     if (this->send_time == 0 || Util::getTime() > (this->send_time + this->send_interval))
     {
         // TODO: Uncomment this
-        JsonObject obj = Util::deserialize("{\"header\": \"stage_data\", \"stage\": " + stage_strings.at(stage_index) + ", \"status\": " + Util::to_string(calculate_status()) + "}");
+        JsonObject obj = Util::deserialize("{\"header\": \"stage_data\", \"stage\": \"" + stage_strings.at(stage_index) + "\", \"status\": \"" + Util::to_string(calculate_status()) + "\"}");
         global_flag.log_info("stage", obj);
         this->send_time = Util::getTime();
     }

@@ -128,7 +128,7 @@ void SensorControl::boundary_check() {
         }
         message = message.substr(0, message.length() - 2);
 
-        JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": " + message + "}");
+        JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"" + message + "\"}");
         global_flag.log_critical("response", obj);
     }
 }
