@@ -35,12 +35,12 @@ void ValveTask::read(){
         string valve_type = pin_to_valve[pin].first;
         string valve_location = pin_to_valve[pin].second;
 
-        SolenoidState state = valve_driver->getSolenoidState(pin);
-        ActuationType actuation_type = valve_driver->getActuationType(pin);
+        // SolenoidState state = valve_driver->getSolenoidState(pin);
+        // ActuationType actuation_type = valve_driver->getActuationType(pin);
 
         /* Update the registry */
-        global_registry.valves[valve_type][valve_location].state = state;
-        global_registry.valves[valve_type][valve_location].actuation_type = actuation_type;
+        // global_registry.valves[valve_type][valve_location].state = state;
+        // global_registry.valves[valve_type][valve_location].actuation_type = actuation_type;
     }
 }
 
@@ -93,9 +93,20 @@ void ValveTask::actuate() {
             /* Send actuation signal */
             valve_driver->actuate(pin, target_valve_info.actuation_type);
 
+            if(target_valve_info.actuation_type == ActuationType::CLOSE_VENT) {
+                print("closed");
+                global_registry.valves[valve_type][valve_location].state = SolenoidState::CLOSED;
+            }
+            if(target_valve_info.actuation_type == ActuationType::OPEN_VENT) {
+                print("open");
+                global_registry.valves[valve_type][valve_location].state = SolenoidState::OPEN;
+            }
+
             /* Reset the flags */
             global_flag.valves[valve_type][valve_location].actuation_type = ActuationType::NONE;
             global_flag.valves[valve_type][valve_location].actuation_priority = ValvePriority::NONE;
+
+            
 
             // Send response message
             JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": Set actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + "}");

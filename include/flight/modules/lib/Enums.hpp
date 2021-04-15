@@ -76,10 +76,10 @@ enum class ValveLocation {
 };
 
 enum class ActuationType {
-    NONE = 0,
-    CLOSE_VENT = 1,
-    OPEN_VENT = 2,
-    PULSE = 3,
+    NONE = 1,
+    CLOSE_VENT = 2,
+    OPEN_VENT = 3,
+    PULSE = 4
 };
 
 static unordered_map<string, ActuationType> actuation_type_map {
@@ -92,7 +92,7 @@ static unordered_map<string, ActuationType> actuation_type_map {
 static unordered_map<ActuationType, string, EnumClassHash> actuation_type_inverse_map {
         {ActuationType::NONE, "NONE"},
         {ActuationType::CLOSE_VENT, "CLOSE_VENT"},
-        {ActuationType::OPEN_VENT, "SAFE"},
+        {ActuationType::OPEN_VENT, "OPEN VENT"},
         {ActuationType::PULSE, "PULSE"}
 };
 

@@ -70,8 +70,8 @@ bool Telemetry::write(const Packet& packet) {
 
     // Note: add "END" at the end of the packet, so packets are split correctly
     string packet_string = output + "END";
-    print("Telemetry: Sending packet: " + packet_string);
-    print("");
+    // print("Telemetry: Sending packet: " + packet_string);
+    // print("");
 
     if(packet_string.find("sensor") != string::npos) {
         // print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n BIG OOGA BOOGA PAY ATTENTION ABOVE \n\n\n\n\n\n\n\n\n\n\n\n");
