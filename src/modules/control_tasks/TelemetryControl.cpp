@@ -181,9 +181,11 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     kalman_value = sensor.normalized_value;
     sensor_status_str = sensor_status_map[sensor.status];
     long double millisecond_timestamp = Util::getTime();
-    string value_str = Util::to_string(value);
-    string kalman_str = Util::to_string(kalman_value);
+
+    string value_str = Util::to_string((int) value);
+    string kalman_str = Util::to_string((int) kalman_value);
     string time_str = Util::to_string((int) (millisecond_timestamp / 1000));
+    
     JsonObject obj = Util::deserialize("{\"header\": \"Sensor data request\", \"Status\": \"Success\", \"Sensor type\": " + args[0] + ", \"Sensor location\": " + args[1] + ", \"Sensor status\": " + sensor_status_str + ", \"Measured value\": " + value_str + ", \"Normalized value\": " + kalman_str + ", \"Last updated\": " + time_str + "}");
     global_flag.log_critical("response", obj);
 }
