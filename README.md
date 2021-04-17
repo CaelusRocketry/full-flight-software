@@ -10,7 +10,7 @@ First, clone the repository, and move into the directory where it was cloned. Th
 
 After that's done, download the PlatformIO IDE extension in VS Code.
 
-If you don't already have it, download the MinGW C++ compiler from [here](https://https://sourceforge.net/projects/mingw-w64/).
+If you don't already have it, download the MinGW C++ compiler from [here](https://sourceforge.net/projects/mingw-w64/).
 
 Run
 
