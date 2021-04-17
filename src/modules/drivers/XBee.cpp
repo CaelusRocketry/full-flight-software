@@ -10,8 +10,29 @@
 
     XBee::XBee() {
         // Initialize variables
-        connection = false;
-        xbee = new SoftwareSerial(global_config.telemetry.XBEE_RX_PIN, global_config.telemetry.XBEE_TX_PIN);
+        // Util::pause(5000);
+        // print("\n\n\n\nhello WHAT IS UP ITS ADI\n\n\n");
+        // SoftwareSerial testing(2, 3);
+        // connection = false;
+        // testing.begin(9600); //telemetry.XBEE_BAUD_RATE
+        // Util::pause(5000);
+        // while(true) {
+        //     Util::pause(1000);
+        //     testing.println("code works6");
+        //     print("code works6");
+        // }
+        xbee = new SoftwareSerial(2, 3);
+        xbee->begin(9600);
+
+        for(int i = 0; i < 20; i++) {
+            xbee->println("test");
+            Util::pause(500);
+            print("test");
+        }
+        // SoftwareSerial testing(2, 3);
+        // testing.println("\n\n\n\nhello WHAT IS UP ITS ADI\n\n\n");
+        print("done");
+        // Util::pause(100000);
     }
 
     queue<string> XBee::read(int num_messages) {
@@ -39,7 +60,7 @@
         Packet::to_string(output, packet);
 
         string packet_string = "^" + output + "$";
-        print("XBee: Sending packet: " + packet_string);
+        // print("XBee: Sending packet: " + packet_string);
 
         for (size_t i = 0; i < packet_string.size(); i += 255)
         {
@@ -47,7 +68,9 @@
             
                 try {
                     char const *c = subpacket_string.c_str();
+                    // print("subpacket: " + string(c));
                     xbee->write(c);
+                    // print("done");
                 }
                 catch (std::exception& e) {
                     print(e.what());
@@ -105,12 +128,12 @@
     bool XBee::connect() {
         print("XBee: Connecting");
 
-        try {
-            xbee->begin(global_config.telemetry.XBEE_BAUD_RATE);
-        } catch(std::exception& e) {
-            print(e.what());
-            throw XBEE_CONNECTION_ERROR();
-        }
+        // try {
+        //     xbee->begin(global_config.telemetry.XBEE_BAUD_RATE);
+        // } catch(std::exception& e) {
+        //     print(e.what());
+        //     throw XBEE_CONNECTION_ERROR();
+        // }
 
         connection = true;
         TERMINATE_FLAG = false;
