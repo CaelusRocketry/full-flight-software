@@ -7,6 +7,7 @@
 #include <flight/modules/lib/Log.hpp>
 #include <flight/modules/drivers/Telemetry.hpp>
 #include <flight/modules/lib/Util.hpp>
+#include <string>
 
 class TelemetryControl : public Control {
 

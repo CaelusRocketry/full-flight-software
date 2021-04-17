@@ -58,6 +58,15 @@ void TelemetryControl::execute() {
 
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
+
+    if(header == "solenoid_actuate") {
+        print("SOLENOID ACTUATE \n\n\n\n\n\n\n\n\n\n\nSOLENOID\n\nSOILENDOIDDLKSJFDSKLFJ\n\n\n\n\n");
+    }
+
+    if(header == "valve_request") {
+        print("VALVE REQUEST \n\n\n\n\n\n\n\n\n\nVALVE\n\nSOILENDOIDDLKSJFDSKLFJ\n\n\n\n\n");
+    }
+
     JsonObject message = Util::deserialize(log.getMessage());
     JsonObject params = Util::deserialize(message["message"].as<string>());
 
@@ -133,6 +142,11 @@ void TelemetryControl::undo_soft_abort(const vector<string>& args) {
     global_flag.log_critical("mode", obj2);
 }
 void TelemetryControl::solenoid_actuate(const vector<string>& args) {
+    for(const string& s : args) {
+        print(s);
+    }
+
+    print("SKDJSDKLFJDSLJKF\n\n\n\n\n\n\nSDKLFJDSKLFJSDKLFJSDKLFJSDKLF SOLENOID\n\n");
     if (!global_registry.valve_exists("solenoid", args[0])) {
         JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Unable to find actuatable solenoid\", \"Valve location\": \"" + args[0] + "\"}");
         global_flag.log_critical("Valve actuation", obj);
@@ -149,18 +163,23 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     print("Actuating solenoid at " + args[0] + " with actuation type " + args[1]);
 
     try {
+        print("\n\ntry\n\ncatch\n\n");
         //TODO: make sure gs packets have the upper case version of the enum as the value for the actuation type
         FlagValveInfo &valve_flag = global_flag.valves["solenoid"][args[0]];
-        valve_flag.actuation_type = actuation_type_map[args[1]];
-        valve_flag.actuation_priority = valve_priority_map[args[2]];
+        valve_flag.actuation_type = (ActuationType) std::atoi(args[1].c_str());
+        valve_flag.actuation_priority = (ValvePriority) std::atoi(args[2].c_str());
+        print("\n\n\nit works\n\n\n\n\n");
     } catch(...) {
         JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Wrong packet message\", \"Valve location\": \"" + args[0] + "\", \"Actuation type\": \"" + args[1] + "\", \"Priority\": \"" + args[2] + "\"}");
         global_flag.log_critical("Valve actuation", obj);
         throw INVALID_PACKET_MESSAGE_ERROR();
     }
+    print(args[1]);
 
     JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Success\", \"Description\": \"Successfully actuated solenoid\"}");
     global_flag.log_info("Valve actuation", obj);
+
+    print("REACHED HERE");
 }
 
 void TelemetryControl::sensor_request(const vector<string>& args) {

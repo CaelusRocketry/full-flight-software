@@ -1,6 +1,7 @@
 #include <flight/modules/drivers/ValveDriver.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
+#include <flight/modules/lib/Util.hpp>
 #ifndef DESKTOP
     #include "Arduino.h"
 #endif
@@ -47,6 +48,8 @@ ActuationType ValveDriver::getActuationType(int pin){
 
 void ValveDriver::actuate(int pin, ActuationType actuation_type){
     int idx = getIndex(pin);
+    print("\n\n\n\n\nstuff");
+    
     valve_actuations[idx] = actuation_type;
     if(actuation_type == ActuationType::OPEN_VENT){
         valve_states[idx] = SolenoidState::OPEN;
@@ -61,6 +64,9 @@ void ValveDriver::actuate(int pin, ActuationType actuation_type){
         #ifndef DESKTOP
         writeVal(pin, LOW);
         #endif
+    }
+    for(SolenoidState i : valve_states) {
+        print(Util::to_string((int) i));
     }
 }
 
