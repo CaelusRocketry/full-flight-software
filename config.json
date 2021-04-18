@@ -5,9 +5,9 @@
     "DELAY": 0.5,
     "SOCKETIO_HOST": "127.0.0.1",
     "SOCKETIO_PORT": 5000,
-    "XBEE_RX_PIN": 10, 
-    "XBEE_TX_PIN": 11, 
-    "XBEE_BAUD_RATE": 9600
+    "XBEE_RX_PIN": 31, 
+    "XBEE_TX_PIN": 32, 
+    "XBEE_BAUD_RATE": 115200
   },
   "sensors": {
     "list": {
@@ -192,7 +192,7 @@
   },
   "arduino_type": "real",
   "task_config": {
-    "tasks": ["sensor", "valve", "telemetry"],
-    "control_tasks": ["sensor", "valve", "telemetry"]
+    "tasks": ["telemetry"],
+    "control_tasks": ["telemetry"]
   }
 }

@@ -14,7 +14,8 @@ using namespace std;
 class XBee  {
 private:
     #ifndef DESKTOP
-        SoftwareSerial *xbee;
+        // SoftwareSerial *xbee;
+        HardwareSerial *xbee;
     #endif
 
     bool connection;
