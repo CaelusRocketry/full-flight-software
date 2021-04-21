@@ -38,7 +38,7 @@
     }
 
     queue<string> XBee::read(int num_messages) {
-        print("XBee: Current buffer: " + rcvd);
+        // print("XBee: Current buffer: " + rcvd);
 
         read_buffer();
         if (num_messages > (int) ingest_queue.size() || num_messages == -1){
@@ -93,7 +93,7 @@
                 char msg = xbee->read();
                 string msg_str(1, msg);
                 rcvd.append(msg_str);
-                // print("XBee: Recieved: " + msg_str);
+                print("XBee: Recieved: " + msg_str);
             }
             catch (std::exception& e){
                 print(e.what());
@@ -113,7 +113,7 @@
                 rcvd = rcvd.substr(packet_end + 1);
             }
         }
-        print("xbee: received: " + rcvd);
+        // print("xbee: received: " + rcvd);
     }
 
     bool XBee::get_status() const {
