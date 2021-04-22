@@ -40,6 +40,7 @@
     queue<string> XBee::read(int num_messages) {
         // print("XBee: Current buffer: " + rcvd);
 
+        // printCritical("------------------------");
         read_buffer();
         if (num_messages > (int) ingest_queue.size() || num_messages == -1){
             num_messages = (int) ingest_queue.size();
@@ -64,21 +65,26 @@
         string packet_string = "^" + output + "$";
         // print("XBee: Sending packet: " + packet_string);
 
-        for (size_t i = 0; i < packet_string.size(); i += 255)
+        // TODO: Move this to config or constants or smth
+        int subpacket_len = 60;
+        int DELAY_SEND = 50;
+
+        for (size_t i = 0; i < packet_string.size(); i += subpacket_len)
         {
-            string subpacket_string = packet_string.substr(i, 255);
+            string subpacket_string = packet_string.substr(i, subpacket_len);
             
                 try {
                     char const *c = subpacket_string.c_str();
-                    // print("subpacket: " + string(c));
+                    print("Sending subpacket: " + string(c));
                     xbee->write(c);
                     // print("done");
                 }
                 catch (std::exception& e) {
-                    print(e.what());
+                    printCritical(e.what());
+                    printCritical("HELLO");
                     throw XBEE_WRITE_ERROR();
                 }
-            
+            Util::pause(DELAY_SEND);
         }
 
         return true;
@@ -93,7 +99,7 @@
                 char msg = xbee->read();
                 string msg_str(1, msg);
                 rcvd.append(msg_str);
-                print("XBee: Recieved: " + msg_str);
+                printCritical("XBee: Recieved: " + msg_str);
             }
             catch (std::exception& e){
                 print(e.what());
@@ -107,7 +113,7 @@
             size_t packet_end = rcvd.find('$', packet_start);
             if (packet_end != string::npos) {
                 string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
-                print("Telemetry: Received Full Packet: " + incoming_packet);
+                printCritical("XBee: Received Full Packet: " + incoming_packet);
                 ingest_queue.push(incoming_packet);
 
                 rcvd = rcvd.substr(packet_end + 1);

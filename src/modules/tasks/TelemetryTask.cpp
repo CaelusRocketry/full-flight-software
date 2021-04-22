@@ -28,16 +28,17 @@ void TelemetryTask::read() {
         
         // NOTE: ONLY WORKS FOR XBEE, with "^" and "$" formatting
         for (const string &packet_string = packets.front(); !packets.empty(); packets.pop()) {
-            print("TelemetryTask: Read packet group: " + packet_string);
+            printCritical("TelemetryTask: Read packet group: " + packet_string);
             if (!packet_string.empty() && packet_string[0] == '{') {
-                print("TelemetryTask: Processing packet: " + packet_string);
-                print("");
+                printCritical("TelemetryTask: Processing packet: " + packet_string);
+                printCritical("");
                 string processed_packet_string = packet_string;
 
                 // get rid of {} in the message field if necessary
                 if(processed_packet_string.find("\"message\": {") != string::npos) {
                     // print("TelemetryTask: reformatting packet message: " + processed_packet_string);
                     // print("");
+                    printCritical("Reformating");
                     int start = processed_packet_string.find("\"message\": {");
 
                     if (processed_packet_string.find("\"message\": {}") != string::npos) {
@@ -62,9 +63,22 @@ void TelemetryTask::read() {
                     // print("");
                 }
 
+                printCritical("Reached here!!");
+
                 Packet pack;
                 // print("Hello: " + processed_packet_string);
-                JsonObject j = Util::deserialize(processed_packet_string);
+                JsonObject j;
+                try{
+                    j = Util::deserialize(processed_packet_string);
+                }
+                catch (std::exception& e) {
+                    printCritical("ERRRRRRRRRRRRRRRRRRRRRRRRRROR:");
+                    printCritical(e.what());
+                    throw XBEE_READ_ERROR();
+                }
+
+                printCritical("Another checkpoint !!");
+
                 string output2;
                 Util::serialize(j, output2);
                 // print("Telemtask: json string " + output2);
@@ -100,8 +114,8 @@ void TelemetryTask::actuate() {
 
         // for each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
-            // print("here 2.5");
-            // telemetry->write(packet);
+            print("Calling telem write method");
+            telemetry->write(packet);
         }
         // print("here 3");
     }
@@ -110,6 +124,7 @@ void TelemetryTask::actuate() {
 void TelemetryTask::enqueue() {
     // print("here 1.5");
     auto &enqueue_queue = global_flag.telemetry.enqueue;
+    // printCritical("Enqueueing");
 
     // for each packet in the enqueue_queue, push that packet to the send_queue
     for(auto &packet = enqueue_queue.top(); !enqueue_queue.empty(); enqueue_queue.pop()) {
