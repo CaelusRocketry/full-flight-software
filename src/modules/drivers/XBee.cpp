@@ -21,14 +21,14 @@
         //     testing.println("code works6");
         //     print("code works6");
         // }
-        xbee = new SoftwareSerial(2, 3);
+        xbee = new SoftwareSerial(7, 8);
         xbee->begin(9600);
 
-        for(int i = 0; i < 20; i++) {
-            xbee->println("test");
-            Util::pause(500);
-            print("test");
-        }
+        // for(int i = 0; i < 20; i++) {
+        //     xbee->println("test");
+        //     Util::pause(500);
+        //     print("test");
+        // }
         // SoftwareSerial testing(2, 3);
         // testing.println("\n\n\n\nhello WHAT IS UP ITS ADI\n\n\n");
         print("done");
@@ -36,7 +36,7 @@
     }
 
     queue<string> XBee::read(int num_messages) {
-        print("XBee: Reading: " + rcvd);
+        print("XBee: Currently contains: " + rcvd);
 
         read_buffer();
         if (num_messages > (int) ingest_queue.size() || num_messages == -1){
@@ -91,6 +91,7 @@
                 char msg = xbee->read();
                 string msg_str(1, msg);
                 rcvd.append(msg_str);
+                print("XBee: Received: " + msg_str);
             }
             catch (std::exception& e){
                 print(e.what());
@@ -98,7 +99,7 @@
                 throw XBEE_READ_ERROR();
             }
         }
-        print("XBee: Received: " + rcvd);
+        
 
         size_t packet_start = rcvd.find('^');
         if(packet_start != string::npos) {

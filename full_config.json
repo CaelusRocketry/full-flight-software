@@ -40,7 +40,7 @@
               }
             },
             "pressure": {
-              "PT-5": {
+              "PT-1": {
                 "kalman_args": {
                   "process_variance": 0.01,
                   "measurement_variance": 0.02,
@@ -66,6 +66,110 @@
                 },
                 "pressure_pin": 10
               },
+              "PT-2": {
+                "kalman_args": {
+                  "process_variance": 0.01,
+                  "measurement_variance": 0.02,
+                  "kalman_value": 1000
+                },
+                "boundaries": {
+                  "waiting": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "pressurization": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "autosequence": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "postburn": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  }
+                },
+                "pressure_pin": 27
+              },
+              "PT-3": {
+                "kalman_args": {
+                  "process_variance": 0.01,
+                  "measurement_variance": 0.02,
+                  "kalman_value": 1000
+                },
+                "boundaries": {
+                  "waiting": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "pressurization": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "autosequence": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "postburn": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  }
+                },
+                "pressure_pin": 20
+              },
+              "PT-4": {
+                "kalman_args": {
+                  "process_variance": 0.01,
+                  "measurement_variance": 0.02,
+                  "kalman_value": 1000
+                },
+                "boundaries": {
+                  "waiting": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "pressurization": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "autosequence": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "postburn": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  }
+                },
+                "pressure_pin": 18
+              },
+              "PT-5": {
+                "kalman_args": {
+                  "process_variance": 0.01,
+                  "measurement_variance": 0.02,
+                  "kalman_value": 1000
+                },
+                "boundaries": {
+                  "waiting": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "pressurization": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "autosequence": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "postburn": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  }
+                },
+                "pressure_pin": 14
+              },
               "PT-P": {
                 "kalman_args": {
                   "process_variance": 0.01,
@@ -90,7 +194,7 @@
                     "warn": [50, 550]
                   }
                 },
-                "pressure_pin": 15
+                "pressure_pin": 22
               },
               "PT-7": {
                 "kalman_args": {
@@ -208,8 +312,8 @@
     },
     "arduino_type": "real",
     "task_config": {
-      "tasks": ["sensor", "valve", "telemetry"],
-      "control_tasks": ["sensor", "valve", "telemetry"]
+      "tasks": ["telemetry"],
+      "control_tasks": ["telemetry"]
     },
     "UI": {
         "data_cutoff": 30,
