@@ -93,10 +93,15 @@ void TelemetryTask::actuate() {
         // print("here 2");
         auto& send_queue = global_flag.telemetry.send_queue;
 
+        // JsonObject test = doc.to<JsonObject>();
+        // test["timestamp"] = 100;
+        // global_flag.log_info("test", test);
+
+
         // for each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
             // print("here 2.5");
-            telemetry->write(packet);
+            // telemetry->write(packet);
         }
         // print("here 3");
     }

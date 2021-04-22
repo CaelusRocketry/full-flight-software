@@ -66,11 +66,24 @@ void Supervisor::actuate() {
 
 void Supervisor::run() {
     while (true) {
+        // double delay = global_config.timer.delay;
+        // Serial.println(delay);
+        // Serial.println("HELLOO");
+        // Serial.println(millis());
+        // double delay = 0;
+        // long double start_time = Util::getTime();
         read();
         control();
         actuate();
         // temp placeholder for TimerControl
-        Util::pause(1000);
+        Util::pause(11);
+        // long double end_time = Util::getTime();
+        // long double diff = end_time - start_time;
+        // if(delay > diff){
+        //     Util::pause(delay - diff);
+        // }
+        // Serial.println(millis());
+        // Serial.println("WHATSUPPPP");
     }
 }
 

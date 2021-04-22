@@ -21,8 +21,11 @@
         //     testing.println("code works6");
         //     print("code works6");
         // }
-        xbee = new SoftwareSerial(7, 8);
+        
+        // xbee = new SoftwareSerial(31, 32);
+        xbee = &Serial4;
         xbee->begin(9600);
+        connection = true;
 
         // for(int i = 0; i < 20; i++) {
         //     xbee->println("test");
@@ -31,12 +34,11 @@
         // }
         // SoftwareSerial testing(2, 3);
         // testing.println("\n\n\n\nhello WHAT IS UP ITS ADI\n\n\n");
-        print("done");
         // Util::pause(100000);
     }
 
     queue<string> XBee::read(int num_messages) {
-        print("XBee: Currently contains: " + rcvd);
+        // print("XBee: Current buffer: " + rcvd);
 
         read_buffer();
         if (num_messages > (int) ingest_queue.size() || num_messages == -1){
@@ -99,7 +101,6 @@
                 throw XBEE_READ_ERROR();
             }
         }
-        
 
         size_t packet_start = rcvd.find('^');
         if(packet_start != string::npos) {
@@ -112,6 +113,7 @@
                 rcvd = rcvd.substr(packet_end + 1);
             }
         }
+        // print("xbee: received: " + rcvd);
     }
 
     bool XBee::get_status() const {
