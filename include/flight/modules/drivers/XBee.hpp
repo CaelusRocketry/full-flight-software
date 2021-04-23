@@ -20,7 +20,6 @@ private:
 
     bool connection;
     queue<string> ingest_queue;
-    queue<string> send_queue;
     queue<string> subpacket_send_queue;
     string rcvd;
 
@@ -29,6 +28,8 @@ private:
 
 
 public:
+    queue<string> send_queue;
+
     XBee();
     queue<string> read(int num_messages);
     bool write();

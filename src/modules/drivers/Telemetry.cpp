@@ -1,5 +1,3 @@
-#ifdef DESKTOP
-
 #include <chrono>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/drivers/Telemetry.hpp>
@@ -54,17 +52,15 @@ queue<string> Telemetry::read(int num_messages) {
 }
 
 // This sends the packet to the GUI!
-bool Telemetry::write(const Packet& packet) {
-    // Convert to JSON and then to a string
-    string output;
-    // print(":O");
-    try {
-        Packet::to_string(output, packet);
+bool Telemetry::write() {
+
+    // If there's nothing to send, return
+    if(send_queue.size() == 0){
+        return true;
     }
-    catch(std::exception& e) {
-        print("ERROR:");
-        print(e.what());
-    }
+
+    string output = send_queue.front();
+    send_queue.pop();
     
     // print("!!!!!!!!");
 
@@ -166,5 +162,3 @@ void Telemetry::end() {
     socket.close();
     connection = false;
 }
-
-#endif

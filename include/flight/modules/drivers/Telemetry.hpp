@@ -33,9 +33,11 @@ private:
     asio::ip::tcp::socket socket = tcp::socket(io_context);
 
 public:
+    queue<string> send_queue;
+
     Telemetry();
     queue<string> read(int num_messages);
-    bool write(const Packet& packet);
+    bool write();
     // void recv_loop();
     bool get_status() const;
     void reset();
