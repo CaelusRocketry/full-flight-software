@@ -10,31 +10,11 @@
 
     XBee::XBee() {
         // Initialize variables
-        // Util::pause(5000);
-        // print("\n\n\n\nhello WHAT IS UP ITS ADI\n\n\n");
-        // SoftwareSerial testing(2, 3);
-        // connection = false;
-        // testing.begin(9600); //telemetry.XBEE_BAUD_RATE
-        // Util::pause(5000);
-        // while(true) {
-        //     Util::pause(1000);
-        //     testing.println("code works6");
-        //     print("code works6");
-        // }
         
         // xbee = new SoftwareSerial(31, 32);
         xbee = &Serial4;
         xbee->begin(9600);
         connection = true;
-
-        // for(int i = 0; i < 20; i++) {
-        //     xbee->println("test");
-        //     Util::pause(500);
-        //     print("test");
-        // }
-        // SoftwareSerial testing(2, 3);
-        // testing.println("\n\n\n\nhello WHAT IS UP ITS ADI\n\n\n");
-        // Util::pause(100000);
     }
 
     queue<string> XBee::read(int num_messages) {
@@ -56,36 +36,42 @@
         return q;
     }
 
-    // This sends the packet to the GUI!
-    bool XBee::write(const Packet& packet) {
+    // Send the next subpacket in queue
+    bool XBee::write() {
 
-        string output;
-        Packet::to_string(output, packet);
-
-        string packet_string = "^" + output + "$";
-        // print("XBee: Sending packet: " + packet_string);
-
-        // TODO: Move this to config or constants or smth
-        int subpacket_len = 60;
-        int DELAY_SEND = 50;
-
-        for (size_t i = 0; i < packet_string.size(); i += subpacket_len)
-        {
-            string subpacket_string = packet_string.substr(i, subpacket_len);
-            
-                try {
-                    char const *c = subpacket_string.c_str();
-                    print("Sending subpacket: " + string(c));
-                    xbee->write(c);
-                    // print("done");
-                }
-                catch (std::exception& e) {
-                    printCritical(e.what());
-                    printCritical("HELLO");
-                    throw XBEE_WRITE_ERROR();
-                }
-            Util::pause(DELAY_SEND);
+        // Nothing to send, so j return
+        if(subpacket_send_queue.size() == 0 && send_queue.size() == 0){
+            return true;
         }
+
+        if(subpacket_send_queue.size() == 0){
+            // TODO: Move this to config or constants or smth
+            string packet_string = send_queue.front();
+            send_queue.pop();
+            int subpacket_len = 60;
+
+            for (size_t i = 0; i < packet_string.size(); i += subpacket_len)
+            {
+                string subpacket_string = packet_string.substr(i, subpacket_len);
+                subpacket_send_queue.push(subpacket_string);
+            }
+
+        }
+
+        int DELAY_SEND = 50;
+        string to_send = subpacket_send_queue.front();
+        subpacket_send_queue.pop();
+        try {
+            char const *c = to_send.c_str();
+            print("Sending subpacket: " + string(c));
+            xbee->write(c);
+        }
+        catch (std::exception& e) {
+            printCritical(e.what());
+            printCritical("HELLO");
+            throw XBEE_WRITE_ERROR();
+        }
+        Util::pause(DELAY_SEND);
 
         return true;
     }
