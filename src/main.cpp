@@ -3,13 +3,17 @@
 
 using namespace std; // allows access to standard library utilities
 
-#include <Arduino.h>
+
+#ifndef DESKTOP
+    #include <Arduino.h>
+#endif
+// #include <Arduino.h>
 
 int main(int argc, char** argv) { // argc = len(argv) in python; char** argv = actual arguments
     print("INFO: Starting Application"); 
 
-    pinMode(13, OUTPUT);
-    digitalWrite(13, HIGH);
+    // pinMode(13, OUTPUT);
+    // digitalWrite(13, HIGH);
 
     // Serial4.begin(9600);
     // Serial.begin(9600);

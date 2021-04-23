@@ -100,7 +100,7 @@ static unordered_map<ActuationType, string, EnumClassHash> actuation_type_invers
         {ActuationType::OPEN_VENT, "OPEN VENT"},
         {ActuationType::PULSE, "PULSE"}
 };
-
+// TODO: Reverse this order (0 as highest priority)
 enum class ValvePriority {
     NONE = 0,
     LOW_PRIORITY = 1,
