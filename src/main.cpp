@@ -7,7 +7,7 @@ using namespace std; // allows access to standard library utilities
 #ifndef DESKTOP
     #include <Arduino.h>
 #endif
-// #include <Arduino.h>
+
 
 int main(int argc, char** argv) { // argc = len(argv) in python; char** argv = actual arguments
     print("INFO: Starting Application"); 

@@ -114,7 +114,7 @@ void TelemetryTask::actuate() {
 
         // for each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
-            print("Calling telem write method");
+            print("Calling telem write method: Writing stuff");
             string output;
             Packet::to_string(output, packet);
             string packet_string = "^" + output + "$";

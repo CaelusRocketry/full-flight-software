@@ -6,13 +6,12 @@
 #include <flight/modules/lib/Util.hpp>
 #include <thread>
 
-// #include <iostream> //TODO: GETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTRIGDDDDDDDDDDDDDDDDDDDDDDDDDD OF THISSSSSSSSSSSSSSSSSSSSS
-
 using asio::ip::address;
 
 Telemetry::Telemetry() {
     // Initialize variables
     connection = false;
+    recv_buffer = "";
 }
 
 queue<string> Telemetry::read(int num_messages) {
@@ -28,13 +27,28 @@ queue<string> Telemetry::read(int num_messages) {
                 print("Telemetry: Received: " + msg); //TODO: FIX THIS MSG CAN POTENTIALLY BE INCOMPLETE
                 print("");
 
-                vector<string> split_msg = Util::split(msg, string("END"));
+                recv_buffer += msg;
+
                 std::queue<string> q;
 
-                for(string s : split_msg) {
-                    q.push(s);
-                    // print("Telemetry: split packet: " + s);
+                size_t packet_start = recv_buffer.find('^');
+                if(packet_start != string::npos) {
+                    size_t packet_end = recv_buffer.find('$', packet_start);
+                    if (packet_end != string::npos) {
+                        string incoming_packet = recv_buffer.substr(packet_start + 1, packet_end - packet_start - 1);
+                        printCritical("Telemetry: Received Full Packet: " + incoming_packet);
+                        q.push(incoming_packet);
+                        recv_buffer = recv_buffer.substr(packet_end + 1);
+                    }
                 }
+
+
+                // vector<string> split_msg = Util::split(msg, string("END"));
+
+                // for(string s : split_msg) {
+                //     q.push(s);
+                //     // print("Telemetry: split packet: " + s);
+                // }
 
                 return q;
             }
@@ -59,19 +73,16 @@ bool Telemetry::write() {
         return true;
     }
 
-    string output = send_queue.front();
+    string packet_string = send_queue.front();
     send_queue.pop();
     
     // print("!!!!!!!!");
 
     // Note: add "END" at the end of the packet, so packets are split correctly
-    string packet_string = output + "END";
+    // string packet_string = output + "END";
     // print("Telemetry: Sending packet: " + packet_string);
     // print("");
 
-    if(packet_string.find("sensor") != string::npos) {
-        // print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n BIG OOGA BOOGA PAY ATTENTION ABOVE \n\n\n\n\n\n\n\n\n\n\n\n");
-    }
     // Util::pause(1000);
     try {
         // print("dd");

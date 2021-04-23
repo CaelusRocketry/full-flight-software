@@ -1,8 +1,6 @@
 #ifndef FLIGHT_TELEMETRY_HPP
 #define FLIGHT_TELEMETRY_HPP
 
-#ifdef DESKTOP
-
 #include <string>
 #include <queue>
 #include <cstdio>
@@ -23,6 +21,7 @@ class Telemetry {
 private:
     bool connection;
     queue<string> ingest_queue;
+    string recv_buffer;
 
     // lockable object used to specify when things need exclusive access.
     // std::mutex mtx;
@@ -44,7 +43,5 @@ public:
     bool connect();
     void end();
 };
-
-#endif
 
 #endif //FLIGHT_TELEMETRY_HPP
