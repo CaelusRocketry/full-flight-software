@@ -3,17 +3,16 @@
 #include <flight/modules/lib/logger_util.hpp>
 #include <queue>
 #include <flight/modules/mcl/Flag.hpp>
-#include <ArduinoJson.h>
+// #include <ArduinoJson.h>
 
-//TODO: add custom packet enqueuing interface to gs???
 
 TelemetryControl::TelemetryControl() {
-    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Telemetry Control started\"}");
-    global_flag.log_info("response", obj);
+    string msg = "Telemetry control starting";
+    global_flag.log_info("response", msg);
 }
 
 void TelemetryControl::begin() {
-    print("Telemetry control: Beginning");
+    print("Telemetry control: beginning");
     make_functions();
 }
 
@@ -45,7 +44,6 @@ void TelemetryControl::execute() {
             Packet::to_string(packet_to_str, packet);
             print("TelemetryControl packet to string: " + packet_to_str);
 
-            //TODO: figure out if log command is outdated
             for(const Log& log_ : packet.getLogs()) {
                 string to_str_log;
                 Log::to_string(to_str_log, log_);
@@ -59,24 +57,14 @@ void TelemetryControl::execute() {
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
 
-    if(header == "solenoid_actuate") {
-        print("SOLENOID ACTUATE \n\n\n\n\n\n\n\n\n\n\nSOLENOID\n\nSOILENDOIDDLKSJFDSKLFJ\n\n\n\n\n");
-    }
+    // JsonObject message = Util::deserialize(log.getMessage());
+    // JsonObject params = Util::deserialize(message["message"].as<string>());
 
-    if(header == "valve_request") {
-        print("VALVE REQUEST \n\n\n\n\n\n\n\n\n\nVALVE\n\nSOILENDOIDDLKSJFDSKLFJ\n\n\n\n\n");
-    }
-
-    JsonObject message = Util::deserialize(log.getMessage());
-    JsonObject params = Util::deserialize(message["message"].as<string>());
-
-    string output;
-    Util::serialize(params, output);
-    string new_msg_str = output;
+    // string output = log.getMessage();
+    // string new_msg_str = output;
     
-    string dump;
-    Log::to_string(dump, log);
-
+    // string dump;
+    // Log::to_string(dump, log);
 
     // if(string({dump[0]}) == "{" || string({dump[1]}) == "{") { // if its a converted packet
     //     new_msg_str = Util::replaceAll(new_msg_str, "\\", "");
@@ -86,6 +74,7 @@ void TelemetryControl::ingest(const Log& log) {
     //     // params = json::parse(new_msg_str);
     //     // cout << params.dump() << endl;
     // }
+
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
         print("TelemetryControl Packet Header: " + header);
@@ -114,24 +103,29 @@ void TelemetryControl::ingest(const Log& log) {
             param_values.push_back(params[argument_name]);
         }
     } catch (...) {
-        JsonObject obj = Util::deserialize("{\"message\": \"Invalid function arguments\"}");
+        string obj = "Invalid function arguments";
         global_flag.log_warning("info", obj);
         throw INVALID_PACKET_ARGUMENTS_ERROR();
     }
     (this->*function)(param_values); // call function which maps to the GS command sent w/ all params necessary
 }
+
 void TelemetryControl::heartbeat(const vector<string>& args) {
-    JsonObject obj = Util::deserialize(
-        "{\"header\": \"heartbeat\", \"response\": \"OK\", \"timestamp\" : \"" + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) + "\" }");
-    global_flag.log_info("heartbeat", obj);
+    // JsonObject obj = Util::deserialize(
+    //    "{\"header\": \"heartbeat\", \"response\": \"OK\", \"timestamp\" : \"" + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) + "\" }");
+    // global_flag.log_info("heartbeat", obj);
+    string header = "HRT"
+    string obj = std::format("{}|{}", header, Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000));
+    global_flag.log_info(header, obj);
 }
 
 void TelemetryControl::soft_abort(const vector<string>& args) {
     global_registry.general.soft_abort = true;
-    JsonObject obj = Util::deserialize("{\"header\": \"Soft Abort\", \"Status\": \"Success\", \"Description\": \"Rocket is undergoing soft abort\"}");
-    global_flag.log_critical("response", obj);
-    JsonObject obj2 = Util::deserialize("{\"header\": \"Soft Abort\", \"mode\": \"Soft Abort\"}");
-    global_flag.log_critical("mode", obj2);
+    string header = "S"
+    // JsonObject obj = Util::deserialize("{\"header\": \"Soft Abort\", \"Status\": \"Success\", \"Description\": \"Rocket is undergoing soft abort\"}");
+    // global_flag.log_critical("response", obj);
+    // JsonObject obj2 = Util::deserialize("{\"header\": \"Soft Abort\", \"mode\": \"Soft Abort\"}");
+    // global_flag.log_critical("mode", obj2);
 }
 
 void TelemetryControl::undo_soft_abort(const vector<string>& args) {

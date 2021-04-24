@@ -9,55 +9,35 @@ void Flag::enqueue(const Log& log, LogPriority logPriority) {
     Log::to_string(output, log);
     // print("Flag: Enqueue: " + output);
     // print("Flag: Log priority: " + Util::to_string(static_cast<int>(logPriority)));
-
     long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
     Packet packet(logPriority, millisecond_timestamp / 1000);
     packet.add(log);
     telemetry.enqueue.push(packet);
 }
 
-void Flag::log_info(const string &header, JsonObject &message) {
+void Flag::log_info(const string &header, const string &message) {
     long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
-    // print("----------------------------------");
-    // print("HIIII!!!: " + header);
-    // string output;
-    // serializeJson(message, output);
-    // print(output);
-    // if(output.length() > 200){
-    //     int a = 1;
-    //     int b = 0;
-    //     int c = (a / b);
-    // }
-    string messageString;
-    Util::serialize(message, messageString);
-    Log log(header, messageString, millisecond_timestamp / 1000);
+    Log log(header, message, millisecond_timestamp / 1000);
     enqueue(log, LogPriority::INFO);
 }
 
-void Flag::log_debug(const string &header, JsonObject &message) {
+void Flag::log_debug(const string &header, const string &message) {
     long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
-    string messageString;
-    Util::serialize(message, messageString);
-    Log log(header, messageString, millisecond_timestamp / 1000);
+    Log log(header, message, millisecond_timestamp / 1000);
     enqueue(log, LogPriority::DEBUG);
     // enqueue(Log(header, message, millisecond_timestamp / 1000), LogPriority::DEBUG);
 }
 
-void Flag::log_warning(const string &header, JsonObject &message) {
+void Flag::log_warning(const string &header, const string &message) {
     long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
-    string messageString;
-    Util::serialize(message, messageString);
-    Log log(header, messageString, millisecond_timestamp / 1000);
+    Log log(header, message, millisecond_timestamp / 1000);
     enqueue(log, LogPriority::WARN);
     // enqueue(Log(header, message, millisecond_timestamp / 1000), LogPriority::WARN);
 }
 
-void Flag::log_critical(const string &header, JsonObject &message) {
+void Flag::log_critical(const string &header, const string &message) {
     long double millisecond_timestamp = Util::getTime() - general.mcl_start_time;
-
-    string messageString;
-    Util::serialize(message, messageString);
-    Log log(header, messageString, millisecond_timestamp / 1000);
+    Log log(header, message, millisecond_timestamp / 1000);
     enqueue(log, LogPriority::CRIT);
     // enqueue(Log(header, message, millisecond_timestamp / 1000), LogPriority::CRIT);
 }

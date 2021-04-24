@@ -6,7 +6,7 @@
 #include <flight/modules/lib/logger_util.hpp>
 // #include <functional>
 
-void Log::to_string(string& output, const Log& log) {
+// void Log::to_string(string& output, const Log& log) {
     // print("TO STRING METHOD");
     // print("Log details:");
     // print(log.getHeader());
@@ -92,32 +92,32 @@ void Log::to_string(string& output, const Log& log) {
     // print(Util::to_string(log.getTimestamp()));
 
     // print("Creating log from string");
-    StaticJsonDocument<1500> newDoc;
-    JsonObject object = newDoc.to<JsonObject>();
-    object["header"] = log.getHeader();
-    object["timestamp"] = log.getTimestamp();
-    object["message"] = log.getMessage();
+    // StaticJsonDocument<1500> newDoc;
+    // JsonObject object = newDoc.to<JsonObject>();
+    // object["header"] = log.getHeader();
+    // object["timestamp"] = log.getTimestamp();
+    // object["message"] = log.getMessage();
     // print("Done creating Log from string");
-    ArduinoJson::serializeJson(newDoc, output);
+    // ArduinoJson::serializeJson(newDoc, output);
     // print(output);
     // int a = 1;
     // int b = 0;
     // int c = a / b;
-}
+// }
 
-void Log::from_json(const JsonObject& j, Log& log) {
-    string header = j["header"].as<string>();
-    JsonObject message = j["message"];
-    double timestamp = j["timestamp"].as<double>(); // TODO: Timestamp is an int for some reason?
-    string msg, messageString;
-    ArduinoJson::serializeJson(j, msg);
-    Util::serialize(j, messageString);
-    // print("Message: " + msg);
-    // print("Message 2: " + j["message"].as<string>());
-    log = Log(header, messageString, timestamp);
-}
+// void Log::from_json(const JsonObject& j, Log& log) {
+//     string header = j["header"].as<string>();
+//     JsonObject message = j["message"];
+//     double timestamp = j["timestamp"].as<double>(); // TODO: Timestamp is an int for some reason?
+//     string msg, messageString;
+//     ArduinoJson::serializeJson(j, msg);
+//     Util::serialize(j, messageString);
+//     // print("Message: " + msg);
+//     // print("Message 2: " + j["message"].as<string>());
+//     log = Log(header, messageString, timestamp);
+// }
 
-// Log string to black_box.txt
+// TODO: Log string to black_box.txt
 void Log::save(const string& filename) const {
     // ofstream file;
     // file.open(filename, fstream::in | fstream::out | fstream::app);
@@ -126,9 +126,9 @@ void Log::save(const string& filename) const {
     //     file.open(filename, fstream::in | fstream::out | fstream::trunc);
     // }
 
-    
-    string output;
-    to_string(output, *this); 
+    return;
+    // string output;
+    // to_string(output, *this); 
 
     // file << output << endl;
     // file.close();
