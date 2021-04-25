@@ -10,9 +10,7 @@
 // }
 PseudoThermoDriver::PseudoThermoDriver(vector<vector<int>> pins){
     for(unsigned int i = 0; i < pins.size(); i++){
-        for (int j = 0; j < 4; j++) {
-            thermo_pins.push_back(pins[i][j]);
-        }
+        thermo_pins.push_back(pins[i][0]);
         thermo_vals.push_back((MIN_TEMP + MAX_TEMP) / 2);
     }
 }

@@ -25,6 +25,7 @@ struct ConfigSensorInfo {
     } boundaries;
     int pressure_pin;
     vector<int> thermo_pins;
+    vector<int> load_cell_pins;
 };
 
 struct ConfigValveInfo {

@@ -39,6 +39,34 @@
                 "thermo_pins": [33, 0, 1, 32]     
               }
             },
+            "load_cell": {
+              "LoadCell-1": {
+                "kalman_args": {
+                  "process_variance": 0.01,
+                  "measurement_variance": 0.02,
+                  "kalman_value": 1000
+                },
+                "boundaries": {
+                  "waiting": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "pressurization": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "autosequence": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  },
+                  "postburn": {
+                    "safe": [100, 500],
+                    "warn": [50, 550]
+                  }
+                },
+                "load_cell_pins": [100, 101]     
+              }
+            },
             "pressure": {
               "PT-1": {
                 "kalman_args": {
