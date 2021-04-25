@@ -5,7 +5,6 @@
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/lib/Log.hpp>
-#include <flight/modules/drivers/Telemetry.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <string>
 

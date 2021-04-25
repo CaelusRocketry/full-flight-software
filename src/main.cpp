@@ -10,7 +10,28 @@ using namespace std; // allows access to standard library utilities
 
 
 int main(int argc, char** argv) { // argc = len(argv) in python; char** argv = actual arguments
+    #ifndef DESKTOP
+        Serial.begin(9600);
+    #endif
+
+    #ifdef TEENSY
+        // print("Waiting at the beginning of the program");
+        // delay(10000);
+        pinMode(13, OUTPUT);
+        digitalWrite(13, HIGH);
+        print("Initializing SD card");
+        Serial.println(BUILTIN_SDCARD);
+        if(SD.begin(BUILTIN_SDCARD)){
+            Serial.println("Initialization success");
+        }
+        else{
+            Serial.println("Init failed");
+        }
+    #endif
+
     print("INFO: Starting Application"); 
+
+
 
     // pinMode(13, OUTPUT);
     // digitalWrite(13, HIGH);

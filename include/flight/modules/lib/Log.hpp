@@ -7,6 +7,11 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 
+#ifdef TEENSY
+    // #include <SD_ts.h>
+    #include <SD.h>
+#endif
+
 using namespace std;
 using ArduinoJson::StaticJsonDocument;
 

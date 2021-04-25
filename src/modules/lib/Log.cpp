@@ -95,8 +95,12 @@ void Log::to_string(string& output, const Log& log) {
     StaticJsonDocument<1500> newDoc;
     JsonObject object = newDoc.to<JsonObject>();
     object["header"] = log.getHeader();
-    object["timestamp"] = log.getTimestamp();
+    object["timestamp"] = (double) log.getTimestamp();
     object["message"] = log.getMessage();
+
+    Serial.println("HERE");
+    Serial.println((double) object["timestamp"]);
+    Serial.println((double) log.getTimestamp());
     // print("Done creating Log from string");
     ArduinoJson::serializeJson(newDoc, output);
     // print(output);
@@ -106,9 +110,14 @@ void Log::to_string(string& output, const Log& log) {
 }
 
 void Log::from_json(const JsonObject& j, Log& log) {
+    string output;
+    serializeJson(j, output);
+
     string header = j["header"].as<string>();
     JsonObject message = j["message"];
     double timestamp = j["timestamp"].as<double>(); // TODO: Timestamp is an int for some reason?
+
+
     string msg, messageString;
     ArduinoJson::serializeJson(j, msg);
     Util::serialize(j, messageString);
@@ -119,19 +128,36 @@ void Log::from_json(const JsonObject& j, Log& log) {
 
 // Log string to black_box.txt
 void Log::save(const string& filename) const {
-    // ofstream file;
-    // file.open(filename, fstream::in | fstream::out | fstream::app);
+     #ifdef DESKTOP
+        ofstream savefile;
+        savefile.open(filename);
+        string output;
+        to_string(output, *this);
+        savefile << output + "\n";
+        savefile.close();
+    #endif
 
-    // if(!file) {
-    //     file.open(filename, fstream::in | fstream::out | fstream::trunc);
-    // }
+    #ifdef TEENSY
+        print("\n\n\n\n\n\nWRITING STUFF TO SD CARD !!!\n\n\n\n\n\n");
+        File savefile;
+        savefile = SD.open("blackbox.txt", FILE_WRITE);
 
-    
-    string output;
-    to_string(output, *this); 
-
-    // file << output << endl;
-    // file.close();
+        if (savefile) // it opened OK
+        {
+            Serial.println("Saving file!");
+            Serial.println((double) timestamp);
+            string output;
+            to_string(output, *this);
+            
+            savefile.println(output.c_str());
+            savefile.close();
+            Serial.println("Done");
+        }
+        else {
+            Serial.println("Error opening file:");
+            Serial.println("blackbox.txt");
+        }
+    #endif
 }
 
 Log Log::copy(){
