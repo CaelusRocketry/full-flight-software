@@ -115,13 +115,13 @@
     void XBee::reset() {
         end();
         bool res = connect();
-        if( !res ) {
+        if (!res) {
             end();
         }
     }
 
     bool XBee::connect() {
-        print("XBee: Connecting");
+        print("XBee: connecting.");
 
         // try {
         //     xbee->begin(global_config.telemetry.XBEE_BAUD_RATE);
@@ -141,6 +141,4 @@
         connection = false;
     }
 
-
 #endif
-

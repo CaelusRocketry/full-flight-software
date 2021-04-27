@@ -6,8 +6,6 @@
     #include "Arduino.h"
 #endif
 
-StaticJsonDocument<15000> Util::doc;
-
 vector<string> Util::split(const string &s, const string &delimiter){
     string temp = s;
     vector<string> result;
@@ -19,7 +17,6 @@ vector<string> Util::split(const string &s, const string &delimiter){
         result.push_back(token);
         temp.erase(0, pos + delimiter.length());
     }
-
     return result;
 }
 
@@ -41,20 +38,19 @@ template <typename T> int Util::getIndex(vector<T> arr, T val){
     }
     return -1;
 }
+
+int getMaxIndex(string str, string val) {
+    int ind = -1;
+    for(unsigned int i = 0; i < str.size(); i++) {
+        if (str[i] == val) {
+            ind = i;
+        }
+    }
+    return ind;
+}
+
 template int Util::getIndex<int>(vector<int>, int); // Instantiate the template for type int
 template int Util::getIndex<float>(vector<float>, float); // Instantiate the template for type int
-
-
-void Util::serialize(JsonObject obj, string& output){
-    ArduinoJson::serializeJson(obj, output);
-}
-
-JsonObject Util::deserialize(string str){
-    doc.clear();
-    deserializeJson(doc, str);
-    JsonObject object = doc.as<JsonObject>();
-    return object;
-}
 
 double Util::min(double a, double b){
     if(a < b){
@@ -103,11 +99,9 @@ string Util::to_string(long int i) {
 }
 
 string Util::to_string(long double d) {
-    // algorithm: take the double, multiply it by 10 until there are no decimals (or until integer overflow - 17 digits), 
-    // convert that int to a string, place the decimal point back where it belongs
-
-    // TODO: rn this doesn't handle small numbers, such as 0.00123
-    // it just converts it to 0.123
+    // Algorithm: take the double, multiply it by 10 until there are no decimals (or until integer overflow - 17 digits), 
+    // Convert that int to a string, place the decimal point back where it belongs
+    // TODO: Doesn't handle small numbers, such as 0.00123; it just converts it to 0.123
 
     long double temp = d;
     unsigned long int dot = to_string((long int) temp).length();

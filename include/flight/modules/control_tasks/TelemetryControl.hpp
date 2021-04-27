@@ -23,7 +23,7 @@ private:
         {"sensor_request", {"sensor_type", "sensor_location"}},
         {"valve_request", {"valve_type", "valve_location"}},
         {"progress", {}},
-        {"test", {"response"}}
+        {"info", {}}
     };
 
 
@@ -35,7 +35,7 @@ private:
     void sensor_request(const vector<string>& args);
     void valve_request(const vector<string>& args);
     void progress(const vector<string>& args);
-    void test(const vector<string>& args);
+    void info(const vector<string>& args);
     void make_functions();
 
 public:

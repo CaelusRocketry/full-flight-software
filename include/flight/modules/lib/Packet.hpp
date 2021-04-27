@@ -5,15 +5,10 @@
 #include <vector>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Log.hpp>
-#include <ArduinoJson.h>
-
 
 using namespace std;
-using ArduinoJson::StaticJsonDocument;
+// Packet class groups together Logs of similar priority
 
-// class Packet;
-
-// Packet class groups together logs of similar priority
 class Packet {
 private:
 
@@ -31,11 +26,8 @@ public:
     void add(const Log& log);
     vector<Log> getLogs();
 
-    static void to_string(string& output, const Packet& packet);
-    static void from_json(const JsonObject& j, Packet& packet);
-
-    friend void to_json_doc(StaticJsonDocument<5000>& j, const Packet& packet);
-    friend void from_json(const JsonObject& j, Packet& packet);
+    string toString();
+    static void from_string(string& str, Packet& packet);
 
     struct compareTo {
         bool operator()(const Packet& lhs, const Packet& rhs) {

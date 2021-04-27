@@ -1,52 +1,49 @@
 #include <flight/modules/control_tasks/TelemetryControl.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
-#include <queue>
 #include <flight/modules/mcl/Flag.hpp>
-// #include <ArduinoJson.h>
+#include <queue>
 
 
 TelemetryControl::TelemetryControl() {
-    string msg = "Telemetry control starting";
-    global_flag.log_info("response", msg);
+    global_flag.log_info("INF", "Telemetry control starting.");
 }
 
 void TelemetryControl::begin() {
-    print("Telemetry control: beginning");
+    print("Telemetry control: beginning.");
     make_functions();
 }
 
 // Store list of all commands that GS can send as functions, add the function pointers to the map and call when necessary
 void TelemetryControl::make_functions() {
-    print("Telemetry: Making Functions");
-    this->functions.emplace("heartbeat", &TelemetryControl::heartbeat);
-    this->functions.emplace("soft_abort", &TelemetryControl::soft_abort);
-    this->functions.emplace("undo_soft_abort", &TelemetryControl::undo_soft_abort);
-    this->functions.emplace("solenoid_actuate", &TelemetryControl::solenoid_actuate);
-    this->functions.emplace("sensor_request", &TelemetryControl::sensor_request);
-    this->functions.emplace("valve_request", &TelemetryControl::valve_request);
-    this->functions.emplace("progress", &TelemetryControl::progress);
-    this->functions.emplace("test", &TelemetryControl::test);
+    print("Telemetry: making functions.");
+    this->functions.emplace("HRT", &TelemetryControl::heartbeat);
+    this->functions.emplace("SAB", &TelemetryControl::soft_abort);
+    this->functions.emplace("UAB", &TelemetryControl::undo_soft_abort);
+    this->functions.emplace("SAC", &TelemetryControl::solenoid_actuate);
+    this->functions.emplace("SRQ", &TelemetryControl::sensor_request);
+    this->functions.emplace("VRQ", &TelemetryControl::valve_request);
+    this->functions.emplace("PRG", &TelemetryControl::progress);
+    this->functions.emplace("INF", &TelemetryControl::info);
 }
 
 void TelemetryControl::execute() {
-    print("Telemetry control: Controlling");
+    print("Telemetry control: controlling.");
     if (!global_registry.telemetry.status) {
         global_flag.telemetry.reset = true;
     } else {
         global_flag.telemetry.reset = false;
         auto &ingest_queue = global_registry.telemetry.ingest_queue;
         while (!ingest_queue.empty()) {
+            // Pop the packet at the top of the ingest queue
             Packet packet = ingest_queue.top();
             ingest_queue.pop();
-
-            string packet_to_str;
-            Packet::to_string(packet_to_str, packet);
+            // Convert the packet to a string
+            string packet_to_str = packet.toString();
             print("TelemetryControl packet to string: " + packet_to_str);
-
-            for(const Log& log_ : packet.getLogs()) {
-                string to_str_log;
-                Log::to_string(to_str_log, log_);
+            // Ingest each Log in the packet
+            for (const Log& log_ : packet.getLogs()) {
+                string to_str_log = log_.toString();
                 print("TelemetryControl log to string: " + to_str_log);
                 ingest(log_);
             }
@@ -56,95 +53,47 @@ void TelemetryControl::execute() {
 
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
-
-    // JsonObject message = Util::deserialize(log.getMessage());
-    // JsonObject params = Util::deserialize(message["message"].as<string>());
-
-    // string output = log.getMessage();
-    // string new_msg_str = output;
-    
-    // string dump;
-    // Log::to_string(dump, log);
-
-    // if(string({dump[0]}) == "{" || string({dump[1]}) == "{") { // if its a converted packet
-    //     new_msg_str = Util::replaceAll(new_msg_str, "\\", "");
-    //     print("removing slashes");
-    //     print(new_msg_str);
-    //     // cout << "new str: " << new_msg_str << endl;
-    //     // params = json::parse(new_msg_str);
-    //     // cout << params.dump() << endl;
-    // }
-
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
         print("TelemetryControl Packet Header: " + header);
         throw INVALID_HEADER_ERROR();
     }
-
-    auto function = this->functions.at(header);
-    vector<string> argument_order = arguments.at(header);
-
-    // TODO: change the packet format from gs to make it strings instead of enums
-
-    /* if (argument_order.size() != params.size()) {
-        throw PACKET_ARGUMENT_ERROR();
-    } */
-
-    // output = "";
-    // Util::serialize(params, output);
-    // print(output);
-
-    // print(params["message"].as<string>());
-
-    vector<string> param_values;
-
+    auto function = this->functions.at(header); // The reference to the actual function
+    vector<string> argument_order = arguments.at(header); // The arguments for that specific function
+    int arg_len = argument_order.size(); // Number of arguments
+    // Attempt to parse arguments
     try {
-        for (const string& argument_name : argument_order) {
-            param_values.push_back(params[argument_name]);
+        if (arg_len > 0) { // If the message in the log are arguments and not just text
+            for (const &string arg : Util::split(log.getMessage(), "")) {
+                param_values.push_back(arg);
+            }
         }
     } catch (...) {
-        string obj = "Invalid function arguments";
+        string obj = "Invalid function arguments.";
         global_flag.log_warning("info", obj);
         throw INVALID_PACKET_ARGUMENTS_ERROR();
     }
-    (this->*function)(param_values); // call function which maps to the GS command sent w/ all params necessary
+    (this->*function)(param_values); // Call function which maps to the GS command sent w/ all params necessary
 }
 
 void TelemetryControl::heartbeat(const vector<string>& args) {
-    // JsonObject obj = Util::deserialize(
-    //    "{\"header\": \"heartbeat\", \"response\": \"OK\", \"timestamp\" : \"" + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) + "\" }");
-    // global_flag.log_info("heartbeat", obj);
-    string header = "HRT"
-    string obj = std::format("{}|{}", header, Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000));
-    global_flag.log_info(header, obj);
+    global_flag.log_info("HBT", "OK");
 }
 
 void TelemetryControl::soft_abort(const vector<string>& args) {
     global_registry.general.soft_abort = true;
-    string header = "S"
-    // JsonObject obj = Util::deserialize("{\"header\": \"Soft Abort\", \"Status\": \"Success\", \"Description\": \"Rocket is undergoing soft abort\"}");
-    // global_flag.log_critical("response", obj);
-    // JsonObject obj2 = Util::deserialize("{\"header\": \"Soft Abort\", \"mode\": \"Soft Abort\"}");
-    // global_flag.log_critical("mode", obj2);
+    global_flag.log_critical("SAB", "1");
 }
 
 void TelemetryControl::undo_soft_abort(const vector<string>& args) {
     global_registry.general.soft_abort = false;
-    JsonObject obj = Util::deserialize("{\"header\": \"mode\", \"Status\": \"Success\", \"Description\": \"Undoing soft abort\"}");
-    global_flag.log_critical("response", obj);
-    JsonObject obj2 = Util::deserialize("{\"header\": \"mode\", \"mode\": \"Normal\"}");
-    global_flag.log_critical("mode", obj2);
+    global_flag.log_critical("UAB", "1");
 }
-void TelemetryControl::solenoid_actuate(const vector<string>& args) {
-    for(const string& s : args) {
-        print(s);
-    }
 
-    print("SKDJSDKLFJDSLJKF\n\n\n\n\n\n\nSDKLFJDSKLFJSDKLFJSDKLFJSDKLF SOLENOID\n\n");
+void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     if (!global_registry.valve_exists("solenoid", args[0])) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Unable to find actuatable solenoid\", \"Valve location\": \"" + args[0] + "\"}");
-        global_flag.log_critical("Valve actuation", obj);
-        throw INVALID_SOLENOID_ERROR();
+        global_flag.log_critical("SAC", obj);
+        // throw INVALID_SOLENOID_ERROR();
     }
 
     int current_priority = int(global_registry.valves["solenoid"][args[0]].actuation_priority);

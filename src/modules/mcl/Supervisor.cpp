@@ -7,13 +7,11 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Constants.hpp>
-#include <ArduinoJson.h>
 
 #ifndef DESKTOP
     #include "Arduino.h"
 #endif
 
-//TODO: wrap everything in a try catch to make sure that execution doesn't stop if/when an error gets thrown?
 
 Supervisor::~Supervisor() {
     delete control_task;
@@ -75,15 +73,7 @@ void Supervisor::run() {
         read();
         control();
         actuate();
-        // temp placeholder for TimerControl
         Util::pause(1000);
-        // long double end_time = Util::getTime();
-        // long double diff = end_time - start_time;
-        // if(delay > diff){
-        //     Util::pause(delay - diff);
-        // }
-        // Serial.println(millis());
-        // Serial.println("WHATSUPPPP");
     }
 }
 
@@ -103,7 +93,4 @@ void Supervisor::parse_config() {
     }
 
     control_task = new ControlTask(control_tasks);
-    // const int a = 1;
-    // const int b = 0;
-    // const int c = a / b;
 }

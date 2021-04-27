@@ -1,142 +1,109 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <flight/modules/lib/Log.hpp>
-#include <ArduinoJson.h>
+#include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
-// #include <functional>
-
-// void Log::to_string(string& output, const Log& log) {
-    // print("TO STRING METHOD");
-    // print("Log details:");
-    // print(log.getHeader());
-    // string msg;
-    // serializeJson(log.getMessage(), msg);
-    // print(msg);
-    // print(Util::to_string(log.getTimestamp()));
-
-    // JsonObject& msgLog = std::reference_wrapper<ObjectRef>(log.getMessage()).get();
-    // Util::doc.clear();
+#include <flight/modules/lib/Errors.hpp>
 
 
-    // JsonObject messageObject = newDoc.createNestedObject("message");
-    // print("a4");
-    // string msgLog = log.getMessage();
-    // print("a5");
-    // print(Util::to_string((int)msgLog.size()));
-    // print("whats up");
-    // if(msgLog.size() == 0) {
-    //     print("Empty msgLog");
-    // }
-    // else {
-    //     print("sizeeeeeee " + Util::to_string((int) msgLog.size()));
-    //     for(JsonPair kv : msgLog) {
-    //         print(string(kv.key().c_str()));
-    //         print(string(kv.value().as<string>()));
-    //     }
-    // }
-    // print("ayyo");
-    // try {
-    //     string msg;
-    //     print("??????????");
-    //     ArduinoJson::serializeJson(msgLog, msg);
-    //     print("bruh");
-    //     print(msg);
-    // }
-    // catch(std::exception& e) {
-    //     print("SDFKJLLLLL ERORROROROOROROR");
-    //     std::cout << e.what();
-    // }
-    
-    // for(JsonPair kv : msgLog){
-    //     print("ADI");
-    //     string key = kv.key().c_str();
-    //     print(key);
-    //     print("ADI2");
-    //     string value = kv.value().as<string>();
-    //     print(value);
-    //     print("ADI3");
-    //     if(value.find("{") != string::npos){
-    //         print("HI");
-    //         JsonObject depth2 = messageObject.createNestedObject(key);
-    //         for(JsonPair kv2 : kv.value().as<JsonObject>()){
-    //             print("a6");
-    //             string key2 = kv2.key().c_str();
-    //             string value2 = kv2.value().as<string>();
-    //             depth2[key2] = value2;
-    //         }
-    //     }
-    //     else{
-    //         print("a7");
-    //         messageObject[key] = value;
-    //     }
-    // }
+string Log::toString() const {
+    // NOTE: Checksum DOES NOT INCLUDE the last delimiter (before the checksum itself)
+    string delim = global_config.telemetry.PACKET_DELIMITER;
+    string out = header;
+    out += delim + Util::to_string(timestamp);
+    out += delim + message;
+    string checksum = Log::generateChecksum(out);
+    out += delim + checksum;
+    return out;
+}
 
+Log from_string(const string& str) {
+    string delim = global_config.telemetry.PACKET_DELIMITER;
+    // Ingests strings that DO NOT have the ^ and $ headers/tails
+    if (str.find(delim) == string::npos) { // If the string contains no pipes
+        throw INVALID_LOG_ERROR();
+    }
+    vector<string> sections = Util::split(str, delim); // Split string by pipes
+    // Substring the checksum and the packet itself, EXCLUDING final delimiter
+    string csum = str.substr(Util::getMaxIndex(str, delim)+1, str.length());
+    string log_str = str.substr(0, Util::getMaxIndex(str, delim));
+    // If header != 3 chars long or the checksum indicates the Log is corrupted
+    if (sections[0].size() != 3 || !(checkChecksum(log_str, csum))) {
+        throw INVALID_LOG_ERROR();
+    }
+    long double ts;
+    try {
+        // Attempt to cast string
+        ts = strtold(sections[1]);
+    }
+    catch (std::exception& e) {
+        print(e.what());
+        throw INVALID_LOG_ERROR();
+    }
+    return Log(sections[0], ts, sections[2]);
+}
 
-    // object["thing"] = msgLog;
-    // serializeJson(object, output);
-    // print(output);
-    // print("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe");
-    // Util::doc.clear();
-    // Util::doc["header"] = log.getHeader();
-    // Util::doc["message"] = msgLog;
-    // Util::doc["timestamp"] = log.getTimestamp();
+static string generateChecksum(const string& packet) {
+    string delim = global_config.telemetry.PACKET_DELIMITER;
+    vector<string> tokens = Util::split(packet, delim); 
+    int counter = 1;
+    int ascii_sum = 0;
+    for (int i=0; i<tokens.size(); i++) {
+        string current_token = tokens[i];
+        for (int str_idx=0; i<current_token.size(); i++) {
+            ascii_sum += counter * (int)(current_token[str_idx]);
+            counter += 1;
+        }
+    }
+    return Util::to_string(ascii_sum);
+}
 
+static bool checkChecksum(const string& str, const string& sum) {
+    if (generateChecksum(str) == sum) {
+        return true;
+    }
+    return false;
+}
 
-    // print("AFTER THE TO STRING METHOD");
-    // print("Log details:");
-    // print(log.getHeader());
-    // string msg2;
-    // serializeJson(log.getMessage(), msg2);
-    // print(msg2);
-    // print(Util::to_string(log.getTimestamp()));
-
-    // print("Creating log from string");
-    // StaticJsonDocument<1500> newDoc;
-    // JsonObject object = newDoc.to<JsonObject>();
-    // object["header"] = log.getHeader();
-    // object["timestamp"] = log.getTimestamp();
-    // object["message"] = log.getMessage();
-    // print("Done creating Log from string");
-    // ArduinoJson::serializeJson(newDoc, output);
-    // print(output);
-    // int a = 1;
-    // int b = 0;
-    // int c = a / b;
-// }
-
-// void Log::from_json(const JsonObject& j, Log& log) {
-//     string header = j["header"].as<string>();
-//     JsonObject message = j["message"];
-//     double timestamp = j["timestamp"].as<double>(); // TODO: Timestamp is an int for some reason?
-//     string msg, messageString;
-//     ArduinoJson::serializeJson(j, msg);
-//     Util::serialize(j, messageString);
-//     // print("Message: " + msg);
-//     // print("Message 2: " + j["message"].as<string>());
-//     log = Log(header, messageString, timestamp);
-// }
-
-// TODO: Log string to black_box.txt
+// Log string to black_box.txt
 void Log::save(const string& filename) const {
-    // ofstream file;
-    // file.open(filename, fstream::in | fstream::out | fstream::app);
+     #ifdef DESKTOP
+        ofstream savefile;
+        savefile.open(filename);
+        string output;
+        to_string(output, *this);
+        savefile << output + "\n";
+        savefile.close();
+    #endif
 
-    // if(!file) {
-    //     file.open(filename, fstream::in | fstream::out | fstream::trunc);
-    // }
+    #ifdef TEENSY
+        print("Writing data to SD card.");
+        File savefile;
+        savefile = SD.open("blackbox.txt", FILE_WRITE);
 
-    return;
-    // string output;
-    // to_string(output, *this); 
-
-    // file << output << endl;
-    // file.close();
+        if (savefile) // SD card successfully opened
+        {
+            Serial.println("Saving file!");
+            Serial.println((double) timestamp);
+            string output;
+            to_string(output, *this);
+            
+            savefile.println(output.c_str());
+            savefile.close();
+            Serial.println("Done");
+        }
+        else {
+            Serial.println("Error opening file:");
+            Serial.println("blackbox.txt");
+        }
+    #endif
 }
 
 Log Log::copy(){
     // Create a copy of the log
-    return Log(header, message, timestamp, false);
+    return Log(header, timestamp, message, false);
 }
 
 string Log::getHeader() const {

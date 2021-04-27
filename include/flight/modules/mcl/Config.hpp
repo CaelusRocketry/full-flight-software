@@ -53,6 +53,7 @@ public:
         int XBEE_RX_PIN;
         int XBEE_TX_PIN;
         int XBEE_BAUD_RATE;
+        string PACKET_DELIMITER;
     } telemetry;
 
     struct {
