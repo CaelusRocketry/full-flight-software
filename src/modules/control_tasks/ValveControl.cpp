@@ -31,6 +31,7 @@ void ValveControl::execute() {
     auto current_time = Util::getTime();
 
     if (last_send_time == 0 || current_time > last_send_time + send_interval) {
+        print("SENDING VALVE DATA");
         send_valve_data();
         last_send_time = Util::getTime();
     }
@@ -49,12 +50,14 @@ void ValveControl::send_valve_data() {
             RegistryValveInfo valve_info = global_registry.valves[type][location];
 
             type_json[location] = static_cast<int>(valve_info.state);
+            print("Type: " + type + ", location: " + location + ", state: " + Util::to_string(static_cast<int>(valve_info.state)));
         }
     }
 
     // add timestamp?
 
     valve_data_json["timestamp"] = Util::getTime() / 1000;
+    // print("Timestamp: " + std::to_string((Util::getTime() - global_flag.general.mcl_start_time) / 1000));
     global_flag.log_info("valve_data", valve_data_json);
 }
 

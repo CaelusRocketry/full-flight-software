@@ -7,90 +7,6 @@
 // #include <functional>
 
 void Log::to_string(string& output, const Log& log) {
-    // print("TO STRING METHOD");
-    // print("Log details:");
-    // print(log.getHeader());
-    // string msg;
-    // serializeJson(log.getMessage(), msg);
-    // print(msg);
-    // print(Util::to_string(log.getTimestamp()));
-
-    // JsonObject& msgLog = std::reference_wrapper<ObjectRef>(log.getMessage()).get();
-    // Util::doc.clear();
-
-
-    // JsonObject messageObject = newDoc.createNestedObject("message");
-    // print("a4");
-    // string msgLog = log.getMessage();
-    // print("a5");
-    // print(Util::to_string((int)msgLog.size()));
-    // print("whats up");
-    // if(msgLog.size() == 0) {
-    //     print("Empty msgLog");
-    // }
-    // else {
-    //     print("sizeeeeeee " + Util::to_string((int) msgLog.size()));
-    //     for(JsonPair kv : msgLog) {
-    //         print(string(kv.key().c_str()));
-    //         print(string(kv.value().as<string>()));
-    //     }
-    // }
-    // print("ayyo");
-    // try {
-    //     string msg;
-    //     print("??????????");
-    //     ArduinoJson::serializeJson(msgLog, msg);
-    //     print("bruh");
-    //     print(msg);
-    // }
-    // catch(std::exception& e) {
-    //     print("SDFKJLLLLL ERORROROROOROROR");
-    //     std::cout << e.what();
-    // }
-    
-    // for(JsonPair kv : msgLog){
-    //     print("ADI");
-    //     string key = kv.key().c_str();
-    //     print(key);
-    //     print("ADI2");
-    //     string value = kv.value().as<string>();
-    //     print(value);
-    //     print("ADI3");
-    //     if(value.find("{") != string::npos){
-    //         print("HI");
-    //         JsonObject depth2 = messageObject.createNestedObject(key);
-    //         for(JsonPair kv2 : kv.value().as<JsonObject>()){
-    //             print("a6");
-    //             string key2 = kv2.key().c_str();
-    //             string value2 = kv2.value().as<string>();
-    //             depth2[key2] = value2;
-    //         }
-    //     }
-    //     else{
-    //         print("a7");
-    //         messageObject[key] = value;
-    //     }
-    // }
-
-
-    // object["thing"] = msgLog;
-    // serializeJson(object, output);
-    // print(output);
-    // print("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe");
-    // Util::doc.clear();
-    // Util::doc["header"] = log.getHeader();
-    // Util::doc["message"] = msgLog;
-    // Util::doc["timestamp"] = log.getTimestamp();
-
-
-    // print("AFTER THE TO STRING METHOD");
-    // print("Log details:");
-    // print(log.getHeader());
-    // string msg2;
-    // serializeJson(log.getMessage(), msg2);
-    // print(msg2);
-    // print(Util::to_string(log.getTimestamp()));
-
     // print("Creating log from string");
     StaticJsonDocument<1500> newDoc;
     JsonObject object = newDoc.to<JsonObject>();
@@ -98,15 +14,12 @@ void Log::to_string(string& output, const Log& log) {
     object["timestamp"] = (double) log.getTimestamp();
     object["message"] = log.getMessage();
 
-    Serial.println("HERE");
-    Serial.println((double) object["timestamp"]);
-    Serial.println((double) log.getTimestamp());
+    // Serial.println("HERE");
+    // Serial.println((double) object["timestamp"]);
+    // Serial.println((double) log.getTimestamp());
     // print("Done creating Log from string");
     ArduinoJson::serializeJson(newDoc, output);
     // print(output);
-    // int a = 1;
-    // int b = 0;
-    // int c = a / b;
 }
 
 void Log::from_json(const JsonObject& j, Log& log) {
@@ -144,18 +57,18 @@ void Log::save(const string& filename) const {
 
         if (savefile) // it opened OK
         {
-            Serial.println("Saving file!");
+            print("Saving file! Timestamp:");
             Serial.println((double) timestamp);
             string output;
             to_string(output, *this);
             
             savefile.println(output.c_str());
             savefile.close();
-            Serial.println("Done");
+            print("Done");
         }
         else {
-            Serial.println("Error opening file:");
-            Serial.println("blackbox.txt");
+            print("Error opening file:");
+            print("blackbox.txt");
         }
     #endif
 }

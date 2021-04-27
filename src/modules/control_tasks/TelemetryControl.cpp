@@ -60,11 +60,7 @@ void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
 
     if(header == "solenoid_actuate") {
-        print("SOLENOID ACTUATE \n\n\n\n\n\n\n\n\n\n\nSOLENOID\n\nSOILENDOIDDLKSJFDSKLFJ\n\n\n\n\n");
-    }
-
-    if(header == "valve_request") {
-        print("VALVE REQUEST \n\n\n\n\n\n\n\n\n\nVALVE\n\nSOILENDOIDDLKSJFDSKLFJ\n\n\n\n\n");
+        print("SOLENOID ACTUATE MESSAGE RECEIVED");
     }
 
     JsonObject message = Util::deserialize(log.getMessage());
@@ -146,7 +142,6 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
         print(s);
     }
 
-    print("SKDJSDKLFJDSLJKF\n\n\n\n\n\n\nSDKLFJDSKLFJSDKLFJSDKLFJSDKLF SOLENOID\n\n");
     if (!global_registry.valve_exists("solenoid", args[0])) {
         JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Unable to find actuatable solenoid\", \"Valve location\": \"" + args[0] + "\"}");
         global_flag.log_critical("Valve actuation", obj);
@@ -163,12 +158,10 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     print("Actuating solenoid at " + args[0] + " with actuation type " + args[1]);
 
     try {
-        print("\n\ntry\n\ncatch\n\n");
         //TODO: make sure gs packets have the upper case version of the enum as the value for the actuation type
         FlagValveInfo &valve_flag = global_flag.valves["solenoid"][args[0]];
         valve_flag.actuation_type = (ActuationType) std::atoi(args[1].c_str());
         valve_flag.actuation_priority = (ValvePriority) std::atoi(args[2].c_str());
-        print("\n\n\nit works\n\n\n\n\n");
     } catch(...) {
         JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Wrong packet message\", \"Valve location\": \"" + args[0] + "\", \"Actuation type\": \"" + args[1] + "\", \"Priority\": \"" + args[2] + "\"}");
         global_flag.log_critical("Valve actuation", obj);

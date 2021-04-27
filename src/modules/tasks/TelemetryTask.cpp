@@ -8,10 +8,7 @@ void TelemetryTask::initialize() {
     #ifdef DESKTOP
         telemetry = new Telemetry();
     #else 
-        // Util::pause(5000);
-        // print("\n\n\nYAYAYAYA\n\n\n\n\n\nCONNECTED");
         telemetry = new XBee();
-        // print("\n\n\nYAYAYAYA\n\n\n\n\n\nCONNECTED");
     #endif
 
     telemetry->connect();
