@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <flight/modules/lib/Log.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Util.hpp>
@@ -19,7 +18,7 @@ string Log::toString() const {
     return out;
 }
 
-Log from_string(const string& str) {
+static Log from_string(const string& str) {
     string delim = global_config.telemetry.PACKET_DELIMITER;
     // Ingests strings that DO NOT have the ^ and $ headers/tails
     if (str.find(delim) == string::npos) { // If the string contains no pipes
@@ -33,12 +32,17 @@ Log from_string(const string& str) {
     if (sections[0].size() != 3 || !(checkChecksum(log_str, csum))) {
         throw INVALID_LOG_ERROR();
     }
-    long double ts;
+    long ts;
     try {
-        // Attempt to cast string
-        ts = strtold(sections[1]);
+        // Convert string to char* array
+        char* char_arr;
+        char* end;
+        string str_obj(sections[1]);
+        char_arr = &str_obj[0];
+        // Attempt to cast string to a long
+        ts = strtol(char_arr, &end, 10);
     }
-    catch (std::exception& e) {
+    catch (exception& e) {
         print(e.what());
         throw INVALID_LOG_ERROR();
     }
@@ -114,6 +118,6 @@ string Log::getMessage() const {
     return message;
 }
 
-long double Log::getTimestamp() const {
+long Log::getTimestamp() const {
     return timestamp;
 }

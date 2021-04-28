@@ -23,7 +23,7 @@ void TelemetryControl::make_functions() {
     this->functions.emplace("SAC", &TelemetryControl::solenoid_actuate);
     this->functions.emplace("SRQ", &TelemetryControl::sensor_request);
     this->functions.emplace("VRQ", &TelemetryControl::valve_request);
-    this->functions.emplace("PRG", &TelemetryControl::progress);
+    this->functions.emplace("SGP", &TelemetryControl::stage_progression);
     this->functions.emplace("INF", &TelemetryControl::info);
 }
 
@@ -53,31 +53,36 @@ void TelemetryControl::execute() {
 
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
+    string msg = log.getMessage();
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
-        print("TelemetryControl Packet Header: " + header);
+        print("TelemetryControl packet header: " + header);
         throw INVALID_HEADER_ERROR();
     }
     auto function = this->functions.at(header); // The reference to the actual function
-    vector<string> argument_order = arguments.at(header); // The arguments for that specific function
-    int arg_len = argument_order.size(); // Number of arguments
+    vector<string> param_values; // The arguments for that specific function
+    int arg_len = arguments.at(header).size(); // Number of arguments
     // Attempt to parse arguments
     try {
         if (arg_len > 0) { // If the message in the log are arguments and not just text
-            for (const &string arg : Util::split(log.getMessage(), "")) {
-                param_values.push_back(arg);
+            for (unsigned int i = 0; i < msg.length(); i++) {
+                string s(1, msg[i]);
+                param_values.push_back(s);
             }
+        }
+        else { // Message is just text; probably an HBT or INF
+            param_values.push_back(msg);
         }
     } catch (...) {
         string obj = "Invalid function arguments.";
-        global_flag.log_warning("info", obj);
+        global_flag.log_warning("INF", obj);
         throw INVALID_PACKET_ARGUMENTS_ERROR();
     }
     (this->*function)(param_values); // Call function which maps to the GS command sent w/ all params necessary
 }
 
 void TelemetryControl::heartbeat(const vector<string>& args) {
-    global_flag.log_info("HBT", "OK");
+    global_flag.log_info("HBR", "OK"); // This is sent back to GS
 }
 
 void TelemetryControl::soft_abort(const vector<string>& args) {
@@ -91,38 +96,40 @@ void TelemetryControl::undo_soft_abort(const vector<string>& args) {
 }
 
 void TelemetryControl::solenoid_actuate(const vector<string>& args) {
+    // TODO: Should we send return packets with error codes to GS in case an error is thrown?
+    string msg;
+    for (const string& str : args) {
+        msg += str;
+    }
     if (!global_registry.valve_exists("solenoid", args[0])) {
-        global_flag.log_critical("SAC", obj);
-        // throw INVALID_SOLENOID_ERROR();
+        global_flag.log_critical("SAC", msg + "-0"); // "-0" indicates a failure; this is "dash-zero" 
+        throw INVALID_SOLENOID_ERROR();
     }
 
     int current_priority = int(global_registry.valves["solenoid"][args[0]].actuation_priority);
 
     if (int(valve_priority_map[args[2]]) < current_priority) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Priority too low to actuate\", \"Valve location\": \"" + args[0] + "\", \"Actuation type\": \"" + args[1] + "\", \"Priority\": \"" + args[2] + "\"}");
-        global_flag.log_critical("Valve actuation", obj);
+        global_flag.log_critical("SAC", msg + "-0");
+        printCritical("Priority too low to actuate. Valve location: " + args[0] + " Actuation type: " + args[1] + " Priority: " + args[2] + ".");
+        throw INVALID_SOLENOID_ERROR();
     }
 
-    print("Actuating solenoid at " + args[0] + " with actuation type " + args[1]);
+    print(format("Actuating solenoid at {} with actuation type {}.", args[0], args[1]));
 
     try {
-        print("\n\ntry\n\ncatch\n\n");
-        //TODO: make sure gs packets have the upper case version of the enum as the value for the actuation type
         FlagValveInfo &valve_flag = global_flag.valves["solenoid"][args[0]];
         valve_flag.actuation_type = (ActuationType) std::atoi(args[1].c_str());
         valve_flag.actuation_priority = (ValvePriority) std::atoi(args[2].c_str());
-        print("\n\n\nit works\n\n\n\n\n");
     } catch(...) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Failure\", \"Description\": \"Wrong packet message\", \"Valve location\": \"" + args[0] + "\", \"Actuation type\": \"" + args[1] + "\", \"Priority\": \"" + args[2] + "\"}");
-        global_flag.log_critical("Valve actuation", obj);
+        global_flag.log_critical("SAC", msg + "-0");
+        printCritical("Invalid packet message. Valve location: " + args[0] + " Actuation type: " + args[1] + " Priority: " + args[2] + ".");
         throw INVALID_PACKET_MESSAGE_ERROR();
     }
-    print(args[1]);
 
-    JsonObject obj = Util::deserialize("{\"header\": \"Valve actuation\", \"Status\": \"Success\", \"Description\": \"Successfully actuated solenoid\"}");
-    global_flag.log_info("Valve actuation", obj);
-
-    print("REACHED HERE");
+    global_flag.log_info("SAC", msg + "-1");
+    print("Successfully actuated solenoid at " + args[0] + ".");
+    
+    print("SOLENOID ACTUATION SUCCESSFUL!");
 }
 
 void TelemetryControl::sensor_request(const vector<string>& args) {
@@ -133,8 +140,8 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     string sensor_loc = args[1];
 
     if (!global_registry.sensor_exists(sensor_type, sensor_loc)) {
-        JsonObject obj = Util::deserialize("{\"header\": \"Sensor data\", \"Status\": \"Failure\", \"Description\": \"Unable to find sensor\", \"Sensor type\": \"" + args[0] + "\", \"Sensor location\": \"" + args[1] + "\"}");
         global_flag.log_critical("response", obj);
+        printCritical("Unable to find sensor. Sensor type: " + args[0] + " Sensor location: " + args[1] + ".");
         throw INVALID_SENSOR_LOCATION_ERROR();
     }
 
@@ -142,16 +149,13 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     value = sensor.measured_value;
     kalman_value = sensor.normalized_value;
     sensor_status_str = sensor_status_map[sensor.status];
-    long double millisecond_timestamp = Util::getTime();
 
     string value_str = Util::to_string((int) value);
     string kalman_str = Util::to_string((int) kalman_value);
-    string time_str = Util::to_string((int) (millisecond_timestamp / 1000));
+    string time_str = Util::to_string((int) (Util::getMiliTimestampLong(global_flag)));
 
-    string toDeserialize = "{\"header\": \"Sensor data request\", \"Status\": \"Success\", \"Sensor type\": \"" + args[0] + "\", \"Sensor location\": \"" + args[1] + "\", \"Sensor status\": \"" + sensor_status_str + "\", \"Measured value\": \"" + value_str + "\", \"Normalized value\": \"" + kalman_str + "\", \"Last updated\": \"" + time_str + "\"}";
-    print(toDeserialize);
-    JsonObject obj = Util::deserialize(toDeserialize);
-    global_flag.log_critical("response", obj);
+    global_flag.log_critical("DAT", args[0] + args[1] + "-" + sensor_status_str + value_str + kalman_str);
+    print("Sensor data request successful. Sensor type: " + args[0] + ", Sensor location: " + args[1] + ", Sensor status: " + sensor_status_str + ", Measured value: " + value_str + ", Normalized value: " + kalman_str + ".");
 }
 
 void TelemetryControl::valve_request(const vector<string>& args) {
@@ -162,25 +166,28 @@ void TelemetryControl::valve_request(const vector<string>& args) {
     string valve_loc = args[1];
 
     if (!global_registry.valve_exists(valve_type, valve_loc)) {
-        print("{\"header\": \"Valve data request\", \"Status\": \"Failure\", \"Description\": Unable to find valve, \"Valve type\": " + valve_type + ", \"Valve location\": " + valve_loc + "}");
-        // global_flag.log_critical("response", obj);
+        printCritical("Unable to find valve. Valve type: " + valve_type + ", Valve location: " + valve_loc + ".");
+        global_flag.log_critical("VST", valve_type + valve_loc + "-0");
         throw INVALID_VALVE_LOCATION_ERROR();
     }
 
     auto valve_registry = global_registry.valves[valve_type][valve_loc];
-
     actuation_type = actuation_type_inverse_map.at(valve_registry.actuation_type);
     actuation_priority = valve_priority_inverse_map.at(valve_registry.actuation_priority);
-    long double millisecond_timestamp = Util::getTime();
-
-    string time_str = Util::to_string((int) (millisecond_timestamp / 1000));
-    JsonObject obj = Util::deserialize("{\"header\": \"Valve data request\", \"Status\": \"Success\", \"Actuation type\": \"" + actuation_type + "\", \"Actuation priority\": \"" + actuation_priority + "\", \"Valve type\": \"" + valve_type + "\", \"Valve location\": \"" + valve_loc + "\", \"Last actuated\": \"" + time_str + "\"}");
-
-    global_flag.log_critical("response", obj);
+    // string time_str = Util::to_string((int) (Util::getMiliTimestampLong(global_flag);));
+    
+    // TODO: Does time_str actually give the last time the valve was actuated? It just returns the current time, right?
+    global_flag.log_critical("VST", valve_type + valve_loc + "-" + actuation_type + actuation_priority);
+    print("Valve data request successful. Actuation type: " + actuation_type + ", Actuation priority: " + actuation_priority + ", Valve type: " + valve_type + ", Valve location: " + valve_loc + ".");
 }
-void TelemetryControl::progress(const vector<string>& args) {
+
+void stage_progression(const vector<string>& args) {
+    // Progresses the rocket to the next stage of flight
     global_flag.general.progress = true;
+    global_flag.log_critical("SGP", "1")
+    print("Stage progression successful.")
 }
-void TelemetryControl::test(const vector<string>& args) {
-    print("Test received: " + args[0]);
+
+void TelemetryControl::info(const vector<string>& args) {
+    print("Information packet received: " + args[0]);
 }

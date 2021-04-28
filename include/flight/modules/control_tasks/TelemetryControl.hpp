@@ -16,16 +16,15 @@ typedef void (TelemetryControl::*functionType)(const vector<string>&);
 private:
     unordered_map<string, functionType> functions;
     const unordered_map<string, vector<string>> arguments {
-        {"heartbeat", {}},
-        {"soft_abort", {}},
-        {"undo_soft_abort", {}},
-        {"solenoid_actuate", {"valve_location", "actuation_type", "priority"}},
-        {"sensor_request", {"sensor_type", "sensor_location"}},
-        {"valve_request", {"valve_type", "valve_location"}},
-        {"progress", {}},
-        {"info", {}}
+        {"HRT", {}},
+        {"SAB", {}},
+        {"UAB", {}},
+        {"SAC", {"valve_location", "actuation_type", "priority"}},
+        {"SRQ", {"sensor_type", "sensor_location"}},
+        {"VRQ", {"valve_type", "valve_location"}},
+        {"SGP", {}},
+        {"INF", {}}
     };
-
 
     void ingest(const Log& log);
     void heartbeat(const vector<string>& args);
@@ -34,7 +33,7 @@ private:
     void solenoid_actuate(const vector<string>& args);
     void sensor_request(const vector<string>& args);
     void valve_request(const vector<string>& args);
-    void progress(const vector<string>& args);
+    void stage_progression(const vector<string>& args);
     void info(const vector<string>& args);
     void make_functions();
 

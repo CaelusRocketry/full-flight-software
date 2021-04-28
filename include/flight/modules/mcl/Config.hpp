@@ -1,7 +1,6 @@
 #ifndef FLIGHT_CONFIG_HPP
 #define FLIGHT_CONFIG_HPP
 
-#include <ArduinoJson.h>
 #include <string>
 #include <map>
 #include <vector>

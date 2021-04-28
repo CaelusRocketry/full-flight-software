@@ -26,8 +26,8 @@ public:
     void add(const Log& log);
     vector<Log> getLogs();
 
-    string toString();
-    static void from_string(string& str, Packet& packet);
+    string toString() const;
+    static Packet from_string(string& str);
 
     struct compareTo {
         bool operator()(const Packet& lhs, const Packet& rhs) {

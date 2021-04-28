@@ -1,4 +1,6 @@
 #include <flight/modules/lib/Util.hpp>
+#include <flight/modules/mcl/Flag.hpp>
+#include <sstream>
 
 #ifdef DESKTOP
     #include <chrono>
@@ -40,9 +42,11 @@ template <typename T> int Util::getIndex(vector<T> arr, T val){
 }
 
 int getMaxIndex(string str, string val) {
+    // Gets index of last occurence of a string in another string. Only supports 1-char strings.
     int ind = -1;
+    char ch = val[0];
     for(unsigned int i = 0; i < str.size(); i++) {
-        if (str[i] == val) {
+        if (str[i] == ch) {
             ind = i;
         }
     }
@@ -64,6 +68,24 @@ double Util::max(double a, double b){
         return a;
     }
     return b;
+}
+
+long getMiliTimestampLong(const Flag& flag) {
+    return static_cast<long>(Util::getTime() - flag.general.mcl_start_time);
+}
+
+string getMiliTimestampStr(const Flag& flag) {
+    // Returns hexadecimal representation string 
+    long millisecond_timestamp = static_cast<long>(Util::getTime() - flag.general.mcl_start_time);
+    return Util::int_to_hex(millisecond_timestamp);
+}
+
+template<typename T> string int_to_hex(T num) {
+    stringstream stream;
+    stream << "0x"
+        << std::setfill('0') << std::setw(sizeof(T)*2) 
+        << std::hex << num;
+    return stream.str();
 }
 
 string Util::to_string(bool b) {

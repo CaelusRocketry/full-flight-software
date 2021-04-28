@@ -2,23 +2,17 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 
-string Packet::toString() {
-    // Util::doc["priority"] = static_cast<int>(priority);
-    // Util::doc["timestamp"] = timestamp;
+
+string Packet::toString() const {
     string output;
-    for(Log l : logs) {
-        try {
-            output += "^" + l.toString() + "$";
-        }
-        catch(std::exception& e) {
-            print("ERROR: ");
-            print(e.what());
-        }
+    for(Log log : logs) {
+        output += "^" + log.toString() + "$";
     }
     return output;
 }
 
-static void from_string(string& str, Packet& packet) {
+static Packet from_string(string& str) {
+    Packet packet;
     size_t packet_start = str.find('^');
     if(packet_start != string::npos) {
         size_t packet_end = str.find('$', packet_start);
@@ -27,12 +21,12 @@ static void from_string(string& str, Packet& packet) {
             string stripped_str = str.substr(packet_start + 1, packet_end - packet_start - 1);
             print("Packet stripped string: " + stripped_str);
             for (const string& log_str : Util::split(stripped_str, "$^")) {
-                Log log;
-                Log::from_string(log_str, log);
+                Log log = Log::from_string(log_str);
                 packet.add(log);
             }
         }
     }
+    return packet;
 }
 
 void Packet::add(const Log& log) {

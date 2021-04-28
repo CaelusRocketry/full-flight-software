@@ -7,7 +7,7 @@
 #include <map>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Errors.hpp>
-#include <ArduinoJson.h>
+#include <flight/modules/mcl/Flag.hpp>
 
 using namespace std;
 
@@ -18,11 +18,16 @@ namespace Util {
     /** Replace all occurrences of a substring in str with a different string */
     string replaceAll(string str, const string& from, const string& to);
 
-    template <typename T> int getIndex(vector<T> arr, T val);
+    template<typename T> int getIndex(vector<T> arr, T val);
     int getMaxIndex(string str, string val);
 
     double min(double a, double b);
     double max(double a, double b);
+
+    long getMiliTimestampLong(const Flag& flag);
+    string getMiliTimestampStr(const Flag& flag);
+    template<typename T> string int_to_hex(T num);
+
     string to_string(bool b);
     string to_string(int i);
     string to_string(long int i);

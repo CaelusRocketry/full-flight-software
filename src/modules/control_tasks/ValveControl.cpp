@@ -10,7 +10,6 @@
 #include <flight/modules/lib/logger_util.hpp>
 #include <string>
 #include <flight/modules/lib/Util.hpp>
-#include <ArduinoJson.h>
 
 ValveControl::ValveControl() {
     // config send interval in seconds, convert to milliseconds

@@ -12,12 +12,12 @@ class Log {
 private:
     string header;
     string message;
-    long double timestamp;
+    long timestamp;
 
 public:
     Log() = default;
 
-    Log(const string& header, long double timestamp, const string& message, bool save = true)
+    Log(const string& header, long timestamp, const string& message, bool save = true)
         : header(header),
           timestamp(timestamp),
           message(message) {
@@ -27,7 +27,7 @@ public:
     }
 
     string toString() const;
-    static void from_string(const string& str, const Log& log);
+    static Log from_string(const string& str);
     static string generateChecksum(const string& packet);
     static bool checkChecksum(const string& str, const string& sum);
     // TODO: Get save() to actually work
@@ -35,7 +35,7 @@ public:
     Log copy();
     string getHeader() const;
     string getMessage() const;
-    long double getTimestamp() const;
+    long getTimestamp() const;
 };
 
 #endif //FLIGHT_LOG_HPP

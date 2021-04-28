@@ -5,7 +5,6 @@
     #include <flight/modules/lib/Errors.hpp>
     #include <flight/modules/lib/Packet.hpp>
 
-    #include <ArduinoJson.h>
     #include <SoftwareSerial.h>
 
     XBee::XBee() {
