@@ -114,7 +114,7 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
         throw INVALID_SOLENOID_ERROR();
     }
 
-    print(format("Actuating solenoid at {} with actuation type {}.", args[0], args[1]));
+    print("Actuating solenoid at " + args[0] + "with actuation type " + args[1] + ".");
 
     try {
         FlagValveInfo &valve_flag = global_flag.valves["solenoid"][args[0]];
@@ -154,7 +154,7 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     string kalman_str = Util::to_string((int) kalman_value);
     string time_str = Util::to_string((int) (Util::getMiliTimestampLong(global_flag)));
 
-    global_flag.log_critical("DAT", args[0] + args[1] + "-" + sensor_status_str + value_str + kalman_str);
+    global_flag.log_critical("SDT", args[0] + args[1] + "-" + sensor_status_str + value_str + kalman_str);
     print("Sensor data request successful. Sensor type: " + args[0] + ", Sensor location: " + args[1] + ", Sensor status: " + sensor_status_str + ", Measured value: " + value_str + ", Normalized value: " + kalman_str + ".");
 }
 
@@ -184,8 +184,8 @@ void TelemetryControl::valve_request(const vector<string>& args) {
 void stage_progression(const vector<string>& args) {
     // Progresses the rocket to the next stage of flight
     global_flag.general.progress = true;
-    global_flag.log_critical("SGP", "1")
-    print("Stage progression successful.")
+    // global_flag.log_critical("SGP", "1");
+    // print("Stage progression successful.");
 }
 
 void TelemetryControl::info(const vector<string>& args) {

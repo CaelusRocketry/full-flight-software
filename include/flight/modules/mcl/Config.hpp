@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <ArduinoJson.h> // Need this to read the global JSON config
 
 using std::string;
 using std::vector;

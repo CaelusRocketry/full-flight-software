@@ -1,14 +1,9 @@
-//
-// Created by adiv413 on 4/24/2020.
-//
-
 #include <flight/modules/control_tasks/ValveControl.hpp>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/mcl/Registry.hpp>
 #include <flight/modules/mcl/Flag.hpp>
 #include <flight/modules/lib/logger_util.hpp>
-#include <string>
 #include <flight/modules/lib/Util.hpp>
 
 ValveControl::ValveControl() {
@@ -19,16 +14,15 @@ ValveControl::ValveControl() {
 }
 
 void ValveControl::begin() {
-    print("Valve Control: Beginning");
-    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Valve Control started\"}");
-    global_flag.log_info("response", obj);
+    print("Valve Control: beginning.");
+    global_flag.log_info("INF", "Valve control started.");
 }
 
 void ValveControl::execute() {
-    print("Valve control: Controlling");
+    print("Valve control: controlling.");
     check_abort();
     auto current_time = Util::getTime();
-
+    // If the send interval has passed and we should send valve data
     if (last_send_time == 0 || current_time > last_send_time + send_interval) {
         send_valve_data();
         last_send_time = Util::getTime();
@@ -36,29 +30,25 @@ void ValveControl::execute() {
 }
 
 void ValveControl::send_valve_data() {
-    const size_t CAPACITY = JSON_OBJECT_SIZE(50);
-    StaticJsonDocument<CAPACITY> doc;
-    JsonObject valve_data_json = doc.to<JsonObject>();
-
-    for (const auto& type_pair : global_config.valves.list) {
+    // Send a batch of valve data (VDT)
+    string data; // Final log format example with three valves: VDT|253|120,130,211,|298
+    for (const auto& type_pair : global_config.valves.list) { // For each <type, location> pair
         string type = type_pair.first;
-        JsonObject type_json = valve_data_json.createNestedObject(type);
-        for (const auto& location_pair : type_pair.second) {
+        for (const auto& location_pair : type_pair.second) { // For each location pair 
             string location = location_pair.first;
             RegistryValveInfo valve_info = global_registry.valves[type][location];
-
-            type_json[location] = static_cast<int>(valve_info.state);
+            string valve_state = Util::to_string(static_cast<int>(valve_info.state));
+            // Format each individual valve type, location, and state to be delimited by a comma ","
+            data += type + location + valve_state + ",";
         }
     }
-
-    // add timestamp?
-
-    valve_data_json["timestamp"] = Util::getTime() / 1000;
-    global_flag.log_info("valve_data", valve_data_json);
+    string mod_data = data.substr(0, data.length()-1); // Strip the last comma
+    global_flag.log_info("VDT", mod_data);
+    print("Sent valve data batch: " + mod_data);
 }
 
 void ValveControl::abort() {
-    print("Aborting");
+    print("Aborting!");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 
@@ -76,7 +66,7 @@ void ValveControl::abort() {
 
 // Set the actuation type to NONE, with ABORT_PRIORITY priority
 void ValveControl::undo_abort() {
-    print("Undoing abort");
+    print("Undoing abort!");
     for (const auto& valve_ : valves) {
         RegistryValveInfo valve_info = global_registry.valves[valve_.first][valve_.second];
 

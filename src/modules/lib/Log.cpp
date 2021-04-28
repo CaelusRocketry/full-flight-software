@@ -61,7 +61,8 @@ static string generateChecksum(const string& packet) {
             counter += 1;
         }
     }
-    return Util::to_string(ascii_sum);
+    // Modulus of 999 restricts the checksum to three digits
+    return Util::to_string(ascii_sum % 999);
 }
 
 static bool checkChecksum(const string& str, const string& sum) {
