@@ -13,6 +13,7 @@ SensorControl::SensorControl() {
 
     // config gives it in seconds, convert to milliseconds
     this->send_interval = global_config.sensors.send_interval * 1000;
+    // cout << send_interval;
     JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Sensor Control started\"}");
     global_flag.log_info("response", obj);
 }
@@ -48,6 +49,7 @@ void SensorControl::execute() {
     long double now = Util::getTime();
 
     if(last_send_time == 0 || now > last_send_time + send_interval) {
+        // cout << (int) (now / 1000.0) << endl;
         send_sensor_data();
         last_send_time = now;
     }
@@ -154,6 +156,7 @@ void SensorControl::send_sensor_data() {
     }
 
     sensor_data_json["timestamp"] = Util::getTime() / 1000;
+    // cout << "SENDING SENSOR DATA + " + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) << endl;
 
     global_flag.log_info("sensor_data", sensor_data_json);
 }

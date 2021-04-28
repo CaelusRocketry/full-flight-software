@@ -5,6 +5,7 @@
 #include <flight/modules/lib/Errors.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <thread>
+// #include <iostream>
 
 using asio::ip::address;
 
@@ -75,7 +76,8 @@ bool Telemetry::write() {
 
     string packet_string = send_queue.front();
     send_queue.pop();
-    
+
+    // cout << packet_string << endl;    
     // print("!!!!!!!!");
 
     // Note: add "END" at the end of the packet, so packets are split correctly
@@ -94,7 +96,7 @@ bool Telemetry::write() {
         throw SOCKET_WRITE_ERROR();
     }
     // print("sssssssssd");
-    // print(Util::to_string(global_config.telemetry.DELAY));
+    // cout << Util::to_string(global_config.telemetry.DELAY) << endl;
     Util::pause(global_config.telemetry.DELAY);
     return true;
 }

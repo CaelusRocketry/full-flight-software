@@ -15,7 +15,7 @@ class ValveControl : public Control {
 
         // all time is calculated in milliseconds
         long send_interval;
-        long last_send_time;
+        long double last_send_time;
         bool aborted;
 
         void send_valve_data();

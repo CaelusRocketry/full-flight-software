@@ -28,12 +28,16 @@ void ValveControl::begin() {
 void ValveControl::execute() {
     print("Valve control: Controlling");
     check_abort();
-    auto current_time = Util::getTime();
+    long double now = Util::getTime();
 
-    if (last_send_time == 0 || current_time > last_send_time + send_interval) {
-        print("SENDING VALVE DATA");
+    if (last_send_time == 0 || now > last_send_time + send_interval) {
+        // cout << send_interval << endl;
+        // cout << std::to_string(last_send_time) << endl;
+        // cout << std::to_string(now) << endl;
+        // print("SENDING VALVE DATA");
+        // cout << (int) (now / 1000.0) << endl;
         send_valve_data();
-        last_send_time = Util::getTime();
+        last_send_time = now;
     }
 }
 
@@ -57,6 +61,7 @@ void ValveControl::send_valve_data() {
     // add timestamp?
 
     valve_data_json["timestamp"] = Util::getTime() / 1000;
+    // cout << "SENDING VALVE DATA + " + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) << endl;
     // print("Timestamp: " + std::to_string((Util::getTime() - global_flag.general.mcl_start_time) / 1000));
     global_flag.log_info("valve_data", valve_data_json);
 }
