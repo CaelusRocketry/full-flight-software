@@ -36,6 +36,7 @@ namespace Util {
     string to_string(long int i);
     string to_string(double d);
     string to_string(long double d);
+    string hex(long w);
     long double getTime();
     void pause(int millis);
     void terminate();

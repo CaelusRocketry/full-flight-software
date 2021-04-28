@@ -152,6 +152,26 @@ string Util::to_string(long double d) {
     return output;
 }
 
+string Util::hex(long w) {
+    size_t hex_len = sizeof(long) << 1;
+    static const char* digits = "0123456789ABCDEF";
+    std::string ret(hex_len,'0');
+    
+    for (size_t i = 0, j = (hex_len - 1) * 4; i < hex_len; ++i, j -= 4) {
+        ret[i] = digits[(w >> j) & 0x0f];
+    }
+    
+    cout << ret << endl;
+    
+    int start = 0;
+    
+    while(ret[start] == '0') {
+        start++;
+    }
+    
+    return ret.substr(start);
+}
+
 long double Util::getTime(){
     #ifdef DESKTOP
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

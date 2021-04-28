@@ -11,7 +11,7 @@ string Log::toString() const {
     // NOTE: Checksum DOES NOT INCLUDE the last delimiter (before the checksum itself)
     string delim = global_config.telemetry.PACKET_DELIMITER;
     string out = header;
-    out += delim + Util::to_string(timestamp);
+    out += delim + Util::hex(timestamp);
     out += delim + message;
     string checksum = Log::generateChecksum(out);
     out += delim + checksum;

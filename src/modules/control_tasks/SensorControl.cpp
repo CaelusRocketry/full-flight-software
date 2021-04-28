@@ -138,11 +138,9 @@ void SensorControl::send_sensor_data() {
             string location = location_pair.first;
             RegistrySensorInfo sensor = global_registry.sensors[type][location];
             // NOTE: Data is rounded to integers!
-            string measured = Util::to_string(static_cast<long>(sensor.measured_value));
-            string kalman = Util::to_string(static_cast<long>(sensor.normalized_value));
-            string status = Util::to_string(static_cast<long>(sensor.status));
-            // Example data batch (two transducers): DAT|243|24-563-546-1,21-873-866-1|121
-            data += type + location + "-" + measured + "-" + kalman + "-" + status + ",";
+            string measured = Util::hex(static_cast<long>(sensor.measured_value));
+            // Example data batch (two transducers): DAT|FA12|14-223-1A1-1,11-14D-2DA-1|121
+            data += sensor_type_map[type] + sensor_location_map[location] + measured + ",";
         }
     }
     data = data.substr(0, data.length()-1);
