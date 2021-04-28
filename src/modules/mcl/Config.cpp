@@ -76,7 +76,7 @@ Config::Config(JsonObject& json) {
     print("Config: Reading valve list");
     valves.address = json["valves"]["address"].as<string>();
     valves.baud = json["valves"]["baud"].as<int>();
-    valves.send_interval = json["valves"]["send_interval"].as<int>();
+    valves.send_interval = json["valves"]["send_interval"].as<double>();
     
     temp = json["valves"]["list"];
     for(JsonObject::iterator it=temp.begin(); it != temp.end(); ++it){
