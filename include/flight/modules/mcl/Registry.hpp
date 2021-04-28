@@ -34,7 +34,7 @@ public:
     struct {
         bool soft_abort = false;
         Stage stage = Stage::WAITING;
-        double stage_status = 0;
+        int stage_status = 0;
         int stage_progress = 0;
     } general;
 

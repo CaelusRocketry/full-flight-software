@@ -9,13 +9,13 @@
 
 class StageControl : public Control {
 private:
-    long send_time = 0;
-    long start_time = 0;
-    long request_time = 0;
+    long double send_time = 0;
+    long double start_time = 0;
+    long double request_time = 0;
     long request_interval = 10000;
     long send_interval;
     int stage_index;
-    double status;
+    int status;
     Stage curr_stage;
     bool acutated_postburn;
 
@@ -31,7 +31,7 @@ private:
     const double AUTOSEQUENCE_DELAY = 5.0 * 1000;
     const double POSTBURN_DELAY = 10.0 * 1000;
 
-    double calculate_status() const;
+    int calculate_status() const;
     void send_progression_request();
     void send_data();
     void progress();

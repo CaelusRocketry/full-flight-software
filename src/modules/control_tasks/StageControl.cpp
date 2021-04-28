@@ -21,14 +21,14 @@ void StageControl::begin()
     print("Stage control: Beginning");
     this->acutated_postburn = false;
     global_registry.general.stage = stage_names.at(stage_index);
-    global_registry.general.stage_status = 0.0;
+    global_registry.general.stage_status = 0;
 }
 
 void StageControl::execute()
 {
     print("Stage control: Controlling");
 
-    double status = calculate_status();
+    int status = calculate_status();
     global_registry.general.stage_status = status;
     bool &progress_flag = global_flag.general.progress;
     if (progress_flag)
@@ -49,13 +49,13 @@ void StageControl::execute()
     send_data();
 }
 
-double StageControl::calculate_status() const
+int StageControl::calculate_status() const
 {
     Stage current_stage = global_registry.general.stage;
 
     if (current_stage == Stage::WAITING)
     {
-        return 100.0;
+        return 100;
     }
     else if (current_stage == Stage::PRESSURIZATION)
     {
@@ -63,11 +63,11 @@ double StageControl::calculate_status() const
         if (global_registry.sensors["pressure"].find("PT-2") != global_registry.sensors["pressure"].end())
         {
             float pressure = global_registry.sensors["pressure"]["PT-2"].normalized_value;
-            return Util::min(100.0, pressure / 4.9);
+            return static_cast<int>(Util::min(100.0, pressure / 4.9));
         }
         else
         {
-            return 100.0;
+            return 100;
         }
     }
     else if (current_stage == Stage::AUTOSEQUENCE)
@@ -75,11 +75,11 @@ double StageControl::calculate_status() const
         ActuationType mpv_actuation = global_registry.valves["solenoid"]["main_propellant_valve"].actuation_type;
         if (mpv_actuation == ActuationType::OPEN_VENT)
         {
-            return 100.0;
+            return 100;
         }
         else
         {
-            return Util::min(((Util::getTime() - this->start_time) / this->AUTOSEQUENCE_DELAY) * 100, 99.0);
+            return static_cast<int>(Util::min(((Util::getTime() - this->start_time) / this->AUTOSEQUENCE_DELAY) * 100, 99.0));
         }
     }
     else if (current_stage == Stage::POSTBURN)
@@ -87,7 +87,7 @@ double StageControl::calculate_status() const
         double pressure = global_registry.sensors["pressure"]["PT-2"].normalized_value;
         double inv = (pressure - 20.0) / 5.0; // Assuming that "depressurization" means 20psi
         double progress = Util::min(100.0, 100.0 - inv);
-        return Util::max(0.0, progress); //  makes sure that progress isn't negative
+        return static_cast<int>(Util::max(0.0, progress)); //  makes sure that progress isn't negative
     }
 
     throw INVALID_STAGE();
@@ -114,7 +114,7 @@ void StageControl::send_data()
 void StageControl::progress()
 {
     status = calculate_status();
-    if (status != 100.0)
+    if (status != 100)
     {
         // JsonObject obj = Util::createJsonObject();
         // obj["header"] = "stage_progress";
