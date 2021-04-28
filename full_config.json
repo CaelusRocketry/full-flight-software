@@ -252,7 +252,7 @@
       },
       "address": "/dev/ttyACM0",
       "baud": 115200,
-      "send_interval": 2.0
+      "send_interval": 0.5
   },
   "valves": {
     "list": {
@@ -297,7 +297,7 @@
     },
     "address": "/dev/ttyACM1",
     "baud": 115200,
-    "send_interval": 2.0
+    "send_interval": 0.5
   },
   "stages": {
     "list": ["waiting", "pressurization", "autosequence", "postburn"],

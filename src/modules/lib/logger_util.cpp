@@ -17,9 +17,21 @@ void print(std::string message) {
 }
 
 void printCritical(std::string message) {
-    #ifdef DESKTOP
-        std::cout << message << std::endl;
-    #else
-        Serial.println(String(message.c_str()));
-    #endif
+    if(true){
+        #ifdef DESKTOP
+            std::cout << message << std::endl;
+        #else
+            Serial.println(String(message.c_str()));
+        #endif
+    }
+}
+
+void printEssential(std::string message) {
+    if(true){
+        #ifdef DESKTOP
+            std::cout << message << std::endl;
+        #else
+            Serial.println(String(message.c_str()));
+        #endif
+    }
 }

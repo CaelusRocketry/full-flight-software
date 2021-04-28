@@ -118,7 +118,7 @@ void TelemetryTask::actuate() {
             telemetry->send_queue.push(packet_string);
         }
         telemetry->write();
-        // print("here 3");
+        print("TIMESTAMP: " + std::to_string(Util::getTime() - global_flag.general.mcl_start_time));
     }
 }
 
