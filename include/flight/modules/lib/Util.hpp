@@ -7,11 +7,14 @@
 #include <map>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Errors.hpp>
-#include <flight/modules/mcl/Flag.hpp>
+#include <ArduinoJson.h>
 
 using namespace std;
 
 namespace Util {
+    extern StaticJsonDocument<15000> doc;
+    extern StaticJsonDocument<15000> doc;
+
     /** Split a string by a delimiter */
     extern vector<string> split(const string &s, const string &delimiter);
 
@@ -23,11 +26,11 @@ namespace Util {
 
     double min(double a, double b);
     double max(double a, double b);
-
+    /*
     long getMiliTimestampLong(const Flag& flag);
     string getMiliTimestampStr(const Flag& flag);
     template<typename T> string int_to_hex(T num);
-
+    */
     string to_string(bool b);
     string to_string(int i);
     string to_string(long int i);

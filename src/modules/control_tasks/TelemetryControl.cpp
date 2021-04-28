@@ -127,9 +127,9 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     }
 
     global_flag.log_info("SAC", msg + "-1");
-    print("Successfully actuated solenoid at " + args[0] + ".");
+    print("Successfully controlled solenoid at " + args[0] + ".");
     
-    print("SOLENOID ACTUATION SUCCESSFUL!");
+    print("SOLENOID CONTROL SUCCESSFUL!");
 }
 
 void TelemetryControl::sensor_request(const vector<string>& args) {
@@ -140,7 +140,7 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
     string sensor_loc = args[1];
 
     if (!global_registry.sensor_exists(sensor_type, sensor_loc)) {
-        global_flag.log_critical("response", obj);
+        global_flag.log_critical("SDT", args[0] + args[1] + "-0");
         printCritical("Unable to find sensor. Sensor type: " + args[0] + " Sensor location: " + args[1] + ".");
         throw INVALID_SENSOR_LOCATION_ERROR();
     }
@@ -152,7 +152,7 @@ void TelemetryControl::sensor_request(const vector<string>& args) {
 
     string value_str = Util::to_string((int) value);
     string kalman_str = Util::to_string((int) kalman_value);
-    string time_str = Util::to_string((int) (Util::getMiliTimestampLong(global_flag)));
+    string time_str = Util::to_string((int) (static_cast<long>(Util::getTime() - global_flag.general.mcl_start_time)));
 
     global_flag.log_critical("SDT", args[0] + args[1] + "-" + sensor_status_str + value_str + kalman_str);
     print("Sensor data request successful. Sensor type: " + args[0] + ", Sensor location: " + args[1] + ", Sensor status: " + sensor_status_str + ", Measured value: " + value_str + ", Normalized value: " + kalman_str + ".");
@@ -181,7 +181,7 @@ void TelemetryControl::valve_request(const vector<string>& args) {
     print("Valve data request successful. Actuation type: " + actuation_type + ", Actuation priority: " + actuation_priority + ", Valve type: " + valve_type + ", Valve location: " + valve_loc + ".");
 }
 
-void stage_progression(const vector<string>& args) {
+void TelemetryControl::stage_progression(const vector<string>& args) {
     // Progresses the rocket to the next stage of flight
     global_flag.general.progress = true;
     // global_flag.log_critical("SGP", "1");

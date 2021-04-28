@@ -3,11 +3,12 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
 
+
 const unsigned char SEND_DATA_CMD = 255;
 const unsigned char ACTUATE_CMD = 254;
 
 void ValveTask::initialize() {
-    print("Valve task: Starting");
+    print("Valve task: starting.");
     for (const auto& valve_type : global_config.valves.list) {
         string type = valve_type.first;
         auto valve_locations = valve_type.second;
@@ -24,11 +25,9 @@ void ValveTask::initialize() {
     valve_driver = new ValveDriver(pins);    
 }
 
-/*
- * Reads all actuation states from valve and updates registry
- */
+// Reads all actuation states from valve and updates registry
 void ValveTask::read(){
-    print("Valve: Reading");
+    print("Valve task: reading.");
 
     for(unsigned int i = 0; i < pins.size(); i++){
         int pin = pins[i];
@@ -44,18 +43,14 @@ void ValveTask::read(){
     }
 }
 
-/*
-  Given a valve type and location, return its corresponding pin number
-*/
-int ValveTask::get_pin(string valve_type, string valve_loc){
+// Given a valve type and location, return its corresponding pin number
+int ValveTask::get_pin(string valve_type, string valve_loc) {
     for(int pin : pins){
         pair<string, string> valve_info = pin_to_valve[pin];
         if(valve_info.first == valve_type && valve_info.second == valve_loc){
             return pin;
         }
     }
-
-    // Default return
     return -1;
 }
 
@@ -66,7 +61,6 @@ int ValveTask::get_pin(string valve_type, string valve_loc){
  *  else:
  *      deny the request to actuate this solenoid, revert back to the current actuation
  */
-
 void ValveTask::actuate() {
     print("Actuating valves");
 
@@ -90,7 +84,7 @@ void ValveTask::actuate() {
             print("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + Util::to_string(pin));
             print("Actuation type: " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ", Actuation priority: " + valve_priority_inverse_map.at(target_valve_info.actuation_priority));
 
-            /* Send actuation signal */
+            // Send actuation signal
             valve_driver->actuate(pin, target_valve_info.actuation_type);
 
             if(target_valve_info.actuation_type == ActuationType::CLOSE_VENT) {
@@ -101,16 +95,13 @@ void ValveTask::actuate() {
                 print("open");
                 global_registry.valves[valve_type][valve_location].state = SolenoidState::OPEN;
             }
-
-            /* Reset the flags */
+            // Reset the flags
             global_flag.valves[valve_type][valve_location].actuation_type = ActuationType::NONE;
             global_flag.valves[valve_type][valve_location].actuation_priority = ValvePriority::NONE;
 
-            
-
             // Send response message
-            JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Set actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + "\"}");
-            global_flag.log_info("response", obj);
+            global_flag.log_info("INF", "SAC at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ".");
+            print("Set solenoid actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ".");
         }
     }
 }

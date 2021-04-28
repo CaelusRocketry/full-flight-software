@@ -11,7 +11,7 @@ string Packet::toString() const {
     return output;
 }
 
-static Packet from_string(string& str) {
+Packet Packet::from_string(string& str) {
     Packet packet;
     size_t packet_start = str.find('^');
     if(packet_start != string::npos) {

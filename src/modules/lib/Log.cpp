@@ -18,7 +18,7 @@ string Log::toString() const {
     return out;
 }
 
-static Log from_string(const string& str) {
+Log Log::from_string(const string& str) {
     string delim = global_config.telemetry.PACKET_DELIMITER;
     // Ingests strings that DO NOT have the ^ and $ headers/tails
     if (str.find(delim) == string::npos) { // If the string contains no pipes
@@ -29,7 +29,7 @@ static Log from_string(const string& str) {
     string csum = str.substr(Util::getMaxIndex(str, delim)+1, str.length());
     string log_str = str.substr(0, Util::getMaxIndex(str, delim));
     // If header != 3 chars long or the checksum indicates the Log is corrupted
-    if (sections[0].size() != 3 || !(checkChecksum(log_str, csum))) {
+    if (sections[0].size() != 3 || !(Log::checkChecksum(log_str, csum))) {
         throw INVALID_LOG_ERROR();
     }
     long ts;
@@ -49,7 +49,7 @@ static Log from_string(const string& str) {
     return Log(sections[0], ts, sections[2]);
 }
 
-static string generateChecksum(const string& packet) {
+string Log::generateChecksum(const string& packet) {
     string delim = global_config.telemetry.PACKET_DELIMITER;
     vector<string> tokens = Util::split(packet, delim); 
     int counter = 1;
@@ -65,16 +65,17 @@ static string generateChecksum(const string& packet) {
     return Util::to_string(ascii_sum % 999);
 }
 
-static bool checkChecksum(const string& str, const string& sum) {
+bool Log::checkChecksum(const string& str, const string& sum) {
     if (generateChecksum(str) == sum) {
         return true;
     }
     return false;
 }
 
-// Log string to black_box.txt
+// TODO: Log string to black_box.txt on SD card currently doesn't compile
 void Log::save(const string& filename) const {
-     #ifdef DESKTOP
+    /*
+    #ifdef DESKTOP
         ofstream savefile;
         savefile.open(filename);
         string output;
@@ -104,6 +105,8 @@ void Log::save(const string& filename) const {
             Serial.println("blackbox.txt");
         }
     #endif
+    */
+   return;
 }
 
 Log Log::copy(){

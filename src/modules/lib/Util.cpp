@@ -1,12 +1,14 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Flag.hpp>
-#include <sstream>
 
 #ifdef DESKTOP
     #include <chrono>
 #else
     #include "Arduino.h"
 #endif
+
+
+StaticJsonDocument<15000> Util::doc;
 
 vector<string> Util::split(const string &s, const string &delimiter){
     string temp = s;
@@ -41,7 +43,7 @@ template <typename T> int Util::getIndex(vector<T> arr, T val){
     return -1;
 }
 
-int getMaxIndex(string str, string val) {
+int Util::getMaxIndex(string str, string val) {
     // Gets index of last occurence of a string in another string. Only supports 1-char strings.
     int ind = -1;
     char ch = val[0];
@@ -70,6 +72,7 @@ double Util::max(double a, double b){
     return b;
 }
 
+/*
 long getMiliTimestampLong(const Flag& flag) {
     return static_cast<long>(Util::getTime() - flag.general.mcl_start_time);
 }
@@ -87,6 +90,7 @@ template<typename T> string int_to_hex(T num) {
         << std::hex << num;
     return stream.str();
 }
+*/
 
 string Util::to_string(bool b) {
     return b ? "true" : "false";   

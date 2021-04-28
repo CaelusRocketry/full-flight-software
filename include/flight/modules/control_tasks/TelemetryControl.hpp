@@ -25,8 +25,8 @@ private:
         {"SGP", {}},
         {"INF", {}}
     };
-
     void ingest(const Log& log);
+
     void heartbeat(const vector<string>& args);
     void soft_abort(const vector<string>& args);
     void undo_soft_abort(const vector<string>& args);

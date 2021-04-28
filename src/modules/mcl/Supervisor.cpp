@@ -1,4 +1,5 @@
 #include <set>
+#include <ArduinoJson.h>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Supervisor.hpp>
 #include <flight/modules/tasks/SensorTask.hpp>
