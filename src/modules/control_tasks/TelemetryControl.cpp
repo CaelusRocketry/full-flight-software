@@ -101,6 +101,7 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     for (const string& str : args) {
         msg += str;
     }
+    
     if (!global_registry.valve_exists("solenoid", args[0])) {
         global_flag.log_critical("SAC", msg + "-0"); // "-0" indicates a failure; this is "dash-zero" 
         throw INVALID_SOLENOID_ERROR();

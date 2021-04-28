@@ -21,11 +21,11 @@ void ValveControl::begin() {
 void ValveControl::execute() {
     print("Valve control: controlling.");
     check_abort();
-    auto current_time = Util::getTime();
-    // If the send interval has passed and we should send valve data
-    if (last_send_time == 0 || current_time > last_send_time + send_interval) {
+    long double now = Util::getTime();
+
+    if (last_send_time == 0 || now > last_send_time + send_interval) {
         send_valve_data();
-        last_send_time = Util::getTime();
+        last_send_time = now;
     }
 }
 

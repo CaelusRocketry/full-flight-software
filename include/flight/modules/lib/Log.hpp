@@ -6,6 +6,11 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 
+#ifdef TEENSY
+    // #include <SD_ts.h>
+    #include <SD.h>
+#endif
+
 using namespace std;
 // Log class stores messages to be sent to and from ground and flight station
 class Log {

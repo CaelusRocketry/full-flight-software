@@ -20,6 +20,12 @@ void SensorTask::initialize() {
                 pin = location_.second.thermo_pins[0];
                 thermo_pins.push_back( location_.second.thermo_pins );
             }
+            if (type_.first == "load_cell")
+            {
+                pin = location_.second.load_cell_pins[0];
+                load_cell_pins.push_back( location_.second.load_cell_pins );
+            }
+
 
             pin_sensor_mappings[pin] = make_pair(type_.first, location_.first);
         }
@@ -31,6 +37,7 @@ void SensorTask::initialize() {
     #else
         pressure_driver = new PressureDriver(pressure_pins);
         thermo_driver = new ThermoDriver(thermo_pins);
+        load_cell_driver = new LoadCellDriver(load_cell_pins);
     #endif
 
     print("Sensor: Initialized");

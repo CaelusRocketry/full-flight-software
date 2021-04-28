@@ -1,7 +1,3 @@
-//
-// Created by adiv413 on 4/24/2020.
-//
-
 #ifndef FLIGHT_CONTROL_HPP
 #define FLIGHT_CONTROL_HPP
 

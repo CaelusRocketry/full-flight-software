@@ -74,7 +74,16 @@ void Supervisor::run() {
         read();
         control();
         actuate();
-        Util::pause(1000);
+        // temp placeholder for TimerControl
+        print("TIME: " + Util::to_string((int)Util::getTime()));
+        // Util::pause(500);
+        // long double end_time = Util::getTime();
+        // long double diff = end_time - start_time;
+        // if(delay > diff){
+        //     Util::pause(delay - diff);
+        // }
+        // Serial.println(millis());
+        // Serial.println("WHATSUPPPP");
     }
 }
 

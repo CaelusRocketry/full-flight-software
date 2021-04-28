@@ -74,15 +74,15 @@ bool Log::checkChecksum(const string& str, const string& sum) {
 
 // TODO: Log string to black_box.txt on SD card currently doesn't compile
 void Log::save(const string& filename) const {
-    /*
-    #ifdef DESKTOP
-        ofstream savefile;
-        savefile.open(filename);
-        string output;
-        to_string(output, *this);
-        savefile << output + "\n";
-        savefile.close();
-    #endif
+    
+    // #ifdef DESKTOP
+    //     ofstream savefile;
+    //     savefile.open(filename);
+    //     string output;
+    //     to_string(output, *this);
+    //     savefile << output + "\n";
+    //     savefile.close();
+    // #endif
 
     #ifdef TEENSY
         print("Writing data to SD card.");
@@ -105,7 +105,7 @@ void Log::save(const string& filename) const {
             Serial.println("blackbox.txt");
         }
     #endif
-    */
+    
    return;
 }
 

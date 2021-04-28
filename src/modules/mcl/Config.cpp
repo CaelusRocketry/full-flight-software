@@ -61,6 +61,12 @@ Config::Config(JsonObject& json) {
                     info.thermo_pins.push_back( value.as<int>() );
                 }
             }
+            if(sensor_type == "load_cell") {
+                JsonArray load_cell_pins_arr = sensor["load_cell_pins"].as<JsonArray>();
+                for(JsonVariant value : load_cell_pins_arr) {
+                    info.load_cell_pins.push_back( value.as<int>() );
+                }
+            }
 
             sensors.list[sensor_type][sensor_loc] = info;
         }
@@ -70,7 +76,7 @@ Config::Config(JsonObject& json) {
     print("Config: Reading valve list");
     valves.address = json["valves"]["address"].as<string>();
     valves.baud = json["valves"]["baud"].as<int>();
-    valves.send_interval = json["valves"]["send_interval"].as<int>();
+    valves.send_interval = json["valves"]["send_interval"].as<double>();
     
     temp = json["valves"]["list"];
     for(JsonObject::iterator it=temp.begin(); it != temp.end(); ++it){

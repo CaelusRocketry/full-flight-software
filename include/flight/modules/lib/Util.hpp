@@ -38,6 +38,7 @@ namespace Util {
     string to_string(long double d);
     long double getTime();
     void pause(int millis);
+    void terminate();
 }
 
 #endif // FLIGHT_UTIL_HPP

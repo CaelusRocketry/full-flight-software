@@ -1,5 +1,6 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Flag.hpp>
+#include <flight/modules/lib/logger_util.hpp>
 
 #ifdef DESKTOP
     #include <chrono>
@@ -165,5 +166,18 @@ void Util::pause(int millis){
         while(getTime() < curr_time + millis);
     #else
         delay(millis);
+    #endif
+}
+
+void Util::terminate(){
+    print("Terminating program");
+    #ifdef DESKTOP
+        int a = 1;
+        int b = 0;
+        int c = a / b;
+    #else
+        while(true){
+
+        }
     #endif
 }
