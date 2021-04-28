@@ -8,7 +8,7 @@ private:
     std::vector<int> pressure_pins;
     std::vector<float> pressure_vals;
 
-    float readSensor(int pin, int curr_val);
+    float readSensor(int pin);
 
 public:
     PseudoPressureDriver(std::vector<int> pins);
