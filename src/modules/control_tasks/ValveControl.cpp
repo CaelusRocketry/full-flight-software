@@ -39,7 +39,7 @@ void ValveControl::send_valve_data() {
             RegistryValveInfo valve_info = global_registry.valves[type][location];
             string valve_state = Util::to_string(static_cast<int>(valve_info.state));
             // Format each individual valve type, location, and state to be delimited by a comma ","
-            data += type + location + valve_state + ",";
+            data += valve_type_map[type] + valve_location_map[location] + valve_state + ",";
         }
     }
     string mod_data = data.substr(0, data.length()-1); // Strip the last comma

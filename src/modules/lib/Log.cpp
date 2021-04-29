@@ -86,8 +86,7 @@ void Log::save(const string& filename) const {
         {
             Serial.println("Saving file!");
             Serial.println((double) timestamp);
-            string output;
-            to_string(output, *this);
+            string output = toString();
             
             savefile.println(output.c_str());
             savefile.close();
