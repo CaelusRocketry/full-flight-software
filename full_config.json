@@ -276,24 +276,24 @@
           "natural": "CLOSED",
           "special": true
         },
-          "nitrous_pressurization": {
-              "label": "NCSV-4",
-              "pin": 5,
-              "natural": "CLOSED",
-              "special": true
-          },
-          "nitrous_fill": {
-              "label": "NOSV-1",
-              "pin": 11,
-              "natural": "OPEN",
-              "special": false
-          },
-          "nitrous_mpv": {
-              "label": "NCSV-5",
-              "pin": 9,
-              "natural": "CLOSED",
-              "special": true
-          }
+        "nitrous_pressurization": {
+            "label": "NCSV-4",
+            "pin": 5,
+            "natural": "CLOSED",
+            "special": true
+        },
+        "nitrous_fill": {
+            "label": "NOSV-1",
+            "pin": 11,
+            "natural": "OPEN",
+            "special": false
+        },
+        "nitrous_mpv": {
+            "label": "NCSV-5",
+            "pin": 9,
+            "natural": "CLOSED",
+            "special": true
+        }
       }
     },
     "address": "/dev/ttyACM1",
