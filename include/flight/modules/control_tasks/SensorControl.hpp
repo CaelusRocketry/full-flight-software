@@ -31,7 +31,7 @@ class SensorControl : public Control {
             {"PT-P", "P"},
             {"PT-7", "7"},
             {"PT-8", "8"},
-            {"Thermo-1", "9"}
+            {"TC-1", "9"}
         };
 
         void boundary_check();

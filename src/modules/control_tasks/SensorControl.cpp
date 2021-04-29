@@ -111,7 +111,7 @@ void SensorControl::boundary_check() {
         }
     }
 
-    if (!global_registry.general.soft_abort and critical_sensors.empty()) { // one or more of the sensors are critical, soft abort
+    if (!global_registry.general.soft_abort and !(critical_sensors.empty())) { // one or more of the sensors are critical, soft abort
         global_registry.general.soft_abort = true;
 
         string message = "Soft aborting because the following sensors have reached critical levels: ";

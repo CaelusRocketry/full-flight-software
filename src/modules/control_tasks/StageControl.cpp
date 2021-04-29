@@ -44,6 +44,7 @@ void StageControl::execute()
 
 int StageControl::calculate_status() const
 {
+    // TODO: Why is calculate_status() returning 100 for everything???
     Stage current_stage = global_registry.general.stage;
 
     if (current_stage == Stage::WAITING)
@@ -82,15 +83,15 @@ int StageControl::calculate_status() const
 }
 
 void StageControl::send_progression_request() {
-    global_flag.log_critical("SPQ", stage_strings.at(stage_index) + stage_strings.at(stage_index + 1));
-    print("Stage progression request. Current stage: " + stage_strings.at(stage_index) + ", Next stage: " + stage_strings.at(stage_index + 1) + ".");
+    global_flag.log_critical("SPQ", stage_name_map[stage_strings.at(stage_index)] + stage_name_map[stage_strings.at(stage_index + 1)]);
+    print("Stage progression request. Current stage: " + stage_name_map[stage_strings.at(stage_index)] + ", Next stage: " + stage_name_map[stage_strings.at(stage_index + 1)] + ".");
 }
 
 void StageControl::send_data() {
     print("Sending stage data.");
     if (this->send_time == 0 || Util::getTime() > (this->send_time + this->send_interval)) {
         // Send stage data, where first char is the current stage, second char is said stage's status
-        global_flag.log_info("SGD", stage_strings.at(stage_index) + Util::to_string(calculate_status()));
+        global_flag.log_info("SGD", stage_name_map[stage_strings.at(stage_index)] + Util::to_string(calculate_status()));
         this->send_time = Util::getTime();
     }
 }
@@ -99,7 +100,7 @@ void StageControl::progress() {
     status = calculate_status();
     if (status != 100.0) {
         // Log the failed stage progression to GS
-        global_flag.log_critical("SGP", stage_strings.at(stage_index) + Util::to_string(status) + "-0");
+        global_flag.log_critical("SGP", stage_name_map[stage_strings.at(stage_index)] + Util::to_string(status) + "-0");
         // NOTE: Using stage_strings.at(stage_index) instead of obj["Status"] = status; 
         printCritical("Stage progression failed.");
     }
@@ -113,7 +114,7 @@ void StageControl::progress() {
         global_registry.general.stage_status = status;
         start_time = Util::getTime();
         // Log the successful stage progression to GS
-        global_flag.log_critical("SGP", stage_strings.at(stage_index) + Util::to_string(status) + "-1");
+        global_flag.log_critical("SGP", stage_name_map[stage_strings.at(stage_index)] + Util::to_string(status) + "-1");
         print("Stage progression successful.");
     }
 }

@@ -44,7 +44,7 @@ void ValveControl::send_valve_data() {
     }
     string mod_data = data.substr(0, data.length()-1); // Strip the last comma
     global_flag.log_info("VDT", mod_data);
-    printCritical("Sent valve data batch: " + mod_data);
+    printCritical("Valve data batch sent: " + mod_data);
 }
 
 void ValveControl::abort() {
