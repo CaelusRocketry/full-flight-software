@@ -8,7 +8,7 @@ const unsigned char SEND_DATA_CMD = 255;
 const unsigned char ACTUATE_CMD = 254;
 
 void ValveTask::initialize() {
-    print("Valve task: starting.");
+    print("Valve task: Starting");
     for (const auto& valve_type : global_config.valves.list) {
         string type = valve_type.first;
         auto valve_locations = valve_type.second;
@@ -27,7 +27,7 @@ void ValveTask::initialize() {
 
 // Reads all actuation states from valve and updates registry
 void ValveTask::read(){
-    print("Valve task: reading.");
+    print("Valve task: Reading");
 
     for(unsigned int i = 0; i < pins.size(); i++){
         int pin = pins[i];

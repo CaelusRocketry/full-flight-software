@@ -33,7 +33,7 @@ ControlTask::ControlTask(const set<string>& config) {
 }
 
 void ControlTask::begin() {
-    print("Control task: beginning.");
+    print("Control task: Beginning");
     
     for (auto &control : this->controls) {
         control->begin();
@@ -41,7 +41,7 @@ void ControlTask::begin() {
 }
 
 void ControlTask::control() {
-    print("Control task: controlling.");
+    print("Control task: Controlling");
 
     for (auto &control : this->controls) {
         control->execute();

@@ -14,7 +14,7 @@ SensorControl::SensorControl() {
 }
 
 void SensorControl::begin() {
-    print("Sensor control: beginning.");
+    print("Sensor control: Beginning");
     // Initialize the Kalman filters
 
     /* Pair of <string, <string, SensorInfo>> */
@@ -145,5 +145,5 @@ void SensorControl::send_sensor_data() {
     }
     data = data.substr(0, data.length()-1);
     global_flag.log_info("DAT", data);
-    print("Sensor data batch sent: " + data + ".");
+    printCritical("Sensor data batch sent: " + data + ".");
 }

@@ -13,7 +13,7 @@ void TelemetryTask::initialize() {
 }
 
 void TelemetryTask::read() {
-    print("Telemetry: reading.");
+    print("Telemetry: Reading");
     bool status = telemetry->get_status();
     global_registry.telemetry.status = status;
 
@@ -35,7 +35,7 @@ void TelemetryTask::read() {
 }
 
 void TelemetryTask::actuate() {
-    print("Telemetry: actuating.");
+    print("Telemetry: Actuating");
     if (global_flag.telemetry.reset) {
         telemetry->reset();
     } else {
@@ -44,6 +44,7 @@ void TelemetryTask::actuate() {
         // For each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
             string packet_string = packet.toString();
+            printCritical("SENDING PACKET: " + packet_string);
             telemetry->send_queue.push(packet_string);
         }
         telemetry->write();

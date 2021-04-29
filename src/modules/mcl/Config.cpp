@@ -126,11 +126,12 @@ Config::Config(JsonObject& json) {
     print("Config: Reading task config");
     JsonArray task_list_json = json["task_config"]["tasks"].as<JsonArray>();
     for (JsonVariant value : task_list_json) {
-        print(value.as<string>());
         task_config.tasks.push_back(value.as<string>());
     }
+    
     JsonArray ct_list_json = json["task_config"]["control_tasks"].as<JsonArray>();
     for (JsonVariant value : ct_list_json) {
+        print(value.as<string>());
         task_config.control_tasks.push_back(value.as<string>());
     }
     // task_config.tasks = json["task_config"]["tasks"].as<vector<string>>(); 

@@ -12,8 +12,7 @@
 using namespace std;
 
 namespace Util {
-    extern StaticJsonDocument<15000> doc;
-    extern StaticJsonDocument<15000> doc;
+    extern StaticJsonDocument<20000> doc;
 
     /** Split a string by a delimiter */
     extern vector<string> split(const string &s, const string &delimiter);

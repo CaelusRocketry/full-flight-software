@@ -75,8 +75,8 @@ void Supervisor::run() {
         control();
         actuate();
         // temp placeholder for TimerControl
-        print("TIME: " + Util::to_string((int)Util::getTime()));
-        // Util::pause(500);
+        // print("TIME: " + Util::to_string((int)Util::getTime()));
+        Util::pause(2000);
         // long double end_time = Util::getTime();
         // long double diff = end_time - start_time;
         // if(delay > diff){

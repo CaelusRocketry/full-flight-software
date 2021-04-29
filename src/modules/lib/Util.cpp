@@ -9,7 +9,7 @@
 #endif
 
 
-StaticJsonDocument<15000> Util::doc;
+StaticJsonDocument<20000> Util::doc;
 
 vector<string> Util::split(const string &s, const string &delimiter){
     string temp = s;

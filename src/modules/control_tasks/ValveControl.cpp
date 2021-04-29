@@ -14,12 +14,12 @@ ValveControl::ValveControl() {
 }
 
 void ValveControl::begin() {
-    print("Valve Control: beginning.");
+    print("Valve Control: Beginning");
     global_flag.log_info("INF", "Valve control started.");
 }
 
 void ValveControl::execute() {
-    print("Valve control: controlling.");
+    print("Valve control: Controlling");
     check_abort();
     long double now = Util::getTime();
 
@@ -44,7 +44,7 @@ void ValveControl::send_valve_data() {
     }
     string mod_data = data.substr(0, data.length()-1); // Strip the last comma
     global_flag.log_info("VDT", mod_data);
-    print("Sent valve data batch: " + mod_data);
+    printCritical("Sent valve data batch: " + mod_data);
 }
 
 void ValveControl::abort() {

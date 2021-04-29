@@ -15,7 +15,7 @@ StageControl::StageControl() {
 }
 
 void StageControl::begin() {
-    print("Stage control: beginning");
+    print("Stage control: Beginning");
     this->acutated_postburn = false;
     global_registry.general.stage = stage_names.at(stage_index);
     global_registry.general.stage_status = 0;

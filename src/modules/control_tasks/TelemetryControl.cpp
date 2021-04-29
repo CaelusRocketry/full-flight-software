@@ -10,13 +10,13 @@ TelemetryControl::TelemetryControl() {
 }
 
 void TelemetryControl::begin() {
-    print("Telemetry control: beginning.");
+    print("Telemetry control: Beginning");
     make_functions();
 }
 
 // Store list of all commands that GS can send as functions, add the function pointers to the map and call when necessary
 void TelemetryControl::make_functions() {
-    print("Telemetry: making functions.");
+    print("Telemetry: Making functions");
     this->functions.emplace("HRT", &TelemetryControl::heartbeat);
     this->functions.emplace("SAB", &TelemetryControl::soft_abort);
     this->functions.emplace("UAB", &TelemetryControl::undo_soft_abort);
@@ -28,7 +28,7 @@ void TelemetryControl::make_functions() {
 }
 
 void TelemetryControl::execute() {
-    print("Telemetry control: controlling.");
+    print("Telemetry control: Controlling");
     if (!global_registry.telemetry.status) {
         global_flag.telemetry.reset = true;
     } else {
@@ -40,11 +40,11 @@ void TelemetryControl::execute() {
             ingest_queue.pop();
             // Convert the packet to a string
             string packet_to_str = packet.toString();
-            print("TelemetryControl packet to string: " + packet_to_str);
+            printCritical("RECIEVED PACKET: " + packet_to_str);
             // Ingest each Log in the packet
             for (const Log& log_ : packet.getLogs()) {
                 string to_str_log = log_.toString();
-                print("TelemetryControl log to string: " + to_str_log);
+                // print("TelemetryControl log to string: " + to_str_log);
                 ingest(log_);
             }
         }
