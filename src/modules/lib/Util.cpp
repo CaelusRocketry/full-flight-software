@@ -167,7 +167,14 @@ string Util::hex(long w) {
         start++;
     }
     
-    return ret.substr(start);
+    string to_return_final = ret.substr(start);
+    
+    if(to_return_final == "") {
+        return "0";
+    } 
+    else {
+        return to_return_final;
+    }
 }
 
 long double Util::getTime(){
