@@ -50,16 +50,9 @@ Log Log::from_string(const string& str) {
 }
 
 string Log::generateChecksum(const string& packet) {
-    string delim = global_config.telemetry.PACKET_DELIMITER;
-    vector<string> tokens = Util::split(packet, delim); 
-    int counter = 1;
     int ascii_sum = 0;
-    for (int i=0; i<tokens.size(); i++) {
-        string current_token = tokens[i];
-        for (int str_idx=0; i<current_token.size(); i++) {
-            ascii_sum += counter * (int)(current_token[str_idx]);
-            counter += 1;
-        }
+    for (int i = 0; i < packet.length(); i++) {
+        ascii_sum += i * (int)(packet[i]);
     }
     // Modulus of 999 restricts the checksum to three digits
     return Util::to_string(ascii_sum % 999);

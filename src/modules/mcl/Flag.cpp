@@ -13,6 +13,9 @@ void Flag::enqueue(const Log& log, LogPriority logPriority) {
 
 void Flag::log_info(const string &header, const string &message) {
     long millisecond_timestamp = static_cast<long>(Util::getTime() - general.mcl_start_time);
+    if(millisecond_timestamp == 0) {
+        millisecond_timestamp++;
+    }
     Log log(header, millisecond_timestamp, message);
     enqueue(log, LogPriority::INFO);
 }

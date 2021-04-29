@@ -161,8 +161,6 @@ string Util::hex(long w) {
         ret[i] = digits[(w >> j) & 0x0f];
     }
     
-    cout << ret << endl;
-    
     int start = 0;
     
     while(ret[start] == '0') {

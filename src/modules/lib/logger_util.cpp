@@ -9,7 +9,7 @@
 void print(std::string message) {
     if(true){
         #ifdef DESKTOP
-            std::cout << message << std::endl;
+            // std::cout << message << std::endl;
         #else
             Serial.println(String(message.c_str()));
         #endif

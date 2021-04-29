@@ -69,7 +69,7 @@ bool Telemetry::write() {
 
     // Note: add "END" at the end of the packet, so packets are split correctly
     // string packet_string = output + "END";
-    // print("Telemetry: Sending packet: " + packet_string);
+    printCritical("Telemetry: Sending packet: " + packet_string);
     // print("");
 
     // Util::pause(1000);
