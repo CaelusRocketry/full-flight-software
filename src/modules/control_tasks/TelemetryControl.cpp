@@ -50,25 +50,34 @@ void TelemetryControl::execute() {
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
     string msg = log.getMessage();
+    
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
-        print("TelemetryControl packet header: " + header);
         throw INVALID_HEADER_ERROR();
     }
+    
     auto function = this->functions.at(header); // The reference to the actual function
     vector<string> param_values; // The arguments for that specific function
     int arg_len = arguments.at(header).size(); // Number of arguments
     // Attempt to parse arguments
+    
     try {
-        if (arg_len > 0) { // If the message in the log are arguments and not just text
-            for (unsigned int i = 0; i < msg.length(); i++) {
-                string s(1, msg[i]);
-                param_values.push_back(s);
-            }
+        if(header == "SAC") {
+            param_values.push_back(valve_location_inverse_map[string(1,msg[0])]);
+            param_values.push_back(string(1, msg[1]));
+            param_values.push_back(string(1, msg[2]));
         }
-        else { // Message is just text; probably an HBT or INF
-            param_values.push_back(msg);
+        else if (header == "SRQ") {
+            param_values.push_back(sensor_type_inverse_map[string(1, msg[0])]);
+            param_values.push_back(sensor_location_inverse_map[string(1, msg[1])]);
         }
+        else if(header == "VRQ") {
+            param_values.push_back(valve_type_inverse_map[string(1, msg[0])]);
+            param_values.push_back(valve_location_inverse_map[string(1, msg[1])]);
+        }
+        // else { // Message is just text; probably an HBT or INF
+        //     param_values.push_back(msg);
+        // }
     } catch (...) {
         string obj = "Invalid function arguments.";
         global_flag.send_packet("INF", obj);
@@ -105,7 +114,7 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
 
     int current_priority = int(global_registry.valves["solenoid"][args[0]].actuation_priority);
 
-    if (int(valve_priority_map[args[2]]) < current_priority) {
+    if (std::atoi(args[2].c_str()) < current_priority) {
         global_flag.send_packet("SAC", msg + "-0");
         printCritical("Priority too low to actuate. Valve location: " + args[0] + " Actuation type: " + args[1] + " Priority: " + args[2] + ".");
         throw INVALID_SOLENOID_ERROR();

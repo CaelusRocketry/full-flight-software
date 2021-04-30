@@ -24,6 +24,37 @@ private:
         {"SGP", {}},
         {"INF", {}}
     };
+
+    unordered_map<string, string> sensor_type_inverse_map {
+        {"0", "thermocouple"},
+        {"1", "pressure"}
+    };
+    
+    unordered_map<string, string> sensor_location_inverse_map {
+        {"1", "PT-1"},
+        {"2", "PT-2"},
+        {"3", "PT-3"},
+        {"4", "PT-4"},
+        {"5", "PT-5"},
+        {"P", "PT-P"},
+        {"7", "PT-7"},
+        {"8", "PT-8"},
+        {"9", "Thermo-1"}
+    };
+
+    std::unordered_map<std::string, std::string> valve_type_inverse_map {
+        {"0", "solenoid"}
+    };
+    
+    std::unordered_map<std::string, std::string> valve_location_inverse_map {
+        {"1", "ethanol_pressurization"},
+        {"2", "ethanol_vent"},
+        {"3", "ethanol_mpv"},
+        {"4", "nitrous_pressurization"},
+        {"5", "nitrous_fill"},
+        {"6", "nitrous_mpv"}
+    };
+
     void ingest(const Log& log);
 
     void heartbeat(const vector<string>& args);
