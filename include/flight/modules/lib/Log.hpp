@@ -41,6 +41,12 @@ public:
     string getHeader() const;
     string getMessage() const;
     long getTimestamp() const;
+
+    struct compareTo {
+        bool operator()(const Log& lhs, const Log& rhs) {
+            return lhs.timestamp < rhs.timestamp;
+        }
+    };
 };
 
 #endif //FLIGHT_LOG_HPP

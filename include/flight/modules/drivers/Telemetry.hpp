@@ -12,9 +12,6 @@
     #include <asio/read.hpp>
     #include <asio/basic_stream_socket.hpp>
     #include <unistd.h>
-    #include <mutex>
-    // #include <thread/tinythread.h>
-    #include <flight/modules/lib/Packet.hpp>
 
     using namespace std;
     using asio::ip::tcp;

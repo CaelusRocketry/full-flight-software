@@ -10,7 +10,7 @@ PressureControl::PressureControl(){
 
 void PressureControl::begin() {
     print("Pressure control: beginning.");
-    global_flag.log_info("INF", "Pressure control started.");
+    global_flag.send_packet("INF", "Pressure control started.");
 
     this->activate_stages = global_config.pressure_control.active_stages;
     this->valves = global_config.valves.list["solenoid"];

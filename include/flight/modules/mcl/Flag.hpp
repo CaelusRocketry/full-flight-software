@@ -7,7 +7,7 @@
 #include <vector>
 #include <queue>
 
-#include <flight/modules/lib/Packet.hpp>
+#include <flight/modules/lib/Log.hpp>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/lib/Util.hpp>
 
@@ -33,8 +33,8 @@ class Flag {
 
         /* Telemetry Flags */
         struct {
-            priority_queue<Packet, vector<Packet>, Packet::compareTo> enqueue;
-            priority_queue<Packet, vector<Packet>, Packet::compareTo> send_queue;
+            priority_queue<Log, vector<Log>, Log::compareTo> enqueue;
+            priority_queue<Log, vector<Log>, Log::compareTo> send_queue;
 
             /* Whether to reset telemetry or not */
             bool reset = false;
@@ -43,11 +43,8 @@ class Flag {
         /* Valve Flags */
         std::map<string, std::map<string, FlagValveInfo>> valves;
 
-        void enqueue(const Log& log, LogPriority logPriority);
-        void log_info(const string& header, const string& message);
-        void log_debug(const string& header, const string& message);
-        void log_warning(const string& header, const string& message);
-        void log_critical(const string& header, const string& message);
+        void enqueue(const Log& log);
+        void send_packet(const string& header, const string& message);
 };
 
 extern Flag global_flag;

@@ -3,7 +3,7 @@
     #include <flight/modules/drivers/XBee.hpp>
     #include <flight/modules/mcl/Config.hpp>
     #include <flight/modules/lib/Errors.hpp>
-    #include <flight/modules/lib/Packet.hpp>
+    #include <flight/modules/lib/Util.hpp>
 
     #include <SoftwareSerial.h>
 

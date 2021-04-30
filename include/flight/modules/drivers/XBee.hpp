@@ -4,7 +4,6 @@
 #include <queue>
 #include <cstdio>
 #include <unistd.h>
-#include <flight/modules/lib/Packet.hpp>
 #ifndef DESKTOP
     #include <SoftwareSerial.h>
 #endif

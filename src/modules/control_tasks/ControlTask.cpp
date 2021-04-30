@@ -29,7 +29,7 @@ ControlTask::ControlTask(const set<string>& config) {
     if (config.count("pressure")) {
         controls.push_back(unique_ptr<Control>(new PressureControl()));
     }
-    global_flag.log_info("INF", "Control tasks started.");
+    global_flag.send_packet("INF", "Control tasks started.");
 }
 
 void ControlTask::begin() {

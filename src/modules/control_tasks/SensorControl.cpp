@@ -9,7 +9,7 @@ SensorControl::SensorControl() {
     this->last_send_time = 0;
     // Config gives it in seconds, convert to milliseconds
     this->send_interval = global_config.sensors.send_interval * 1000;
-    global_flag.log_info("INF", "Sensor control started.");
+    global_flag.send_packet("INF", "Sensor control started.");
     print("Sensor control started.");
 }
 
@@ -123,7 +123,7 @@ void SensorControl::boundary_check() {
         message += crit_sensors;
         message = message.substr(0, message.length()-1);
 
-        global_flag.log_critical("AAB", crit_sensors.substr(0, crit_sensors.length()-1));
+        global_flag.send_packet("AAB", crit_sensors.substr(0, crit_sensors.length()-1));
         printCritical(message);
     }
 }
@@ -144,6 +144,6 @@ void SensorControl::send_sensor_data() {
         }
     }
     data = data.substr(0, data.length()-1);
-    global_flag.log_info("DAT", data);
+    global_flag.send_packet("DAT", data);
     printCritical("Sensor data batch sent: " + data + ".");
 }

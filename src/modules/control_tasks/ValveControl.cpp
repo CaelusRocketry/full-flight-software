@@ -15,7 +15,7 @@ ValveControl::ValveControl() {
 
 void ValveControl::begin() {
     print("Valve Control: Beginning");
-    global_flag.log_info("INF", "Valve control started.");
+    global_flag.send_packet("INF", "Valve control started.");
 }
 
 void ValveControl::execute() {
@@ -43,7 +43,7 @@ void ValveControl::send_valve_data() {
         }
     }
     string mod_data = data.substr(0, data.length()-1); // Strip the last comma
-    global_flag.log_info("VDT", mod_data);
+    global_flag.send_packet("VDT", mod_data);
     printCritical("Valve data batch sent: " + mod_data);
 }
 

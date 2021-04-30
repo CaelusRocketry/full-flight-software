@@ -26,8 +26,8 @@ void TelemetryTask::read() {
                 printCritical("TelemetryTask: processing packet: " + packet_string);
                 string processed_packet_string = packet_string;
                 // Create a Packet out of the processed packet string 
-                Packet pack = Packet::from_string(processed_packet_string);
-                global_registry.telemetry.ingest_queue.push(pack);
+                Log log = Log::from_string(processed_packet_string);
+                global_registry.telemetry.ingest_queue.push(log);
             }
         }
         print("Telemetry: finished reading packets.");

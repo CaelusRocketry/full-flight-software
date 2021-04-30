@@ -5,7 +5,7 @@
 #include <map>
 #include <queue>
 #include <flight/modules/lib/Enums.hpp>
-#include <flight/modules/lib/Packet.hpp>
+#include <flight/modules/lib/Log.hpp>
 
 using namespace std;
 
@@ -41,7 +41,7 @@ public:
     struct {
         int status = 0;
         bool resetting = false;
-        priority_queue<Packet, vector<Packet>, Packet::compareTo> ingest_queue; /* what type is this */
+        priority_queue<Log, vector<Log>, Log::compareTo> ingest_queue; 
     } telemetry;
 
     // valve type --> valve location --> valve info

@@ -15,6 +15,7 @@ string Log::toString() const {
     out += delim + message;
     string checksum = Log::generateChecksum(out);
     out += delim + checksum;
+    out = "^" + out + "$";
     return out;
 }
 
