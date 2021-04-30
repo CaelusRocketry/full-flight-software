@@ -71,7 +71,7 @@ void Supervisor::run() {
         // Serial.println(millis());
         // double delay = 0;
         // long double start_time = Util::getTime();
-        printCritical("------------------ITERATION------------------");
+        // printCritical("------------------ITERATION------------------");
         read();
         control();
         actuate();

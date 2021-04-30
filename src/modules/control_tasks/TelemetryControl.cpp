@@ -82,7 +82,7 @@ void TelemetryControl::ingest(const Log& log) {
 }
 
 void TelemetryControl::heartbeat(const vector<string>& args) {
-    global_flag.log_info("HBR", "OK"); // This is sent back to GS
+    global_flag.log_info("HRT", "OK"); // This is sent back to GS
     // global_flag.log_critical("HBR", "OK"); // This is sent back to GS
 }
 

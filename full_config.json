@@ -13,7 +13,7 @@
   "sensors": {
       "list": {
           "thermocouple": {
-            "TC-1": {
+            "Thermo-1": {
               "kalman_args": {
                 "process_variance": 0.01,
                 "measurement_variance": 0.02,
