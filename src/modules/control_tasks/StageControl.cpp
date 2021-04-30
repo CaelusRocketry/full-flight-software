@@ -98,7 +98,7 @@ void StageControl::send_data() {
 
 void StageControl::progress() {
     status = calculate_status();
-    if (status != 100.0) {
+    if (status != 100) {
         // Log the failed stage progression to GS
         global_flag.send_packet("SGP", stage_name_map[stage_strings.at(stage_index)] + Util::to_string(status) + "-0");
         // NOTE: Using stage_strings.at(stage_index) instead of obj["Status"] = status; 
