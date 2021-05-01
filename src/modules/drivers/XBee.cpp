@@ -41,6 +41,11 @@
         int DELAY_SEND = 50;
         string to_send = send_queue.front();
         send_queue.pop();
+        while (!(send_queue.empty())) {
+            to_send += send_queue.front();
+            send_queue.pop();
+        }
+        printCritical("CURRENT LENGTH OF SEND QUEUE::::: " + Util::to_string(static_cast<int>(send_queue.size())));
         try {
             char const *c = to_send.c_str();
             printCritical("\nSENDING PACKET: " + to_send + "\n");
