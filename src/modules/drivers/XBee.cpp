@@ -5,12 +5,8 @@
     #include <flight/modules/lib/Errors.hpp>
     #include <flight/modules/lib/Util.hpp>
 
-    #include <SoftwareSerial.h>
-
     XBee::XBee() {
         // Initialize variables
-        
-        // xbee = new SoftwareSerial(31, 32);
         xbee = &Serial4;
         xbee->begin(9600);
         connection = true;
@@ -37,41 +33,26 @@
 
     // Send the next subpacket in queue
     bool XBee::write() {
-
-        // Nothing to send, so j return
-        if(subpacket_send_queue.size() == 0 && send_queue.size() == 0){
+        // If the queue is empty, do nothing
+        if(send_queue.size() == 0){
             return true;
         }
 
-        if(subpacket_send_queue.size() == 0){
-            // TODO: Move this to config or constants or smth
-            string packet_string = send_queue.front();
-            send_queue.pop();
-            int subpacket_len = 60;
-
-            for (size_t i = 0; i < packet_string.size(); i += subpacket_len)
-            {
-                string subpacket_string = packet_string.substr(i, subpacket_len);
-                subpacket_send_queue.push(subpacket_string);
-            }
-
-        }
-
         int DELAY_SEND = 50;
-        string to_send = subpacket_send_queue.front();
-        subpacket_send_queue.pop();
+        string to_send = send_queue.front();
+        send_queue.pop();
         try {
             char const *c = to_send.c_str();
-            print("Sending subpacket: " + string(c));
-            xbee->write(c);
+            printCritical("\nSENDING PACKET: " + to_send + "\n");
+            Serial4.begin(9600); // 05/01/2021 NEED TO KEEP THIS LINE HERE DO NOT MOVE
+            Serial4.write(c);
         }
         catch (std::exception& e) {
             printCritical(e.what());
-            printCritical("HELLO");
+            printCritical("ERROR IN XBEE WRITE!");
             throw XBEE_WRITE_ERROR();
         }
         Util::pause(DELAY_SEND);
-
         return true;
     }
 

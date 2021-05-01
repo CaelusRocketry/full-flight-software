@@ -15,8 +15,6 @@ int main(int argc, char** argv) { // argc = len(argv) in python; char** argv = a
     #endif
 
     #ifdef TEENSY
-        // print("Waiting at the beginning of the program");
-        // delay(10000);
         pinMode(13, OUTPUT);
         digitalWrite(13, HIGH);
         print("Initializing SD card");

@@ -44,7 +44,7 @@ void TelemetryTask::actuate() {
         // For each packet in the send_queue, write that packet to telemetry
         for (auto &packet = send_queue.top(); !send_queue.empty(); send_queue.pop()) {
             string packet_string = packet.toString();
-            printCritical("SENDING PACKET: " + packet_string);
+            printCritical("PUSHING PACKET TO SEND_QUEUE: " + packet_string);
             telemetry->send_queue.push(packet_string);
         }
         telemetry->write();

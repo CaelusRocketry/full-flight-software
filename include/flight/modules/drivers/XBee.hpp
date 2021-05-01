@@ -19,7 +19,6 @@ private:
 
     bool connection;
     queue<string> ingest_queue;
-    queue<string> subpacket_send_queue;
     string rcvd;
 
     // lockable object used to specify when things need exclusive access.
