@@ -23,6 +23,7 @@ int main(int argc, char** argv) { // argc = len(argv) in python; char** argv = a
             Serial.println("Initialization success");
         }
         else{
+            while(true){};
             Serial.println("Init failed");
         }
     #endif

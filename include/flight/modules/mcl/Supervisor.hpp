@@ -15,6 +15,8 @@ class Supervisor {
         vector<Task*> tasks;
         ControlTask *control_task;
         void parse_config();
+        int last_blink_time;
+        int ledState = 0;
 
     public:
         Supervisor() = default;

@@ -42,10 +42,11 @@ void Supervisor::initialize() {
 
     print("Control tasks: Initializing");
     control_task->begin();
+    last_blink_time = (int)Util::getTime();
 }
 
 void Supervisor::read() {
-    print("Supervisor: Reading");
+    printEssential("Supervisor: Reading");
     for (Task* task : tasks){
         task->read();
     }
@@ -71,7 +72,13 @@ void Supervisor::run() {
         // Serial.println(millis());
         // double delay = 0;
         // long double start_time = Util::getTime();
-        // printCritical("------------------ITERATION------------------");
+        printEssential("------------------ITERATION------------------");
+        Serial.println((int)Util::getTime());
+        if((int)Util::getTime - last_blink_time > 1000){
+            ledState = 1 - ledState;
+            digitalWrite(13, ledState);
+            last_blink_time = (int)Util::getTime();
+        }
         read();
         control();
         actuate();

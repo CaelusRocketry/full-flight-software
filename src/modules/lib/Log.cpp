@@ -40,7 +40,7 @@ Log Log::from_string(const string& str) {
         char* end;
         string str_obj(sections[1]);
         char_arr = &str_obj[0];
-        // Attempt to cast string to a long
+    // Attempt to cast string to a long
         ts = strtol(char_arr, &end, 10);
     }
     catch (exception& e) {

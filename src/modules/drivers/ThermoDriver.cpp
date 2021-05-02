@@ -4,7 +4,7 @@
     #include <flight/modules/lib/logger_util.hpp>
 
     #include "Arduino.h"
-    #include <Adafruit_MAX31856.h>
+    #include <Adafruit_MAX31856/Adafruit_MAX31856.h>
 
 
     // Ex.
@@ -19,6 +19,7 @@
             thermo_pins.push_back(pins[i][0]);
             thermo_vals.push_back(MIN_TEMP);
             Adafruit_MAX31856 *maxthermo;
+            // chip select, mosi, miso, clk
             maxthermo = new Adafruit_MAX31856(pins[i][0], pins[i][1], pins[i][2], pins[i][3]);
             // Begin making readings
             maxthermo->begin();
@@ -50,9 +51,15 @@
     }
 
     float ThermoDriver::readSensor(int pin){
+        printEssential("Beginning of method");
+        Serial.println((int)Util::getTime());
         int idx = Util::getIndex<int>(thermo_pins, pin);
+        Serial.println((int)Util::getTime());
         float ret = 0.0;
+        
+        
         ret = this->maxthermos[idx]->readThermocoupleTemperature();
+        Serial.println((int)Util::getTime());
         uint8_t fault = this->maxthermos[idx]->readFault();
         print(Util::to_string(idx) + " " + Util::to_string(ret) + " " + Util::to_string(fault));
 
@@ -60,6 +67,7 @@
         if (fault) {
             ret = -420;
         }
+        Serial.println((int)Util::getTime());
 
         return ret;
     }
