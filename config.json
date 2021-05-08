@@ -65,7 +65,8 @@
             }
           },
           "pressure_pin": 10,
-          "bias": 15.0
+          "bias": 15.0,
+          "slope": 1.0
         },
         "PT-P": {
           "kalman_args": {
@@ -92,7 +93,8 @@
             }
           },
           "pressure_pin": 15,
-          "bias": 15.0
+          "bias": 15.0,
+          "slope": 1.0
         },
         "PT-7": {
           "kalman_args": {
@@ -119,7 +121,8 @@
             }
           },
           "pressure_pin": 16,
-          "bias": 15.0
+          "bias": 15.0,
+          "slope": 1.0
         },
         "PT-8": {
           "kalman_args": {
@@ -146,7 +149,8 @@
             }
           },
           "pressure_pin": 17,
-          "bias": 15.0.0
+          "bias": 15.0,
+          "slope": 1.0
         }
       }
     },
