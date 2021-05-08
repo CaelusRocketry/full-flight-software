@@ -4,6 +4,7 @@
     #include <flight/modules/mcl/Config.hpp>
     #include <flight/modules/lib/Errors.hpp>
     #include <flight/modules/lib/Util.hpp>
+    #include <flight/modules/lib/Log.hpp>
 
     XBee::XBee() {
         // Initialize variables
@@ -84,16 +85,34 @@
         }
 
         size_t packet_start = rcvd.find('^');
+        // while(true){
+        //     rcvd = rcvd.substr(packet_start + 1);
+        //     if(rcvd.find("^") != string::npos){
+        //         break;
+        //     }
+        //     packet_start = rcvd.find('^');
+        // }
+        // string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
         if(packet_start != string::npos) {
             size_t packet_end = rcvd.find('$', packet_start);
             if (packet_end != string::npos) {
                 string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
                 printCritical("XBee: Received Full Packet: " + incoming_packet);
-                ingest_queue.push(incoming_packet);
+                int idx = Util::getMaxIndex(incoming_packet, "|");
+                string jason = incoming_packet.substr(0, idx);
+                string checksum = Log::generateChecksum(jason);
+                string sentChecksum = incoming_packet.substr(idx + 1);
+                printEssential("Calculated checksum: " + checksum);
+                printEssential("Got checksum: " + sentChecksum);
+                if(checksum == sentChecksum){
+                    printEssential("Got a valid string: " + incoming_packet);
+                    ingest_queue.push(incoming_packet);
+                }
 
                 rcvd = rcvd.substr(packet_end + 1);
             }
         }
+
         // print("xbee: received: " + rcvd);
     }
 

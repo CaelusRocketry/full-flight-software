@@ -44,7 +44,16 @@ ActuationType ValveDriver::getActuationType(int pin){
     return valve_actuations[idx];
 }
 
-// TODO: Add in pulsing and stuff
+// TODO: Add in pulsing and special
+// void ValveDriver::handlePulsing(){
+//     for(unsigned int i = 0; i < pins.size(); i++){
+
+//     }
+// }
+
+// void ValveDriver::handleSpecial(){
+    
+// }
 
 void ValveDriver::actuate(int pin, ActuationType actuation_type){
     int idx = getIndex(pin);

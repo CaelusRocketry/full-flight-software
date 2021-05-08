@@ -17,6 +17,8 @@ private:
     int getIndex(int pin);
     void openVent(int pin);
     void closeVent(int pin);
+    // void handlePulsing();
+    // void handleSpecial();
 
 public:
     ValveDriver(vector<int> pins);
