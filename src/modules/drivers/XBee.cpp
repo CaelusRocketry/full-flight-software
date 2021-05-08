@@ -52,7 +52,7 @@
         printCritical("CURRENT LENGTH OF SEND QUEUE::::: " + Util::to_string(static_cast<int>(send_queue.size())));
         try {
             char const *c = to_send.c_str();
-            // printEssential("\nSENDING PACKET: " + to_send + "\n");
+            printEssential("\nSENDING PACKET: " + to_send + "\n");
             xbee->begin(9600); // 05/01/2021 NEED TO KEEP THIS LINE HERE DO NOT MOVE
             xbee->write(c);
         }
