@@ -52,11 +52,17 @@ void ValveDriver::actuate(int pin, ActuationType actuation_type){
     valve_actuations[idx] = actuation_type;
     if(actuation_type == ActuationType::OPEN_VENT){
         valve_states[idx] = SolenoidState::OPEN;
-        writeVal(pin, HIGH);
+
+        #ifndef DESKTOP
+            writeVal(pin, HIGH);
+        #endif
     }
     else if(actuation_type == ActuationType::CLOSE_VENT){
         valve_states[idx] = SolenoidState::CLOSED;
-        writeVal(pin, LOW);
+
+        #ifndef DESKTOP
+            writeVal(pin, LOW);
+        #endif
     }
     for(SolenoidState i : valve_states) {
         print(Util::to_string((int) i));
@@ -65,5 +71,8 @@ void ValveDriver::actuate(int pin, ActuationType actuation_type){
 
 void ValveDriver::writeVal(int pin, int signal){
     printEssential("writing " + Util::hex(pin) + " with signal " + Util::hex(signal));
-    digitalWrite(pin, signal);
+
+     #ifndef DESKTOP
+        digitalWrite(pin, signal);
+    #endif
 }

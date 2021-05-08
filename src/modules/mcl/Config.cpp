@@ -52,6 +52,8 @@ Config::Config(JsonObject& json) {
             info.boundaries.postburn.safe.lower = sensor["boundaries"]["postburn"]["safe"][0].as<double>();
             info.boundaries.postburn.warn.upper = sensor["boundaries"]["postburn"]["warn"][1].as<double>();
 
+            info.bias = sensor["bias"].as<double>();
+
             if(sensor_type == "pressure") {
                 info.pressure_pin = sensor["pressure_pin"].as<int>();
             }

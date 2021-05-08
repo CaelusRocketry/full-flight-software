@@ -55,7 +55,7 @@ void SensorTask::read() {
         string type = sensor_info.first;
         // specific sensor, pressure sensor 1, pressure sensor 2, etc.
         string loc = sensor_info.second;
-        float value = pressure_driver->getPressureValue(pin);
+        float value = pressure_driver->getPressureValue(pin) - global_config.sensors.list[type][loc].bias;
         print(type + " " + loc + ": " + Util::to_string((double) value));
         global_registry.sensors[type][loc].measured_value = value;
     }
