@@ -79,19 +79,18 @@ void Log::save(const string& filename) const {
     // #endif
 
     #ifdef TEENSY
-        print("Writing data to SD card.");
         File savefile;
         savefile = SD.open("blackbox.txt", FILE_WRITE);
 
         if (savefile) // SD card successfully opened
         {
-            Serial.println("Saving file!");
+            Serial.println("Saving data to SD!");
             Serial.println((double) timestamp);
             string output = toString();
             
             savefile.println(output.c_str());
             savefile.close();
-            Serial.println("Done");
+            // Serial.println("Done");
         }
         else {
             Serial.println("Error opening file:");

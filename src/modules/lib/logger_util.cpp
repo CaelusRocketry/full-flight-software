@@ -26,7 +26,7 @@ void saveData(std::string message){
 
 // TODO: Add priorities to print statements
 void print(std::string message) {
-    if(true){
+    if(false){
         #ifdef DESKTOP
             std::cout << message << std::endl;
         #else
@@ -37,7 +37,7 @@ void print(std::string message) {
 }
 
 void printCritical(std::string message) {
-    if(true){
+    if(false){
         #ifdef DESKTOP
             std::cout << message << std::endl;
         #else

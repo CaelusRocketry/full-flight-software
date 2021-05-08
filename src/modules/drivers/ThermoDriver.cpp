@@ -51,23 +51,22 @@
     }
 
     float ThermoDriver::readSensor(int pin){
-        printEssential("Beginning of method");
-        Serial.println((int)Util::getTime());
+        // Serial.println((int)Util::getTime());
         int idx = Util::getIndex<int>(thermo_pins, pin);
-        Serial.println((int)Util::getTime());
+        // Serial.println((int)Util::getTime());
         float ret = 0.0;
         
         
         ret = this->maxthermos[idx]->readThermocoupleTemperature();
-        Serial.println((int)Util::getTime());
+        // Serial.println((int)Util::getTime());
         uint8_t fault = this->maxthermos[idx]->readFault();
         print(Util::to_string(idx) + " " + Util::to_string(ret) + " " + Util::to_string(fault));
 
 
         if (fault) {
-            ret = -420;
+            ret = 420;
         }
-        Serial.println((int)Util::getTime());
+        // Serial.println((int)Util::getTime());
 
         return ret;
     }

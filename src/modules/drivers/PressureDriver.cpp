@@ -22,10 +22,18 @@
     }
 
     float PressureDriver::readSensor(int pin){
+        // print("in pressure readSensor");
         float pwmVal = analogRead(pin);
-        float voltage = map_value(pwmVal, 147, 1024, 0.5, 4.5) + 0.0100;
-        float psi = map_value(voltage, 0.5, 4.5, 15, 1000) - 15;
-        print(Util::to_string(psi) + " " + Util::to_string(voltage) + " " + Util::to_string(pwmVal));
+        float voltage = map_value(pwmVal, 0.0, 1024.0, 0.0, 5.0);
+        // voltage *= 1000;
+        // print(Util::hex(voltage));
+        float psi = map_value(voltage, 0.5, 4.5, 15, 1000);
+        // print(Util::hex(psi) + " " + Util::hex(voltage) + " " + Util::hex(pwmVal));
+        if(psi < 0) {
+            psi = 0;
+        }
+        // return voltage;
+        // return 420.0;
         return psi;
     }
 

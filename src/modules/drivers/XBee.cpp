@@ -35,11 +35,11 @@
     bool XBee::write() {
         // If the queue is empty, do nothing
         if(send_queue.size() == 0){
-            printEssential("THERES NOTHING IN THE SEND QUEUE");
+            print("THERES NOTHING IN THE SEND QUEUE");
             return true;
         }
         else{
-            printEssential("THERES SMTH IN THE SEND QUEUE");
+            print("THERES SMTH IN THE SEND QUEUE");
         }
 
         int DELAY_SEND = 50;
@@ -52,7 +52,7 @@
         printCritical("CURRENT LENGTH OF SEND QUEUE::::: " + Util::to_string(static_cast<int>(send_queue.size())));
         try {
             char const *c = to_send.c_str();
-            printEssential("\nSENDING PACKET: " + to_send + "\n");
+            // printEssential("\nSENDING PACKET: " + to_send + "\n");
             xbee->begin(9600); // 05/01/2021 NEED TO KEEP THIS LINE HERE DO NOT MOVE
             xbee->write(c);
         }
@@ -74,7 +74,7 @@
                 char msg = xbee->read();
                 string msg_str(1, msg);
                 rcvd.append(msg_str);
-                printEssential("XBee: Recieved: " + msg_str);
+                // printEssential("XBee: Recieved: " + msg_str);
             }
             catch (std::exception& e){
                 print(e.what());

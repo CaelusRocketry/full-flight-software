@@ -62,7 +62,7 @@ int ValveTask::get_pin(string valve_type, string valve_loc) {
  *      deny the request to actuate this solenoid, revert back to the current actuation
  */
 void ValveTask::actuate() {
-    print("Actuating valves");
+    // printEssential("Actuating valves");
 
     for (const auto& valve_info : valve_list) {
         string valve_type = valve_info.first;
@@ -81,8 +81,8 @@ void ValveTask::actuate() {
             target_valve_info.actuation_priority >= current_valve_info.actuation_priority
         ) {
 
-            print("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + Util::to_string(pin));
-            print("Actuation type: " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ", Actuation priority: " + valve_priority_inverse_map.at(target_valve_info.actuation_priority));
+            printEssential("Running actuation on valve type: " + valve_type + ", valve location: " + valve_location + ", pin: " + Util::to_string(pin));
+            printEssential("Actuation type: " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ", Actuation priority: " + valve_priority_inverse_map.at(target_valve_info.actuation_priority));
 
             // Send actuation signal
             valve_driver->actuate(pin, target_valve_info.actuation_type);
@@ -101,7 +101,7 @@ void ValveTask::actuate() {
 
             // Send response message
             global_flag.send_packet("INF", "SAC at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ".");
-            print("Set solenoid actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ".");
+            printEssential("Set solenoid actuation at " + valve_type + "." + valve_location + " to " + actuation_type_inverse_map.at(target_valve_info.actuation_type) + ".");
         }
     }
 }
