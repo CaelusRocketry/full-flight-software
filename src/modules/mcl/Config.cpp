@@ -17,7 +17,7 @@ Config::Config(JsonObject& json) {
     telemetry.XBEE_RX_PIN = json["telmetry"]["XBEE_RX_PIN"].as<int>();
     telemetry.XBEE_TX_PIN = json["telmetry"]["XBEE_TX_PIN"].as<int>();
     telemetry.XBEE_BAUD_RATE = json["telmetry"]["XBEE_BAUD_RATE"].as<int>();
-
+    telemetry.PACKET_DELIMITER = json["telemetry"]["PACKET_DELIMITER"].as<string>();
 
     /* Read sensor list */
     print("Config: Reading sensor list");
@@ -126,11 +126,12 @@ Config::Config(JsonObject& json) {
     print("Config: Reading task config");
     JsonArray task_list_json = json["task_config"]["tasks"].as<JsonArray>();
     for (JsonVariant value : task_list_json) {
-        print(value.as<string>());
         task_config.tasks.push_back(value.as<string>());
     }
+    
     JsonArray ct_list_json = json["task_config"]["control_tasks"].as<JsonArray>();
     for (JsonVariant value : ct_list_json) {
+        print(value.as<string>());
         task_config.control_tasks.push_back(value.as<string>());
     }
     // task_config.tasks = json["task_config"]["tasks"].as<vector<string>>(); 

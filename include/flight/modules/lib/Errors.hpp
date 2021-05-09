@@ -131,4 +131,11 @@ class INVALID_PACKET_ARGUMENTS_ERROR : public std::exception {
     }
 };
 
+class INVALID_LOG_ERROR: public std::exception {
+    virtual const char* what() const throw()
+    {
+        return "Invalid log string. Either contains no pipes (|), an incorrect checksum, or an unrecognized header.";
+    }
+};
+
 #endif //FLIGHT_ERRORS_HPP

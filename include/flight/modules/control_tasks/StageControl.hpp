@@ -26,6 +26,13 @@ private:
         Stage::POSTBURN
     };
 
+    unordered_map<string, string> stage_name_map {
+        {"waiting", "1"},
+        {"pressurization", "2"},
+        {"autosequence", "3"},
+        {"postburn", "4"}
+    };
+
     vector<string> stage_strings = global_config.stages.list;
 
     const double AUTOSEQUENCE_DELAY = 5.0 * 1000;

@@ -22,11 +22,9 @@ queue<string> Telemetry::read(int num_messages) {
             if(socket.available() > 0) {
                 std::array<char, 1024> buf;
                 socket.read_some(asio::buffer(buf));
-
                 string msg(buf.data());
                 
-                print("Telemetry: Received: " + msg); //TODO: FIX THIS MSG CAN POTENTIALLY BE INCOMPLETE
-                print("");
+                print("Telemetry: received: " + msg); //TODO: FIX THIS MSG CAN POTENTIALLY BE INCOMPLETE
 
                 recv_buffer += msg;
 
@@ -36,21 +34,13 @@ queue<string> Telemetry::read(int num_messages) {
                 if(packet_start != string::npos) {
                     size_t packet_end = recv_buffer.find('$', packet_start);
                     if (packet_end != string::npos) {
+                        // Strips the leading ^ and trailing $ off the packet string
                         string incoming_packet = recv_buffer.substr(packet_start + 1, packet_end - packet_start - 1);
-                        printCritical("Telemetry: Received Full Packet: " + incoming_packet);
+                        printCritical("Telemetry: received full packet: " + incoming_packet);
                         q.push(incoming_packet);
                         recv_buffer = recv_buffer.substr(packet_end + 1);
                     }
                 }
-
-
-                // vector<string> split_msg = Util::split(msg, string("END"));
-
-                // for(string s : split_msg) {
-                //     q.push(s);
-                //     // print("Telemetry: split packet: " + s);
-                // }
-
                 return q;
             }
         }
@@ -77,26 +67,20 @@ bool Telemetry::write() {
     string packet_string = send_queue.front();
     send_queue.pop();
 
-    // cout << packet_string << endl;    
-    // print("!!!!!!!!");
-
     // Note: add "END" at the end of the packet, so packets are split correctly
     // string packet_string = output + "END";
-    // print("Telemetry: Sending packet: " + packet_string);
+    printCritical("Telemetry: Sending packet: " + packet_string);
     // print("");
 
     // Util::pause(1000);
     try {
-        // print("dd");
         asio::write(socket, asio::buffer(packet_string), asio::transfer_all());
-        // print(":)))");
     }
     catch (std::exception& e) {
         print(e.what());
         throw SOCKET_WRITE_ERROR();
     }
-    // print("sssssssssd");
-    // cout << Util::to_string(global_config.telemetry.DELAY) << endl;
+    // print(Util::to_string(global_config.telemetry.DELAY));
     Util::pause(global_config.telemetry.DELAY);
     return true;
 }

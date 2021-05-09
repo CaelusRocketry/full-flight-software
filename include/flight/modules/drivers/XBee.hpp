@@ -4,7 +4,6 @@
 #include <queue>
 #include <cstdio>
 #include <unistd.h>
-#include <flight/modules/lib/Packet.hpp>
 #ifndef DESKTOP
     #include <SoftwareSerial.h>
 #endif
@@ -20,7 +19,6 @@ private:
 
     bool connection;
     queue<string> ingest_queue;
-    queue<string> subpacket_send_queue;
     string rcvd;
 
     // lockable object used to specify when things need exclusive access.

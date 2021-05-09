@@ -18,7 +18,7 @@ private:
     vector<int> thermo_pins;
     vector<float> thermo_vals;
 
-    float readSensor(int pin, float curr_reading);
+    float readSensor(int pin);
 
 public:
     PseudoThermoDriver(vector<vector<int>> pins);

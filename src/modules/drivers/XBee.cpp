@@ -3,16 +3,11 @@
     #include <flight/modules/drivers/XBee.hpp>
     #include <flight/modules/mcl/Config.hpp>
     #include <flight/modules/lib/Errors.hpp>
-    #include <flight/modules/lib/Packet.hpp>
-
-    #include <ArduinoJson.h>
-    #include <SoftwareSerial.h>
+    #include <flight/modules/lib/Util.hpp>
 
     XBee::XBee() {
         // Initialize variables
-        
-        // xbee = new SoftwareSerial(31, 32);
-        xbee = &Serial4;
+        xbee = &Serial3;
         xbee->begin(9600);
         connection = true;
     }
@@ -38,41 +33,35 @@
 
     // Send the next subpacket in queue
     bool XBee::write() {
-
-        // Nothing to send, so j return
-        if(subpacket_send_queue.size() == 0 && send_queue.size() == 0){
+        // If the queue is empty, do nothing
+        if(send_queue.size() == 0){
+            print("THERES NOTHING IN THE SEND QUEUE");
             return true;
         }
-
-        if(subpacket_send_queue.size() == 0){
-            // TODO: Move this to config or constants or smth
-            string packet_string = send_queue.front();
-            send_queue.pop();
-            int subpacket_len = 60;
-
-            for (size_t i = 0; i < packet_string.size(); i += subpacket_len)
-            {
-                string subpacket_string = packet_string.substr(i, subpacket_len);
-                subpacket_send_queue.push(subpacket_string);
-            }
-
+        else{
+            print("THERES SMTH IN THE SEND QUEUE");
         }
 
         int DELAY_SEND = 50;
-        string to_send = subpacket_send_queue.front();
-        subpacket_send_queue.pop();
+        string to_send = send_queue.front();
+        send_queue.pop();
+        while (!(send_queue.empty())) {
+            to_send += send_queue.front();
+            send_queue.pop();
+        }
+        printCritical("CURRENT LENGTH OF SEND QUEUE::::: " + Util::to_string(static_cast<int>(send_queue.size())));
         try {
             char const *c = to_send.c_str();
-            print("Sending subpacket: " + string(c));
+            printEssential("\nSENDING PACKET: " + to_send + "\n");
+            xbee->begin(9600); // 05/01/2021 NEED TO KEEP THIS LINE HERE DO NOT MOVE
             xbee->write(c);
         }
         catch (std::exception& e) {
             printCritical(e.what());
-            printCritical("HELLO");
+            printCritical("ERROR IN XBEE WRITE!");
             throw XBEE_WRITE_ERROR();
         }
         Util::pause(DELAY_SEND);
-
         return true;
     }
 
@@ -85,7 +74,7 @@
                 char msg = xbee->read();
                 string msg_str(1, msg);
                 rcvd.append(msg_str);
-                printCritical("XBee: Recieved: " + msg_str);
+                // printEssential("XBee: Recieved: " + msg_str);
             }
             catch (std::exception& e){
                 print(e.what());
@@ -115,13 +104,13 @@
     void XBee::reset() {
         end();
         bool res = connect();
-        if( !res ) {
+        if (!res) {
             end();
         }
     }
 
     bool XBee::connect() {
-        print("XBee: Connecting");
+        print("XBee: connecting.");
 
         // try {
         //     xbee->begin(global_config.telemetry.XBEE_BAUD_RATE);
@@ -141,6 +130,4 @@
         connection = false;
     }
 
-
 #endif
-

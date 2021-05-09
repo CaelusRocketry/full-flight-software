@@ -5,9 +5,10 @@
     "DELAY": 0.1,
     "SOCKETIO_HOST": "127.0.0.1",
     "SOCKETIO_PORT": 5000,
-    "XBEE_RX_PIN": 2, 
-    "XBEE_TX_PIN": 3, 
-    "XBEE_BAUD_RATE": 9600
+    "XBEE_RX_PIN": 3, 
+    "XBEE_TX_PIN": 4, 
+    "XBEE_BAUD_RATE": 9600,
+    "PACKET_DELIMITER": "|"
   },
   "sensors": {
       "list": {
@@ -275,24 +276,24 @@
           "natural": "CLOSED",
           "special": true
         },
-          "nitrous_pressurization": {
-              "label": "NCSV-4",
-              "pin": 5,
-              "natural": "CLOSED",
-              "special": true
-          },
-          "nitrous_fill": {
-              "label": "NOSV-1",
-              "pin": 11,
-              "natural": "OPEN",
-              "special": false
-          },
-          "nitrous_mpv": {
-              "label": "NCSV-5",
-              "pin": 9,
-              "natural": "CLOSED",
-              "special": true
-          }
+        "nitrous_pressurization": {
+            "label": "NCSV-4",
+            "pin": 5,
+            "natural": "CLOSED",
+            "special": true
+        },
+        "nitrous_fill": {
+            "label": "NOSV-1",
+            "pin": 11,
+            "natural": "OPEN",
+            "special": false
+        },
+        "nitrous_mpv": {
+            "label": "NCSV-5",
+            "pin": 9,
+            "natural": "CLOSED",
+            "special": true
+        }
       }
     },
     "address": "/dev/ttyACM1",

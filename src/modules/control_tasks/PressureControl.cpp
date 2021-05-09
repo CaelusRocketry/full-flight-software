@@ -5,14 +5,12 @@
 #include <flight/modules/lib/Util.hpp>
 
 PressureControl::PressureControl(){
-    cout << "Pressure Control Initialized";
+    cout << "Pressure control initialized.";
 }
 
 void PressureControl::begin() {
-    print("Pressure control: Beginning");
-
-    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Pressure Control started\"}");
-    global_flag.log_info("response", obj);
+    print("Pressure control: beginning.");
+    global_flag.send_packet("INF", "Pressure control started.");
 
     this->activate_stages = global_config.pressure_control.active_stages;
     this->valves = global_config.valves.list["solenoid"];

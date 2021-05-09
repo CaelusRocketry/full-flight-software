@@ -1,27 +1,20 @@
-//
-// Created by adiv413 on 4/24/2020.
-//
-
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/control_tasks/SensorControl.hpp>
 #include <flight/modules/lib/Enums.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Util.hpp>
 
+
 SensorControl::SensorControl() {
     this->last_send_time = 0;
-
-    // config gives it in seconds, convert to milliseconds
+    // Config gives it in seconds, convert to milliseconds
     this->send_interval = global_config.sensors.send_interval * 1000;
-    // cout << send_interval;
-    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Sensor Control started\"}");
-    global_flag.log_info("response", obj);
+    global_flag.send_packet("INF", "Sensor control started.");
+    print("Sensor control started.");
 }
 
 void SensorControl::begin() {
-
     print("Sensor control: Beginning");
-
     // Initialize the Kalman filters
 
     /* Pair of <string, <string, SensorInfo>> */
@@ -32,8 +25,7 @@ void SensorControl::begin() {
             auto kalman = sensor.kalman_args;
             // Use brackets for the first because we want to create a new map
             // We use emplace for the second because Kalman has no default constructor
-
-            kalman_filters[type_.first].emplace(location_.first, Kalman(
+            kalman_filters[type_.first].emplace(location_.first, Kalman (
                 kalman.process_variance,
                 kalman.measurement_variance,
                 kalman.kalman_value
@@ -47,9 +39,7 @@ void SensorControl::execute() {
     boundary_check();
 
     long double now = Util::getTime();
-
-    if(last_send_time == 0 || now > last_send_time + send_interval) {
-        // cout << (int) (now / 1000.0) << endl;
+    if (last_send_time == 0 || now > last_send_time + send_interval) {
         send_sensor_data();
         last_send_time = now;
     }
@@ -121,43 +111,39 @@ void SensorControl::boundary_check() {
         }
     }
 
-    if (!global_registry.general.soft_abort and critical_sensors.empty()) { // one or more of the sensors are critical, soft abort
+    if (!global_registry.general.soft_abort and !(critical_sensors.empty())) { // one or more of the sensors are critical, soft abort
         global_registry.general.soft_abort = true;
 
-        string message = "Soft aborting because the following sensors have reached critical levels- ";
+        string message = "Soft aborting because the following sensors have reached critical levels: ";
+        string crit_sensors;
         for(const pair<string, string>& sensor_location : critical_sensors) {
-            message += sensor_location.first + "." + sensor_location.second + ", ";
+            // Sensor location pairs: <type, location>
+            crit_sensors += sensor_location.first + sensor_location.second + ",";
         }
-        message = message.substr(0, message.length() - 2);
+        message += crit_sensors;
+        message = message.substr(0, message.length()-1);
 
-        JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"" + message + "\"}");
-        global_flag.log_critical("response", obj);
+        global_flag.send_packet("AAB", crit_sensors.substr(0, crit_sensors.length()-1));
+        printCritical(message);
     }
 }
 
 void SensorControl::send_sensor_data() {
-    const size_t CAPACITY = JSON_OBJECT_SIZE(50);
-    StaticJsonDocument<CAPACITY> doc;
-    
-    JsonObject sensor_data_json = doc.to<JsonObject>();
-
+    // Send batch of sensor data (DAT)
+    string data;
+    // Format each sensor type, location, measured data, kalman, and status to be delimited by a comma ","
     for (const auto& type_pair : global_config.sensors.list) {
         string type = type_pair.first;
-        JsonObject type_json = sensor_data_json.createNestedObject(type);
         for (const auto &location_pair : type_pair.second) {
             string location = location_pair.first;
             RegistrySensorInfo sensor = global_registry.sensors[type][location];
-
-            JsonObject location_json = type_json.createNestedObject(location);
-            location_json["measured"] = sensor.measured_value;
-            location_json["kalman"] = sensor.normalized_value;
-            location_json["status"] = int(sensor.status);
+            // NOTE: Data is rounded to integers!
+            string measured = Util::hex(static_cast<long>(sensor.measured_value));
+            // Example data batch (two transducers): DAT|FA12|14-223-1A1-1,11-14D-2DA-1|121
+            data += sensor_type_map[type] + sensor_location_map[location] + measured + ",";
         }
     }
-
-    sensor_data_json["timestamp"] = Util::getTime() / 1000;
-    // cout << "SENDING SENSOR DATA + " + Util::to_string((int) (Util::getTime() - global_flag.general.mcl_start_time) / 1000) << endl;
-
-    global_flag.log_info("sensor_data", sensor_data_json);
+    data = data.substr(0, data.length()-1);
+    global_flag.send_packet("DAT", data);
+    printCritical("Sensor data batch sent: " + data + ".");
 }
-

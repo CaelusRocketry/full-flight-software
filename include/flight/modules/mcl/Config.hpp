@@ -1,10 +1,10 @@
 #ifndef FLIGHT_CONFIG_HPP
 #define FLIGHT_CONFIG_HPP
 
-#include <ArduinoJson.h>
 #include <string>
 #include <map>
 #include <vector>
+#include <ArduinoJson.h> // Need this to read the global JSON config
 
 using std::string;
 using std::vector;
@@ -54,6 +54,7 @@ public:
         int XBEE_RX_PIN;
         int XBEE_TX_PIN;
         int XBEE_BAUD_RATE;
+        string PACKET_DELIMITER;
     } telemetry;
 
     struct {

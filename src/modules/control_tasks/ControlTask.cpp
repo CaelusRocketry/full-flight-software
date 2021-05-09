@@ -29,14 +29,12 @@ ControlTask::ControlTask(const set<string>& config) {
     if (config.count("pressure")) {
         controls.push_back(unique_ptr<Control>(new PressureControl()));
     }
-
-    JsonObject obj = Util::deserialize("{\"header\": \"info\", \"Description\": \"Control Tasks started\"}");
-    global_flag.log_info("response", obj);
+    global_flag.send_packet("INF", "Control tasks started.");
 }
 
 void ControlTask::begin() {
     print("Control task: Beginning");
-
+    
     for (auto &control : this->controls) {
         control->begin();
     }

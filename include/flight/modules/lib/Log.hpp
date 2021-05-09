@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <ArduinoJson.h>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/lib/logger_util.hpp>
 
@@ -13,45 +12,41 @@
 #endif
 
 using namespace std;
-using ArduinoJson::StaticJsonDocument;
-
-// class Log;
-
 // Log class stores messages to be sent to and from ground and flight station
 class Log {
 private:
     string header;
     string message;
-    long double timestamp;
+    long timestamp;
 
 public:
     Log() = default;
 
-    Log(const string& header, const string& message, long double timestamp, bool save = true)
+    Log(const string& header, long timestamp, const string& message, bool save = true)
         : header(header),
-          message(message),
-          timestamp(timestamp) {
-        // print("Constructor Log details:");
-        // print(getHeader());
-        // print(getMessage());
-        // string msg;
-        // ArduinoJson::serializeJson(getMessage(), msg);
-        // print(msg);
-        // print(Util::to_string(getTimestamp()));
+          timestamp(timestamp),
+          message(message) {
         if (save) {
             this->save();
         }
-
     }
 
-    static void to_string(string &output, const Log& log);
-    static void from_json(const JsonObject& j, Log& log);
+    string toString() const;
+    static Log from_string(const string& str);
+    static string generateChecksum(const string& packet);
+    static bool checkChecksum(const string& str, const string& sum);
+    // TODO: Get save() to actually work
     void save(const string& filename = "black_box.txt") const;
     Log copy();
     string getHeader() const;
     string getMessage() const;
-    long double getTimestamp() const;
-};
+    long getTimestamp() const;
 
+    struct compareTo {
+        bool operator()(const Log& lhs, const Log& rhs) {
+            return lhs.timestamp < rhs.timestamp;
+        }
+    };
+};
 
 #endif //FLIGHT_LOG_HPP

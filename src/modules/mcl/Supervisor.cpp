@@ -1,4 +1,5 @@
 #include <set>
+#include <ArduinoJson.h>
 #include <flight/modules/lib/logger_util.hpp>
 #include <flight/modules/mcl/Supervisor.hpp>
 #include <flight/modules/tasks/SensorTask.hpp>
@@ -7,13 +8,11 @@
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
 #include <flight/modules/lib/Constants.hpp>
-#include <ArduinoJson.h>
 
 #ifndef DESKTOP
     #include "Arduino.h"
 #endif
 
-//TODO: wrap everything in a try catch to make sure that execution doesn't stop if/when an error gets thrown?
 
 Supervisor::~Supervisor() {
     delete control_task;
@@ -43,6 +42,7 @@ void Supervisor::initialize() {
 
     print("Control tasks: Initializing");
     control_task->begin();
+    last_blink_time = (int)Util::getTime();
 }
 
 void Supervisor::read() {
@@ -72,11 +72,18 @@ void Supervisor::run() {
         // Serial.println(millis());
         // double delay = 0;
         // long double start_time = Util::getTime();
+        print("------------------ITERATION------------------");
+        // print(Util::getTime());
+        if((int)Util::getTime - last_blink_time > 1000){
+            ledState = 1 - ledState;
+            digitalWrite(13, ledState);
+            last_blink_time = (int)Util::getTime();
+        }
         read();
         control();
         actuate();
         // temp placeholder for TimerControl
-        print("TIME: " + Util::to_string((int)Util::getTime()));
+        // print("TIME: " + Util::to_string((int)Util::getTime()));
         // Util::pause(500);
         // long double end_time = Util::getTime();
         // long double diff = end_time - start_time;
@@ -104,7 +111,4 @@ void Supervisor::parse_config() {
     }
 
     control_task = new ControlTask(control_tasks);
-    // const int a = 1;
-    // const int b = 0;
-    // const int c = a / b;
 }
