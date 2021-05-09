@@ -66,8 +66,8 @@
                 }
               },
               "pressure_pin": 23,
-              "bias": 38.0,
-              "slope": 1.0
+              "bias": 34.5,
+              "slope": 0.909
             },
             "PT-2": {
               "kalman_args": {
@@ -94,8 +94,8 @@
                 }
               },
               "pressure_pin": 19,
-              "bias": 21.0,
-              "slope": 1.0
+              "bias": 22.113,
+              "slope": 1.053
             },
             "PT-3": {
               "kalman_args": {
@@ -122,8 +122,8 @@
                 }
               },
               "pressure_pin": 20,
-              "bias": 28.0,
-              "slope": 1.0
+              "bias": 30.1,
+              "slope": 1.075
             },
             "PT-4": {
               "kalman_args": {

@@ -295,3 +295,5 @@ __pycache__/*
 # Locally created log files
 black_box.txt
 .pio
+
+include/flight/modules/lib/Constants.hpp
