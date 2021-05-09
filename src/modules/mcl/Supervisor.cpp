@@ -76,7 +76,9 @@ void Supervisor::run() {
         // print(Util::getTime());
         if((int)Util::getTime - last_blink_time > 1000){
             ledState = 1 - ledState;
-            digitalWrite(13, ledState);
+            #ifndef DESKTOP
+                digitalWrite(13, ledState);
+            #endif
             last_blink_time = (int)Util::getTime();
         }
         read();

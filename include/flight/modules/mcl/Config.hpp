@@ -24,6 +24,9 @@ struct ConfigSensorInfo {
         ConfigStage waiting, pressurization, autosequence, postburn;
     } boundaries;
     int pressure_pin;
+    double bias;
+    double slope;
+    double prev_val;
     vector<int> thermo_pins;
     vector<int> load_cell_pins;
 };

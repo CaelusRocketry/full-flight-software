@@ -12,6 +12,8 @@
 #endif
 
 void saveData(std::string message){
+
+    #ifdef TEENSY
     // SD stuff
     File savefile;
     savefile = SD.open("printbox.txt", FILE_WRITE);
@@ -22,6 +24,7 @@ void saveData(std::string message){
         savefile.println(output.c_str());
         savefile.close();
     }
+    #endif
 }
 
 // TODO: Add priorities to print statements

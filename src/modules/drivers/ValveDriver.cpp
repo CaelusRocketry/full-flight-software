@@ -44,7 +44,16 @@ ActuationType ValveDriver::getActuationType(int pin){
     return valve_actuations[idx];
 }
 
-// TODO: Add in pulsing and stuff
+// TODO: Add in pulsing and special
+// void ValveDriver::handlePulsing(){
+//     for(unsigned int i = 0; i < pins.size(); i++){
+
+//     }
+// }
+
+// void ValveDriver::handleSpecial(){
+    
+// }
 
 void ValveDriver::actuate(int pin, ActuationType actuation_type){
     int idx = getIndex(pin);
@@ -52,11 +61,17 @@ void ValveDriver::actuate(int pin, ActuationType actuation_type){
     valve_actuations[idx] = actuation_type;
     if(actuation_type == ActuationType::OPEN_VENT){
         valve_states[idx] = SolenoidState::OPEN;
-        writeVal(pin, HIGH);
+
+        #ifndef DESKTOP
+            writeVal(pin, HIGH);
+        #endif
     }
     else if(actuation_type == ActuationType::CLOSE_VENT){
         valve_states[idx] = SolenoidState::CLOSED;
-        writeVal(pin, LOW);
+
+        #ifndef DESKTOP
+            writeVal(pin, LOW);
+        #endif
     }
     for(SolenoidState i : valve_states) {
         print(Util::to_string((int) i));
@@ -65,5 +80,8 @@ void ValveDriver::actuate(int pin, ActuationType actuation_type){
 
 void ValveDriver::writeVal(int pin, int signal){
     printEssential("writing " + Util::hex(pin) + " with signal " + Util::hex(signal));
-    digitalWrite(pin, signal);
+
+     #ifndef DESKTOP
+        digitalWrite(pin, signal);
+    #endif
 }

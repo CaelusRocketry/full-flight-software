@@ -50,7 +50,7 @@ void TelemetryControl::execute() {
 void TelemetryControl::ingest(const Log& log) {
     string header = log.getHeader();
     string msg = log.getMessage();
-    
+        
     // Make sure the function exists
     if (this->functions.find(header) == this->functions.end()) {
         throw INVALID_HEADER_ERROR();
