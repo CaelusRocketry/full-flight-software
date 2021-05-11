@@ -101,7 +101,7 @@
                     ingest_queue.push(incoming_packet);
                 }
                 else{
-                    printEssential("Invalid String: " + incoming_packet);
+                    printEssential("Invalid String received: " + incoming_packet);
                 }
             }
             rcvd = rcvd.substr(packet_end + 1);

@@ -329,8 +329,8 @@
   },
   "arduino_type": "real",
   "task_config": {
-    "tasks": ["telemetry", "sensor", "valve"],
-    "control_tasks": ["telemetry", "sensor", "valve", "stage"]
+    "tasks": ["sensor", "valve"],
+    "control_tasks": ["sensor", "valve", "stage"]
   },
   "UI": {
       "data_cutoff": 30,

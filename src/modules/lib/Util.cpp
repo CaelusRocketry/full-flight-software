@@ -129,27 +129,45 @@ string Util::to_string(long double d) {
     // Algorithm: take the double, multiply it by 10 until there are no decimals (or until integer overflow - 17 digits), 
     // Convert that int to a string, place the decimal point back where it belongs
     // TODO: Doesn't handle small numbers, such as 0.00123; it just converts it to 0.123
+    // Assume 3 decimal places max
 
-    long double temp = d;
-    unsigned long int dot = to_string((long int) temp).length();
-
-    while((long int) round(temp) != temp && abs(temp / 1000000000000000000) < 1) { // handles integer overflow if there are more than 17 digits
-        temp *= 10;
+    if(d == 0){
+        return "0";
+    }
+    long double temp = abs(d);
+    long int truncated = (long int)temp;
+    int mult = 0;
+    while(truncated == 0 && temp != 0){
+        temp *= 10.0;
+        truncated = (long int)temp;
+        mult++;
+    }
+    string left_decimal = to_string(truncated);
+    long double decimal = temp - truncated;
+    decimal *= 1000.0; // Go up to 3 decimal points
+    string right_decimal = to_string((long int)decimal);
+    
+    string sign = "";
+    if(d < 0){
+        sign = "-";
     }
 
-    long int expanded_temp = (long int) temp;
-
-    string output = to_string(expanded_temp);
-
-    if(0 < d && d < 1) { // make sure 0.9 doesn't become 9
-        dot--;
+    // Means that there are no preceding decimals
+    if(mult == 0){
+        string preceding = "";
+        for(int i = right_decimal.length(); i < 3; i++){
+            preceding += "0";
+        }
+        return sign + left_decimal + "." + preceding + right_decimal;
     }
 
-    if(dot != output.length()) {
-        output = output.substr(0, dot) + "." + output.substr(dot);
+    // Means that there are preceding decimals
+    string preceding = "";
+    for(int i = 0; i < mult - 1; i++){
+        preceding += "0";
     }
+    return sign + "0." + preceding + left_decimal + right_decimal;
 
-    return output;
 }
 
 string Util::hex(long w) {
@@ -178,6 +196,7 @@ string Util::hex(long w) {
         return "0";
     } 
     else {
+        printEssential(to_return_final);
         if(negative){
             to_return_final = "-" + to_return_final;
         }
