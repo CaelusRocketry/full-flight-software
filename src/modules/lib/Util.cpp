@@ -153,6 +153,11 @@ string Util::to_string(long double d) {
 }
 
 string Util::hex(long w) {
+    bool negative = false;
+    if(w < 0){
+        w = -w;
+        negative = true;
+    }
     size_t hex_len = sizeof(long) << 1;
     static const char* digits = "0123456789ABCDEF";
     std::string ret(hex_len,'0');
@@ -173,6 +178,9 @@ string Util::hex(long w) {
         return "0";
     } 
     else {
+        if(negative){
+            to_return_final = "-" + to_return_final;
+        }
         return to_return_final;
     }
 }
