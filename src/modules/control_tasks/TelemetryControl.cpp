@@ -138,30 +138,31 @@ void TelemetryControl::solenoid_actuate(const vector<string>& args) {
     print("SOLENOID CONTROL SUCCESSFUL!");
 }
 
+// TODO: Either delete this method or reimplement sensor_request to work w/ negative numbers
 void TelemetryControl::sensor_request(const vector<string>& args) {
-    double value;
-    double kalman_value;
-    string sensor_status_str;
-    string sensor_type = args[0];
-    string sensor_loc = args[1];
+    // double value;
+    // double kalman_value;
+    // string sensor_status_str;
+    // string sensor_type = args[0];
+    // string sensor_loc = args[1];
 
-    if (!global_registry.sensor_exists(sensor_type, sensor_loc)) {
-        global_flag.send_packet("SDT", args[0] + args[1] + "-0");
-        printCritical("Unable to find sensor. Sensor type: " + args[0] + " Sensor location: " + args[1] + ".");
-        throw INVALID_SENSOR_LOCATION_ERROR();
-    }
+    // if (!global_registry.sensor_exists(sensor_type, sensor_loc)) {
+    //     global_flag.send_packet("SDT", args[0] + args[1] + "-0");
+    //     printCritical("Unable to find sensor. Sensor type: " + args[0] + " Sensor location: " + args[1] + ".");
+    //     throw INVALID_SENSOR_LOCATION_ERROR();
+    // }
 
-    auto sensor = global_registry.sensors[sensor_type][sensor_loc];
-    value = sensor.measured_value;
-    kalman_value = sensor.normalized_value;
-    sensor_status_str = sensor_status_map[sensor.status];
+    // auto sensor = global_registry.sensors[sensor_type][sensor_loc];
+    // value = sensor.measured_value;
+    // kalman_value = sensor.normalized_value;
+    // sensor_status_str = sensor_status_map[sensor.status];
 
-    string value_str = Util::to_string((int) value);
-    string kalman_str = Util::to_string((int) kalman_value);
-    string time_str = Util::to_string((int) (static_cast<long>(Util::getTime() - global_flag.general.mcl_start_time)));
+    // string value_str = Util::to_string((int) value);
+    // string kalman_str = Util::to_string((int) kalman_value);
+    // string time_str = Util::to_string((int) (static_cast<long>(Util::getTime() - global_flag.general.mcl_start_time)));
 
-    global_flag.send_packet("SDT", args[0] + args[1] + "-" + sensor_status_str + value_str + kalman_str);
-    print("Sensor data request successful. Sensor type: " + args[0] + ", Sensor location: " + args[1] + ", Sensor status: " + sensor_status_str + ", Measured value: " + value_str + ", Normalized value: " + kalman_str + ".");
+    // global_flag.send_packet("SDT", args[0] + args[1] + "-" + sensor_status_str + value_str + kalman_str);
+    // print("Sensor data request successful. Sensor type: " + args[0] + ", Sensor location: " + args[1] + ", Sensor status: " + sensor_status_str + ", Measured value: " + value_str + ", Normalized value: " + kalman_str + ".");
 }
 
 void TelemetryControl::valve_request(const vector<string>& args) {

@@ -1,6 +1,7 @@
 #include <flight/modules/control_tasks/ControlTask.hpp>
 #include <flight/modules/control_tasks/TelemetryControl.hpp>
 #include <flight/modules/control_tasks/SensorControl.hpp>
+#include <flight/modules/control_tasks/AbortControl.hpp>
 #include <flight/modules/control_tasks/StageControl.hpp>
 #include <flight/modules/control_tasks/ValveControl.hpp>
 #include <flight/modules/control_tasks/PressureControl.hpp>
@@ -12,6 +13,10 @@ ControlTask::ControlTask(const set<string>& config) {
 
     if (config.count("sensor")) {
         controls.push_back(unique_ptr<Control>(new SensorControl()));
+    }
+
+    if (config.count("abort")) {
+        controls.push_back(unique_ptr<Control>(new AbortControl()));
     }
 
     if (config.count("telemetry")) {
