@@ -57,7 +57,7 @@ int Util::getMaxIndex(string str, string val) {
 }
 
 template int Util::getIndex<int>(vector<int>, int); // Instantiate the template for type int
-template int Util::getIndex<float>(vector<float>, float); // Instantiate the template for type int
+template int Util::getIndex<float>(vector<float>, float); // Instantiate the template for type float
 
 double Util::min(double a, double b){
     if(a < b){
