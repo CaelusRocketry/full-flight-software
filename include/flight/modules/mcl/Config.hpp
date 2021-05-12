@@ -33,8 +33,7 @@ struct ConfigSensorInfo {
 
 struct ConfigValveInfo {
     int pin;
-    string natural;
-    bool special;
+    bool is_nc;
 };
 
 class Config {

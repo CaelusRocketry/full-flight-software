@@ -93,9 +93,8 @@ Config::Config(JsonObject& json) {
         // for(JsonVariant valve: valve_type) {
             ConfigValveInfo info;
             info.pin = valve["pin"].as<int>();
-            info.natural = valve["natural"].as<string>();
-            info.special = valve["special"].as<bool>();
-
+            string natural_string = valve["natural"].as<string>();
+            info.is_nc = natural_string == "CLOSED";
             valves.list[valve_type][valve_loc] = info;
         }
     }
