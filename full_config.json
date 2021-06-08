@@ -277,38 +277,32 @@
         "ethanol_pressurization": {
           "label": "NCSV-1",
           "pin": 4,
-          "natural": "CLOSED",
-          "special": true
+          "natural": "CLOSED"
         },
         "ethanol_vent": {
           "label": "NCSV-2",
           "pin": 39,
-          "natural": "CLOSED",
-          "special": true
+          "natural": "CLOSED"
         },
         "ethanol_mpv": {
           "label": "NCSV-3",
           "pin": 6,
-          "natural": "CLOSED",
-          "special": true
+          "natural": "CLOSED"
         },
         "nitrous_pressurization": {
             "label": "NCSV-4",
             "pin": 5,
-            "natural": "CLOSED",
-            "special": true
+            "natural": "CLOSED"
         },
         "nitrous_fill": {
             "label": "NOSV-1",
             "pin": 11,
-            "natural": "OPEN",
-            "special": false
+            "natural": "OPEN"
         },
         "nitrous_mpv": {
             "label": "NCSV-5",
             "pin": 9,
-            "natural": "CLOSED",
-            "special": true
+            "natural": "CLOSED"
         }
       }
     },
@@ -329,8 +323,8 @@
   },
   "arduino_type": "real",
   "task_config": {
-    "tasks": ["telemetry", "sensor", "valve"],
-    "control_tasks": ["telemetry", "sensor", "valve", "stage"]
+    "tasks": ["sensor", "valve"],
+    "control_tasks": ["sensor", "valve", "stage"]
   },
   "UI": {
       "data_cutoff": 30,

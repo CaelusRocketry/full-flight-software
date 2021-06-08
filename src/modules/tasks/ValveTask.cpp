@@ -16,20 +16,20 @@ void ValveTask::initialize() {
             string location = valve_location.first;
             ConfigValveInfo valve_info = valve_location.second;
             int pin = valve_info.pin;
-
-            pin_to_valve[pin] = make_pair(type, location);
             pins.push_back(pin);
+            pin_to_valve[pin] = make_pair(type, location);
+            valve_infos.push_back(valve_info);
             valve_list.push_back(make_pair(type, location));
         }
     }
-    valve_driver = new ValveDriver(pins);    
+    valve_driver = new ValveDriver(valve_infos);
 }
 
 // Reads all actuation states from valve and updates registry
 void ValveTask::read(){
     print("Valve task: Reading");
 
-    for(unsigned int i = 0; i < pins.size(); i++){
+    for(unsigned int i = 0; i < valve_list.size(); i++){
         int pin = pins[i];
         string valve_type = pin_to_valve[pin].first;
         string valve_location = pin_to_valve[pin].second;
@@ -37,7 +37,7 @@ void ValveTask::read(){
         // SolenoidState state = valve_driver->getSolenoidState(pin);
         // ActuationType actuation_type = valve_driver->getActuationType(pin);
 
-        /* Update the registry */
+        /* Update the registry NOTE: We no longer do this in read(), instead we just update registry in actuate() */ 
         // global_registry.valves[valve_type][valve_location].state = state;
         // global_registry.valves[valve_type][valve_location].actuation_type = actuation_type;
     }

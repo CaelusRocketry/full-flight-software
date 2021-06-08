@@ -296,4 +296,4 @@ __pycache__/*
 black_box.txt
 .pio
 
-include/flight/modules/lib/Constants.hpp
+include/flight/modules/lib/ConfigString.hpp

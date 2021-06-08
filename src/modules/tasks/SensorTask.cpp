@@ -58,7 +58,6 @@ void SensorTask::read() {
 
         
         float value = global_config.sensors.list[type][loc].slope * pressure_driver->getPressureValue(pin) - global_config.sensors.list[type][loc].bias;
-
         print(type + " " + loc + ": " + Util::to_string((double) value));
         global_registry.sensors[type][loc].measured_value = value;
     }

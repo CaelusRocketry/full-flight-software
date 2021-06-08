@@ -84,23 +84,15 @@
             }
         }
 
-        size_t packet_start = rcvd.find('^');
-        // while(true){
-        //     rcvd = rcvd.substr(packet_start + 1);
-        //     if(rcvd.find("^") != string::npos){
-        //         break;
-        //     }
-        //     packet_start = rcvd.find('^');
-        // }
-        // string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
-        if(packet_start != string::npos) {
-            size_t packet_end = rcvd.find('$', packet_start);
-            if (packet_end != string::npos) {
+        size_t packet_end = rcvd.find('$');
+        if (packet_end != string::npos) {
+            int packet_start = Util::getMaxIndex(rcvd.substr(0, packet_end - 1), "^");
+            if(packet_start != -1) {
                 string incoming_packet = rcvd.substr(packet_start + 1, packet_end - packet_start - 1);
                 printCritical("XBee: Received Full Packet: " + incoming_packet);
                 int idx = Util::getMaxIndex(incoming_packet, "|");
-                string jason = incoming_packet.substr(0, idx);
-                string checksum = Log::generateChecksum(jason);
+                string checklessString = incoming_packet.substr(0, idx);
+                string checksum = Log::generateChecksum(checklessString);
                 string sentChecksum = incoming_packet.substr(idx + 1);
                 printEssential("Calculated checksum: " + checksum);
                 printEssential("Got checksum: " + sentChecksum);
@@ -108,12 +100,12 @@
                     printEssential("Got a valid string: " + incoming_packet);
                     ingest_queue.push(incoming_packet);
                 }
-
-                rcvd = rcvd.substr(packet_end + 1);
+                else{
+                    printEssential("Invalid String received: " + incoming_packet);
+                }
             }
+            rcvd = rcvd.substr(packet_end + 1);
         }
-
-        // print("xbee: received: " + rcvd);
     }
 
     bool XBee::get_status() const {

@@ -7,7 +7,7 @@
 #include <flight/modules/tasks/ValveTask.hpp>
 #include <flight/modules/lib/Util.hpp>
 #include <flight/modules/mcl/Config.hpp>
-#include <flight/modules/lib/Constants.hpp>
+#include <flight/modules/lib/ConfigString.hpp>
 
 #ifndef DESKTOP
     #include "Arduino.h"

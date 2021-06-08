@@ -50,8 +50,6 @@ bool between(double a, double b, double x) {
 }
 
 void SensorControl::boundary_check() {
-    vector<pair<string, string>> critical_sensors;
-
     for (const auto& type_ : global_config.sensors.list) {
         string type = type_.first;
         for (const auto& location_ : type_.second) {
@@ -64,67 +62,41 @@ void SensorControl::boundary_check() {
             double kalman_value = kalman_filters.at(type).at(location).update_kalman(value);
             sensor_registry.normalized_value = kalman_value; // reference
             Stage curr_stage = global_registry.general.stage;
+            ConfigStage boundary_conf;
+            bool found_stage = false;
             if(curr_stage == Stage::WAITING)
             {
-                if (between(conf.boundaries.waiting.safe.lower, conf.boundaries.waiting.safe.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::SAFE;
-                } else if (between(conf.boundaries.waiting.warn.lower, conf.boundaries.waiting.warn.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::WARNING;
-                } else {
-                    sensor_registry.status = SensorStatus::CRITICAL;
-                    critical_sensors.push_back({type, location});
-                }
+                boundary_conf = conf.boundaries.waiting;
+                found_stage = true;
             }
             else if(curr_stage == Stage::PRESSURIZATION)
             {
-                if (between(conf.boundaries.pressurization.safe.lower, conf.boundaries.pressurization.safe.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::SAFE;
-                } else if (between(conf.boundaries.pressurization.warn.lower, conf.boundaries.pressurization.warn.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::WARNING;
-                } else {
-                    sensor_registry.status = SensorStatus::CRITICAL;
-                    critical_sensors.push_back({type, location});
-                }
+                boundary_conf = conf.boundaries.pressurization;
+                found_stage = true;
             }
             else if(curr_stage == Stage::AUTOSEQUENCE)
             {
-                if (between(conf.boundaries.autosequence.safe.lower, conf.boundaries.autosequence.safe.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::SAFE;
-                } else if (between(conf.boundaries.autosequence.warn.lower, conf.boundaries.autosequence.warn.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::WARNING;
-                } else {
-                    sensor_registry.status = SensorStatus::CRITICAL;
-                    critical_sensors.push_back({type, location});
-                }
+                boundary_conf = conf.boundaries.autosequence;
+                found_stage = true;
             }
             else if(curr_stage == Stage::POSTBURN)
             {
-                if (between(conf.boundaries.postburn.safe.lower, conf.boundaries.postburn.safe.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::SAFE;
-                } else if (between(conf.boundaries.postburn.warn.lower, conf.boundaries.postburn.warn.upper, kalman_value)) {
-                    sensor_registry.status = SensorStatus::WARNING;
-                } else {
-                    sensor_registry.status = SensorStatus::CRITICAL;
-                    critical_sensors.push_back({type, location});
-                }
+                boundary_conf = conf.boundaries.postburn;
+                found_stage = true;
+            }
+
+            if(!found_stage){
+                continue;
+            }
+
+            if (between(boundary_conf.safe.lower, boundary_conf.safe.upper, kalman_value)) {
+                sensor_registry.status = SensorStatus::SAFE;
+            } else if (between(boundary_conf.warn.lower, boundary_conf.warn.upper, kalman_value)) {
+                sensor_registry.status = SensorStatus::WARNING;
+            } else {
+                sensor_registry.status = SensorStatus::CRITICAL;
             }
         }
-    }
-
-    if (!global_registry.general.soft_abort and !(critical_sensors.empty())) { // one or more of the sensors are critical, soft abort
-        global_registry.general.soft_abort = true;
-
-        string message = "Soft aborting because the following sensors have reached critical levels: ";
-        string crit_sensors;
-        for(const pair<string, string>& sensor_location : critical_sensors) {
-            // Sensor location pairs: <type, location>
-            crit_sensors += sensor_location.first + sensor_location.second + ",";
-        }
-        message += crit_sensors;
-        message = message.substr(0, message.length()-1);
-
-        global_flag.send_packet("AAB", crit_sensors.substr(0, crit_sensors.length()-1));
-        printCritical(message);
     }
 }
 
