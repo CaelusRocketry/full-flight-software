@@ -74,7 +74,7 @@ void Supervisor::run() {
         // long double start_time = Util::getTime();
         print("------------------ITERATION------------------");
         // print(Util::getTime());
-        if((int)Util::getTime - last_blink_time > 1000){
+        if((int)Util::getTime() - last_blink_time > 1000){
             ledState = 1 - ledState;
             #ifndef DESKTOP
                 digitalWrite(13, ledState);
