@@ -180,7 +180,23 @@
           "pin": 8,
           "natural": "CLOSED",
           "special": true
+        },
+        "igniter": {
+          "pin": -1, 
+          "natural": "CLOSED",
+          "special": true 
+        },
+        "ethanol_mpv": {
+          "pin": -1,
+          "natural": "CLOSED",
+          "special": true
+        },
+        "nitrous_mpv": {
+          "pin": -1, 
+          "natural": "CLOSED",
+          "special": true
         }
+  
       }
     },
     "address": "/dev/ttyACM1",
